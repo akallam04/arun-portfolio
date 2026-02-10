@@ -90,8 +90,6 @@ const projects = [
   },
 ];
 
-const HEADER_H = 73;
-
 export default function Page() {
   const [active, setActive] = useState<SectionKey>("profile");
 
@@ -141,62 +139,66 @@ export default function Page() {
           <nav className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
             <button
               onClick={() => scrollTo("profile")}
-              className="cursor-pointer rounded-xl px-4 py-2 text-base font-semibold tracking-tight md:text-lg hover:bg-white/5 transition"
+              className="cursor-pointer rounded-xl px-4 py-2 text-base font-semibold tracking-tight md:text-lg hover:bg-white/5 hover:text-white transition"
+              title="Go to Profile"
             >
               Arun Teja Reddy Kallam
             </button>
 
-            <div className="flex flex-1 items-center justify-end gap-4 md:gap-6">
+            <div className="flex flex-1 items-center justify-end gap-2 md:gap-3">
               {nav.map((n) => (
                 <button
                   key={n.key}
                   onClick={() => scrollTo(n.key)}
                   className={[
                     "cursor-pointer rounded-xl px-4 py-2 text-base font-medium md:text-lg transition",
-                    active === n.key
-                      ? "bg-white/10 text-zinc-50"
-                      : "text-zinc-300 hover:bg-white/5 hover:text-zinc-50",
+                    "text-zinc-300 hover:bg-white/10 hover:text-white",
                   ].join(" ")}
+                  title={`Go to ${n.label}`}
                 >
                   {n.label}
                 </button>
               ))}
             </div>
           </nav>
+
+          <div className="mt-2 text-xs text-zinc-500">
+            Viewing: <span className="text-zinc-300">{active}</span>
+          </div>
         </div>
       </header>
 
       <main className="h-[calc(100vh-73px)] overflow-y-auto snap-y snap-mandatory">
         <SectionShell id="profile">
-          <div className="grid items-start gap-10 md:grid-cols-[0.85fr_1.15fr]">
+          <div className="grid items-center gap-10 md:grid-cols-[0.85fr_1.15fr]">
             <div className="flex flex-col items-center md:items-start">
-              <div className="relative h-64 w-64 overflow-hidden rounded-full border border-white/10 bg-white/5 md:h-80 md:w-80">
+              <div className="relative h-72 w-72 overflow-hidden rounded-full border border-white/15 bg-white/8 md:h-88 md:w-88">
                 <Image src="/avatar.jpg" alt="Arun" fill className="object-cover" priority />
               </div>
-              <div className="mt-6 text-4xl font-semibold tracking-tight md:text-5xl text-center md:text-left">
+              <div className="mt-6 text-4xl font-semibold tracking-tight md:text-5xl text-center md:text-left text-zinc-100">
                 Arun Teja Reddy Kallam
               </div>
             </div>
 
             <div className="space-y-6">
-              <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-200">
+              <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/8 px-4 py-2 text-sm text-zinc-100">
                 <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
                 Open to internships (SDE, SWE, Data Analyst, Full-Stack Web Development)
               </div>
 
-              <p className="text-lg leading-relaxed text-zinc-300">
+              <p className="text-lg leading-relaxed text-zinc-200">
                 CS student at ASU building clean web apps and data-driven products. Focused on shipping
                 polished UI, reliable APIs, and measurable impact.
               </p>
 
               <div className="flex flex-wrap gap-3">
-                <PrimaryButton href={links.email} label="Email" />
-                <GhostButton href={links.linkedin} label="LinkedIn" />
-                <GhostButton href={links.github} label="GitHub" />
-                <GhostButton href={links.resume} label="Resume" newTab />
+                <HoverButton href={links.email} label="Email" />
+                <HoverButton href={links.linkedin} label="LinkedIn" newTab />
+                <HoverButton href={links.github} label="GitHub" newTab />
+                <HoverButton href={links.resume} label="Resume" newTab />
               </div>
 
-              <div className="grid gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 sm:grid-cols-3">
+              <div className="grid gap-4 rounded-2xl border border-white/15 bg-white/8 p-6 sm:grid-cols-3">
                 <Stat label="Location" value="Tempe, AZ" />
                 <Stat label="Degree" value="B.S. CS (ASU)" />
                 <Stat label="GPA" value="4.0 (Dean’s List)" />
@@ -209,16 +211,16 @@ export default function Page() {
           <SectionTitle title="Education" subtitle="Academic background" />
           <Card>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
-              <div className="text-lg font-semibold">
-                Arizona State University <span className="text-zinc-400">· Tempe, AZ</span>
+              <div className="text-lg font-semibold text-zinc-100">
+                Arizona State University <span className="text-zinc-300">· Tempe, AZ</span>
               </div>
-              <div className="text-sm text-zinc-400">Aug 2023 – May 2027</div>
+              <div className="text-sm text-zinc-300">Aug 2023 – May 2027</div>
             </div>
-            <div className="mt-2 text-base text-zinc-300">
+            <div className="mt-2 text-base text-zinc-200">
               B.S. in Computer Science · GPA: 4.0 · Dean’s List
             </div>
 
-            <div className="mt-5 text-sm font-semibold text-zinc-200">Relevant Coursework</div>
+            <div className="mt-5 text-sm font-semibold text-zinc-100">Relevant Coursework</div>
             <div className="mt-3 flex flex-wrap gap-2">
               {coursework.map((c) => (
                 <Tag key={c}>{c}</Tag>
@@ -232,7 +234,7 @@ export default function Page() {
           <div className="grid gap-4 md:grid-cols-2">
             {Object.entries(skills).map(([k, items]) => (
               <Card key={k}>
-                <div className="text-lg font-semibold">{k}</div>
+                <div className="text-lg font-semibold text-zinc-100">{k}</div>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {items.map((s) => (
                     <Tag key={s}>{s}</Tag>
@@ -249,12 +251,12 @@ export default function Page() {
             {experience.map((e) => (
               <Card key={e.role + e.org}>
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
-                  <div className="text-lg font-semibold">
-                    {e.role} <span className="text-zinc-400">· {e.org} ({e.location})</span>
+                  <div className="text-lg font-semibold text-zinc-100">
+                    {e.role} <span className="text-zinc-300">· {e.org} ({e.location})</span>
                   </div>
-                  <div className="text-sm text-zinc-400">{e.dates}</div>
+                  <div className="text-sm text-zinc-300">{e.dates}</div>
                 </div>
-                <ul className="mt-4 list-disc space-y-2 pl-5 text-base text-zinc-300">
+                <ul className="mt-4 list-disc space-y-2 pl-5 text-base text-zinc-200">
                   {e.bullets.map((b) => (
                     <li key={b}>{b}</li>
                   ))}
@@ -271,16 +273,25 @@ export default function Page() {
               <Card key={p.title}>
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <div className="text-lg font-semibold">{p.title}</div>
+                    <div className="text-lg font-semibold text-zinc-100">{p.title}</div>
                     <div className="mt-2 flex flex-wrap gap-2">
                       {p.stack.map((t) => (
                         <Tag key={t}>{t}</Tag>
                       ))}
                     </div>
                   </div>
-                  <SmallButton href={p.github} label="GitHub" />
+
+                  <a
+                    href={p.github}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="cursor-pointer rounded-lg border border-white/15 bg-white/8 px-3 py-2 text-sm text-zinc-200 transition hover:bg-white/15 hover:text-white"
+                  >
+                    GitHub
+                  </a>
                 </div>
-                <ul className="mt-4 list-disc space-y-2 pl-5 text-base text-zinc-300">
+
+                <ul className="mt-4 list-disc space-y-2 pl-5 text-base text-zinc-200">
                   {p.bullets.map((b) => (
                     <li key={b}>{b}</li>
                   ))}
@@ -293,10 +304,10 @@ export default function Page() {
         <SectionShell id="contact">
           <SectionTitle title="Contact" subtitle="Reach me quickly" />
           <Card>
-            <div className="space-y-3 text-lg text-zinc-300">
+            <div className="space-y-3 text-lg text-zinc-200">
               <div>
                 Email:{" "}
-                <a className="underline decoration-white/20 underline-offset-4" href={links.email}>
+                <a className="cursor-pointer underline decoration-white/25 underline-offset-4 hover:text-white" href={links.email}>
                   akallam04@gmail.com
                 </a>
               </div>
@@ -304,7 +315,7 @@ export default function Page() {
               <div>
                 LinkedIn:{" "}
                 <a
-                  className="underline decoration-white/20 underline-offset-4"
+                  className="cursor-pointer underline decoration-white/25 underline-offset-4 hover:text-white"
                   href={links.linkedin}
                   target="_blank"
                   rel="noreferrer"
@@ -315,7 +326,7 @@ export default function Page() {
               <div>
                 GitHub:{" "}
                 <a
-                  className="underline decoration-white/20 underline-offset-4"
+                  className="cursor-pointer underline decoration-white/25 underline-offset-4 hover:text-white"
                   href={links.github}
                   target="_blank"
                   rel="noreferrer"
@@ -334,7 +345,9 @@ export default function Page() {
 function SectionShell({ id, children }: { id: string; children: React.ReactNode }) {
   return (
     <section id={id} className="snap-start min-h-[calc(100vh-73px)] flex items-center">
-      <div className="mx-auto max-w-6xl w-full px-5 py-12">{children}</div>
+      <div className="mx-auto max-w-6xl w-full px-5 py-12 h-[90%] flex flex-col justify-center">
+        {children}
+      </div>
     </section>
   );
 }
@@ -343,7 +356,7 @@ function Background() {
   return (
     <>
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(1200px_circle_at_20%_-10%,rgba(99,102,241,0.22),transparent_55%),radial-gradient(900px_circle_at_85%_0%,rgba(16,185,129,0.16),transparent_52%),radial-gradient(900px_circle_at_50%_105%,rgba(236,72,153,0.12),transparent_55%)]" />
-      <div className="pointer-events-none fixed inset-0 bg-gradient-to-b from-transparent via-zinc-950/25 to-zinc-950" />
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(800px_circle_at_50%_100%,rgba(255,255,255,0.06),transparent_60%)]" />
     </>
   );
 }
@@ -351,15 +364,15 @@ function Background() {
 function SectionTitle({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
     <div className="mb-5">
-      <h2 className="text-3xl font-semibold tracking-tight">{title}</h2>
-      {subtitle ? <div className="mt-1 text-sm text-zinc-400">{subtitle}</div> : null}
+      <h2 className="text-3xl font-semibold tracking-tight text-zinc-100">{title}</h2>
+      {subtitle ? <div className="mt-1 text-sm text-zinc-300">{subtitle}</div> : null}
     </div>
   );
 }
 
 function Card({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-[0_1px_0_0_rgba(255,255,255,0.05)_inset]">
+    <div className="rounded-2xl border border-white/15 bg-white/8 p-6 shadow-[0_1px_0_0_rgba(255,255,255,0.08)_inset]">
       {children}
     </div>
   );
@@ -367,7 +380,7 @@ function Card({ children }: { children: React.ReactNode }) {
 
 function Tag({ children }: { children: React.ReactNode }) {
   return (
-    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-zinc-200">
+    <span className="rounded-full border border-white/15 bg-white/8 px-3 py-1 text-sm text-zinc-100">
       {children}
     </span>
   );
@@ -376,44 +389,20 @@ function Tag({ children }: { children: React.ReactNode }) {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="space-y-1">
-      <div className="text-sm text-zinc-400">{label}</div>
-      <div className="text-base font-medium text-zinc-100">{value}</div>
+      <div className="text-sm text-zinc-300">{label}</div>
+      <div className="text-base font-semibold text-zinc-50">{value}</div>
     </div>
   );
 }
 
-function PrimaryButton({ href, label }: { href: string; label: string }) {
-  return (
-    <a
-      href={href}
-      className="rounded-xl bg-white px-5 py-3 text-base font-semibold text-zinc-950 hover:bg-zinc-200"
-    >
-      {label}
-    </a>
-  );
-}
-
-function GhostButton({ href, label, newTab }: { href: string; label: string; newTab?: boolean }) {
+function HoverButton({ href, label, newTab }: { href: string; label: string; newTab?: boolean }) {
   const openNew = newTab || href.startsWith("http") || href.endsWith(".pdf");
   return (
     <a
       href={href}
       target={openNew ? "_blank" : undefined}
       rel={openNew ? "noreferrer" : undefined}
-      className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-base font-medium text-zinc-100 hover:bg-white/10"
-    >
-      {label}
-    </a>
-  );
-}
-
-function SmallButton({ href, label }: { href: string; label: string }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-100 hover:bg-white/10"
+      className="cursor-pointer rounded-xl border border-white/15 bg-white/8 px-5 py-3 text-base font-medium text-zinc-200 transition hover:bg-white hover:text-zinc-950"
     >
       {label}
     </a>
