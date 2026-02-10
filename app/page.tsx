@@ -1,28 +1,29 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import Image from "next/image";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-type SectionKey = "profile" | "education" | "experience" | "projects" | "contact";
+type SectionKey = "profile" | "education" | "skills" | "experience" | "projects" | "contact";
 
 const nav: { key: SectionKey; label: string }[] = [
   { key: "profile", label: "Profile" },
   { key: "education", label: "Education" },
+  { key: "skills", label: "Skills" },
   { key: "experience", label: "Experience" },
   { key: "projects", label: "Projects" },
   { key: "contact", label: "Contact" },
 ];
 
 const links = {
+  email: "mailto:akallam04@gmail.com",
   linkedin: "https://linkedin.com/in/akallam3",
   github: "https://github.com/akallam04",
-  email: "mailto:akallam04@gmail.com",
   resume: "/resume.pdf",
 };
 
 const skills = {
   Languages: ["JavaScript", "Python", "SQL", "Java", "HTML", "CSS"],
-  Web: ["React", "Node.js", "Express.js", "REST APIs", "JWT Auth"],
+  Web: ["React", "Next.js", "Node.js", "Express.js", "REST APIs", "JWT Auth"],
   Data: ["Tableau", "Excel", "Google Sheets", "Pandas", "NumPy (basic)", "KPI Analysis"],
   Databases: ["MySQL", "MongoDB"],
   Tools: ["Git", "GitHub", "VS Code", "IntelliJ"],
@@ -72,8 +73,8 @@ const projects = [
     stack: ["React", "Node.js/Express", "MongoDB", "JWT Auth", "REST APIs"],
     bullets: [
       "Built a full-stack goals tracking application with JWT-based authentication, protected routes, and a responsive React UI.",
-      "Developed RESTful APIs to create/read/update/delete goals with server-side validation, error handling, and MongoDB persistence.",
-      "Extended the project with UI/UX improvements (loading/error states) and features like filtering/sorting, with clear GitHub documentation.",
+      "Developed RESTful APIs to create/read/update/delete goals with validation, error handling, and MongoDB persistence.",
+      "Improved UX with loading/error states and filtering/sorting; documented setup clearly in the repo.",
     ],
     github: "https://github.com/akallam04",
   },
@@ -81,9 +82,9 @@ const projects = [
     title: "Sales Insights — Business Analytics Dashboard",
     stack: ["MySQL", "Excel", "Tableau"],
     bullets: [
-      "Analyzed sales data using MySQL to compute KPIs (revenue trends, top customers/products, regional performance) and answer business questions.",
-      "Built an interactive Tableau dashboard with filters and drilldowns to visualize performance drivers and trends over time.",
-      "Documented data assumptions, query logic, and insights to ensure the analysis is reproducible and stakeholder-ready.",
+      "Analyzed sales data using MySQL to compute KPIs (revenue trends, top customers/products, regional performance).",
+      "Built an interactive Tableau dashboard with filters and drilldowns to visualize performance drivers over time.",
+      "Documented assumptions and query logic for reproducible stakeholder-ready insights.",
     ],
     github: "https://github.com/akallam04",
   },
@@ -91,8 +92,42 @@ const projects = [
 
 export default function Page() {
   const [active, setActive] = useState<SectionKey>("profile");
+  const sectionRefs = useMemo(
+    () =>
+      nav.reduce((acc, n) => {
+        acc[n.key] = { current: null as HTMLElement | null };
+        return acc;
+      }, {} as Record<SectionKey, React.MutableRefObject<HTMLElement | null>>),
+    []
+  );
 
-  const activeLabel = useMemo(() => nav.find((n) => n.key === active)?.label ?? "", [active]);
+  useEffect(() => {
+    const ids = nav.map((n) => n.key);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
+
+        if (visible?.target?.id && ids.includes(visible.target.id as SectionKey)) {
+          setActive(visible.target.id as SectionKey);
+        }
+      },
+      { root: null, threshold: [0.2, 0.35, 0.5, 0.7] }
+    );
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const scrollTo = (key: SectionKey) => {
+    document.getElementById(key)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-50">
@@ -100,221 +135,200 @@ export default function Page() {
 
       <header className="sticky top-0 z-50 border-b border-white/10 bg-zinc-950/70 backdrop-blur">
         <div className="mx-auto max-w-6xl px-5 py-4">
-          <nav className="flex items-center justify-between gap-6">
-            {nav.map((n) => (
-              <button
-                key={n.key}
-                onClick={() => setActive(n.key)}
-                className={[
-                  "text-base font-medium tracking-tight md:text-lg",
-                  active === n.key ? "text-zinc-50" : "text-zinc-300 hover:text-zinc-50",
-                ].join(" ")}
-              >
-                {n.label}
-              </button>
-            ))}
+          <nav className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+            <button
+              onClick={() => scrollTo("profile")}
+              className="text-base font-semibold tracking-tight md:text-lg"
+            >
+              Arun Teja Reddy Kallam
+            </button>
+
+            <div className="flex flex-1 items-center justify-end gap-6 md:gap-10">
+              {nav.map((n) => (
+                <button
+                  key={n.key}
+                  onClick={() => scrollTo(n.key)}
+                  className={[
+                    "text-base font-medium md:text-lg",
+                    active === n.key ? "text-zinc-50" : "text-zinc-300 hover:text-zinc-50",
+                  ].join(" ")}
+                >
+                  {n.label}
+                </button>
+              ))}
+            </div>
           </nav>
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-5 pb-20 pt-10">
-        <div className="mb-8">
-          <div className="text-sm text-zinc-400">
-            Viewing: <span className="text-zinc-100">{activeLabel}</span>
-          </div>
-        </div>
+      <main className="mx-auto max-w-6xl px-5 pb-24 pt-12 space-y-16">
+        <Reveal>
+          <section id="profile" className="scroll-mt-28">
+            <div className="grid items-start gap-10 md:grid-cols-[0.85fr_1.15fr]">
+              <div className="flex flex-col items-center md:items-start">
+                <div className="relative h-56 w-56 overflow-hidden rounded-full border border-white/10 bg-white/5 md:h-72 md:w-72">
+                  <Image src="/avatar.jpg" alt="Arun" fill className="object-cover" priority />
+                </div>
+                <div className="mt-5 text-3xl font-semibold tracking-tight md:text-4xl text-center md:text-left">
+                  Arun Teja Reddy Kallam
+                </div>
+              </div>
 
-        {active === "profile" ? <Profile /> : null}
-        {active === "education" ? <Education /> : null}
-        {active === "experience" ? <Experience /> : null}
-        {active === "projects" ? <Projects /> : null}
-        {active === "contact" ? <Contact /> : null}
+              <div className="space-y-6">
+                <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-200">
+                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                  Open to internships (SDE, SWE, Data Analyst, Full-Stack Web Development)
+                </div>
 
-        <footer className="mt-14 border-t border-white/10 pt-6 text-xs text-zinc-500">
+                <p className="text-lg leading-relaxed text-zinc-300">
+                  CS student at ASU building clean web apps and data-driven products. Focused on shipping
+                  polished UI, reliable APIs, and measurable impact.
+                </p>
+
+                <div className="flex flex-wrap gap-3">
+                  <PrimaryButton href={links.email} label="Email" />
+                  <GhostButton href={links.linkedin} label="LinkedIn" />
+                  <GhostButton href={links.github} label="GitHub" />
+                  <GhostButton href={links.resume} label="Resume" newTab />
+                </div>
+
+                <div className="grid gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 sm:grid-cols-3">
+                  <Stat label="Location" value="Tempe, AZ" />
+                  <Stat label="Degree" value="B.S. CS (ASU)" />
+                  <Stat label="GPA" value="4.0 (Dean’s List)" />
+                </div>
+              </div>
+            </div>
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section id="education" className="scroll-mt-28">
+            <SectionTitle title="Education" subtitle="Academic background" />
+            <Card>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+                <div className="text-lg font-semibold">
+                  Arizona State University <span className="text-zinc-400">· Tempe, AZ</span>
+                </div>
+                <div className="text-sm text-zinc-400">Aug 2023 – May 2027</div>
+              </div>
+              <div className="mt-2 text-base text-zinc-300">
+                B.S. in Computer Science · GPA: 4.0 · Dean’s List
+              </div>
+
+              <div className="mt-5 text-sm font-semibold text-zinc-200">Relevant Coursework</div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {coursework.map((c) => (
+                  <Tag key={c}>{c}</Tag>
+                ))}
+              </div>
+            </Card>
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section id="skills" className="scroll-mt-28">
+            <SectionTitle title="Skills" subtitle="Technical stack" />
+            <div className="grid gap-4 md:grid-cols-2">
+              {Object.entries(skills).map(([k, items]) => (
+                <Card key={k}>
+                  <div className="text-lg font-semibold">{k}</div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {items.map((s) => (
+                      <Tag key={s}>{s}</Tag>
+                    ))}
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section id="experience" className="scroll-mt-28">
+            <SectionTitle title="Experience" subtitle="Relevant work" />
+            <div className="grid gap-4">
+              {experience.map((e) => (
+                <Card key={e.role + e.org}>
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+                    <div className="text-lg font-semibold">
+                      {e.role} <span className="text-zinc-400">· {e.org} ({e.location})</span>
+                    </div>
+                    <div className="text-sm text-zinc-400">{e.dates}</div>
+                  </div>
+                  <ul className="mt-4 list-disc space-y-2 pl-5 text-base text-zinc-300">
+                    {e.bullets.map((b) => (
+                      <li key={b}>{b}</li>
+                    ))}
+                  </ul>
+                </Card>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section id="projects" className="scroll-mt-28">
+            <SectionTitle title="Projects" subtitle="Selected work" />
+            <div className="grid gap-4 md:grid-cols-2">
+              {projects.map((p) => (
+                <Card key={p.title}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="text-lg font-semibold">{p.title}</div>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {p.stack.map((t) => (
+                          <Tag key={t}>{t}</Tag>
+                        ))}
+                      </div>
+                    </div>
+                    <SmallButton href={p.github} label="GitHub" />
+                  </div>
+                  <ul className="mt-4 list-disc space-y-2 pl-5 text-base text-zinc-300">
+                    {p.bullets.map((b) => (
+                      <li key={b}>{b}</li>
+                    ))}
+                  </ul>
+                </Card>
+              ))}
+            </div>
+          </section>
+        </Reveal>
+
+        <Reveal>
+          <section id="contact" className="scroll-mt-28">
+            <SectionTitle title="Contact" subtitle="Reach me quickly" />
+            <Card>
+              <div className="space-y-3 text-lg text-zinc-300">
+                <div>
+                  Email:{" "}
+                  <a className="underline decoration-white/20 underline-offset-4" href={links.email}>
+                    akallam04@gmail.com
+                  </a>
+                </div>
+                <div>Phone: (480) 937-6420</div>
+                <div>
+                  LinkedIn:{" "}
+                  <a className="underline decoration-white/20 underline-offset-4" href={links.linkedin} target="_blank" rel="noreferrer">
+                    linkedin.com/in/akallam3
+                  </a>
+                </div>
+                <div>
+                  GitHub:{" "}
+                  <a className="underline decoration-white/20 underline-offset-4" href={links.github} target="_blank" rel="noreferrer">
+                    github.com/akallam04
+                  </a>
+                </div>
+              </div>
+            </Card>
+          </section>
+        </Reveal>
+
+        <footer className="pt-6 text-xs text-zinc-500 border-t border-white/10">
           © {new Date().getFullYear()} Arun Teja Reddy Kallam
         </footer>
       </main>
     </div>
-  );
-}
-
-function Profile() {
-  return (
-    <section className="grid gap-10 md:grid-cols-[1.2fr_0.8fr]">
-      <div className="space-y-6">
-        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-300">
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-          Open to internships (Software / Data / Product)
-        </div>
-
-        <div className="space-y-3">
-          <h1 className="text-4xl font-semibold tracking-tight md:text-6xl">
-            Arun Teja Reddy Kallam
-          </h1>
-          <p className="max-w-2xl text-lg leading-relaxed text-zinc-300">
-            CS student at ASU building clean web apps and data-driven products. Focused on shipping
-            polished UI, reliable APIs, and measurable impact.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap gap-3">
-          <PrimaryButton href={links.email} label="Email" />
-          <GhostButton href={links.linkedin} label="LinkedIn" />
-          <GhostButton href={links.github} label="GitHub" />
-          <GhostButton href={links.resume} label="Resume" download />
-        </div>
-
-        <div className="grid gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 sm:grid-cols-3">
-          <Stat label="Location" value="Tempe, AZ" />
-          <Stat label="Degree" value="B.S. CS (ASU)" />
-          <Stat label="GPA" value="4.0 (Dean’s List)" />
-        </div>
-
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-          <div className="text-lg font-semibold">Technical Skills</div>
-          <div className="mt-4 grid gap-4 md:grid-cols-2">
-            {Object.entries(skills).map(([k, items]) => (
-              <div key={k}>
-                <div className="text-sm font-semibold text-zinc-200">{k}</div>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {items.map((s) => (
-                    <Tag key={s}>{s}</Tag>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="flex items-start justify-center md:justify-end">
-        <div className="relative h-48 w-48 overflow-hidden rounded-full border border-white/10 bg-white/5 md:h-64 md:w-64">
-          <Image src="/avatar.jpg" alt="Arun Teja Reddy Kallam" fill className="object-cover" priority />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Education() {
-  return (
-    <section className="space-y-5">
-      <h2 className="text-3xl font-semibold tracking-tight">Education</h2>
-      <Card>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
-          <div className="text-lg font-semibold">
-            Arizona State University <span className="text-zinc-400">· Tempe, AZ</span>
-          </div>
-          <div className="text-sm text-zinc-400">Aug 2023 – May 2027</div>
-        </div>
-        <div className="mt-2 text-base text-zinc-300">
-          B.S. in Computer Science · GPA: 4.0 · Dean’s List
-        </div>
-
-        <div className="mt-5 text-sm font-semibold text-zinc-200">Relevant Coursework</div>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {coursework.map((c) => (
-            <Tag key={c}>{c}</Tag>
-          ))}
-        </div>
-      </Card>
-    </section>
-  );
-}
-
-function Experience() {
-  return (
-    <section className="space-y-5">
-      <h2 className="text-3xl font-semibold tracking-tight">Experience</h2>
-      <div className="grid gap-4">
-        {experience.map((e) => (
-          <Card key={e.role + e.org}>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
-              <div className="text-lg font-semibold">
-                {e.role} <span className="text-zinc-400">· {e.org} ({e.location})</span>
-              </div>
-              <div className="text-sm text-zinc-400">{e.dates}</div>
-            </div>
-            <ul className="mt-4 list-disc space-y-2 pl-5 text-base text-zinc-300">
-              {e.bullets.map((b) => (
-                <li key={b}>{b}</li>
-              ))}
-            </ul>
-          </Card>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Projects() {
-  return (
-    <section className="space-y-5">
-      <h2 className="text-3xl font-semibold tracking-tight">Projects</h2>
-      <div className="grid gap-4 md:grid-cols-2">
-        {projects.map((p) => (
-          <Card key={p.title}>
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <div className="text-lg font-semibold">{p.title}</div>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {p.stack.map((t) => (
-                    <Tag key={t}>{t}</Tag>
-                  ))}
-                </div>
-              </div>
-              <SmallButton href={p.github} label="GitHub" />
-            </div>
-            <ul className="mt-4 list-disc space-y-2 pl-5 text-base text-zinc-300">
-              {p.bullets.map((b) => (
-                <li key={b}>{b}</li>
-              ))}
-            </ul>
-          </Card>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Contact() {
-  return (
-    <section className="space-y-5">
-      <h2 className="text-3xl font-semibold tracking-tight">Contact</h2>
-      <Card>
-        <div className="space-y-3 text-lg text-zinc-300">
-          <div>
-            Email:{" "}
-            <a className="underline decoration-white/20 underline-offset-4" href={links.email}>
-              akallam04@gmail.com
-            </a>
-          </div>
-          <div>Phone: (480) 937-6420</div>
-          <div>
-            LinkedIn:{" "}
-            <a
-              className="underline decoration-white/20 underline-offset-4"
-              href={links.linkedin}
-              target="_blank"
-              rel="noreferrer"
-            >
-              linkedin.com/in/akallam3
-            </a>
-          </div>
-          <div>
-            GitHub:{" "}
-            <a
-              className="underline decoration-white/20 underline-offset-4"
-              href={links.github}
-              target="_blank"
-              rel="noreferrer"
-            >
-              github.com/akallam04
-            </a>
-          </div>
-        </div>
-      </Card>
-    </section>
   );
 }
 
@@ -324,6 +338,47 @@ function Background() {
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(1200px_circle_at_20%_-10%,rgba(99,102,241,0.22),transparent_55%),radial-gradient(900px_circle_at_85%_0%,rgba(16,185,129,0.16),transparent_52%),radial-gradient(900px_circle_at_50%_105%,rgba(236,72,153,0.12),transparent_55%)]" />
       <div className="pointer-events-none fixed inset-0 bg-gradient-to-b from-transparent via-zinc-950/25 to-zinc-950" />
     </>
+  );
+}
+
+function Reveal({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) setShown(true);
+      },
+      { threshold: 0.15 }
+    );
+
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={[
+        "transition-all duration-700",
+        shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
+      ].join(" ")}
+    >
+      {children}
+    </div>
+  );
+}
+
+function SectionTitle({ title, subtitle }: { title: string; subtitle?: string }) {
+  return (
+    <div className="mb-5">
+      <h2 className="text-3xl font-semibold tracking-tight">{title}</h2>
+      {subtitle ? <div className="mt-1 text-sm text-zinc-400">{subtitle}</div> : null}
+    </div>
   );
 }
 
@@ -363,21 +418,14 @@ function PrimaryButton({ href, label }: { href: string; label: string }) {
   );
 }
 
-function GhostButton({
-  href,
-  label,
-  download,
-}: {
-  href: string;
-  label: string;
-  download?: boolean;
-}) {
+function GhostButton({ href, label, newTab }: { href: string; label: string; newTab?: boolean }) {
+  const openNew = newTab || href.startsWith("http") || href.endsWith(".pdf");
+
   return (
     <a
       href={href}
-      download={download ? true : undefined}
-      target={href.startsWith("http") ? "_blank" : undefined}
-      rel={href.startsWith("http") ? "noreferrer" : undefined}
+      target={openNew ? "_blank" : undefined}
+      rel={openNew ? "noreferrer" : undefined}
       className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-base font-medium text-zinc-100 hover:bg-white/10"
     >
       {label}
