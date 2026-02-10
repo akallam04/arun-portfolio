@@ -2,174 +2,34 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
-type SectionKey =
-  | "profile"
-  | "education"
-  | "skills"
-  | "experience"
-  | "projects"
-  | "contact";
+type SectionKey = "profile" | "education" | "skills" | "experience" | "projects" | "contact";
 
-const SECTIONS: { key: SectionKey; label: string }[] = [
-  { key: "profile", label: "Profile" },
-  { key: "education", label: "Education" },
-  { key: "skills", label: "Skills" },
-  { key: "experience", label: "Experience" },
-  { key: "projects", label: "Projects" },
-  { key: "contact", label: "Contact" },
-];
-
-const PROFILE = {
-  name: "Arun Teja Reddy Kallam",
-  tagline:
-    "CS student at ASU building clean web apps and data-driven products. Focused on shipping polished UI, reliable APIs, and measurable impact.",
-  status:
-    "Open to internships (SDE, SWE, Data Analyst, Full-Stack Web Development)",
-  location: "Tempe, AZ",
-  degree: "B.S. CS (ASU)",
-  gpa: "4.0 (Dean’s List)",
-  email: "akallam04@gmail.com",
-  phone: "(480) 937-6420",
-  linkedin: "https://www.linkedin.com/in/akallam3",
-  github: "https://github.com/akallam04",
-  resumePath: "/resume.pdf",
-  photoPath: "/profile.jpg",
+type SectionDef = {
+  key: SectionKey;
+  label: string;
 };
 
-const COURSEWORK = [
-  "Data Structures & Algorithms",
-  "Object-Oriented Programming",
-  "Software Engineering",
-  "Operating Systems",
-  "Principles of Programming Languages",
-  "Intro to Human-Computer Interaction",
-  "Foundations of Data Visualization",
-  "Discrete Mathematics",
-  "Probability & Statistics",
-  "Computer Organization & Assembly",
-];
+const HEADER_H = 76;
 
-const SKILL_GROUPS: { title: string; items: string[] }[] = [
-  { title: "Languages", items: ["JavaScript", "Python", "SQL", "Java", "HTML", "CSS"] },
-  { title: "Web", items: ["React", "Next.js", "Node.js", "Express.js", "REST APIs", "JWT Auth"] },
-  { title: "Data", items: ["Tableau", "Excel", "Google Sheets", "Pandas", "NumPy (basic)", "KPI Analysis"] },
-  { title: "Databases", items: ["MySQL", "MongoDB"] },
-  { title: "Tools", items: ["Git", "GitHub", "VS Code", "IntelliJ"] },
-];
-
-const EXPERIENCE = [
-  {
-    title: "Junior Data Analyst",
-    company: "Food Forest AI",
-    meta: "Remote • Jun 2025 — Jul 2025",
-    tags: ["Data Quality", "Python", "Sheets/Excel", "Enrichment"],
-    bullets: [
-      "Cleaned and validated datasets for 500+ company profiles using Excel/Google Sheets and Python, ensuring accuracy across business, contact, and geographic fields.",
-      "Extracted and standardized capabilities, certifications, and product data from websites, directories, and LinkedIn to deliver structured enrichment.",
-      "Automated Python QA checks to flag missing values, anomalies, and formatting issues—reducing manual review and producing ingestion-ready datasets that improved search/discovery for supply-chain users.",
-    ],
-  },
-  {
-    title: "Full-Stack Web Development Intern",
-    company: "Prodigy InfoTech",
-    meta: "Remote • Sep 2024 — Oct 2024",
-    tags: ["Frontend", "JavaScript", "Responsive UI", "GitHub"],
-    bullets: [
-      "Built responsive web pages using HTML, CSS, and JavaScript, implementing interactive UI components and clean layouts.",
-      "Completed structured development tasks aligned with deadlines and real-world requirements; iterated based on feedback.",
-      "Used GitHub for version control, task submission, and incremental improvements.",
-    ],
-  },
-];
-
-const PROJECTS = [
-  {
-    name: "Goalsetter — Full-Stack MERN App",
-    subtitle: "Auth + CRUD + production-ready UX patterns",
-    stack: ["React", "Node.js/Express", "MongoDB", "JWT Auth", "REST APIs"],
-    bullets: [
-      "Built a full-stack goals tracking app with JWT-based authentication, protected routes, and responsive React UI.",
-      "Developed REST APIs with validation, error handling, and MongoDB persistence.",
-      "Improved UX with loading/error states and filters; documented setup and usage clearly.",
-    ],
-  },
-  {
-    name: "Sales Insights — Analytics Dashboard",
-    subtitle: "KPI-driven analysis + interactive visualization",
-    stack: ["MySQL", "Excel", "Tableau"],
-    bullets: [
-      "Analyzed sales data using MySQL to compute KPIs (revenue trends, top customers/products, regional performance).",
-      "Built an interactive Tableau dashboard with drilldowns and filters to visualize drivers over time.",
-      "Documented assumptions and query logic for reproducible stakeholder-ready insights.",
-    ],
-  },
-];
-
-function Chip({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-3 py-1 text-sm text-white/85">
-      {children}
-    </span>
-  );
-}
-
-function Card({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={[
-        "rounded-2xl border border-white/12 bg-white/6 shadow-[0_8px_30px_rgba(0,0,0,0.35)]",
-        "backdrop-blur-xl",
-        className,
-      ].join(" ")}
-    >
-      {children}
-    </div>
-  );
-}
-
-function SectionShell({
-  id,
-  setRef,
-  title,
-  subtitle,
-  children,
-}: {
-  id: SectionKey;
-  setRef: (key: SectionKey) => (el: HTMLElement | null) => void;
-  title: string;
-  subtitle: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section
-      id={id}
-      ref={setRef(id)}
-      style={{ scrollMarginTop: 110 }}
-      className="min-h-screen w-full"
-    >
-      <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-28 md:px-6">
-        <div className="mb-8">
-          <h2 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
-            {title}
-          </h2>
-          <p className="mt-2 text-base text-white/70">{subtitle}</p>
-        </div>
-        {children}
-      </div>
-    </section>
-  );
+function clamp(n: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, n));
 }
 
 export default function Page() {
-  const [viewing, setViewing] = useState<SectionKey>("profile");
+  const sections: SectionDef[] = useMemo(
+    () => [
+      { key: "profile", label: "Profile" },
+      { key: "education", label: "Education" },
+      { key: "skills", label: "Skills" },
+      { key: "experience", label: "Experience" },
+      { key: "projects", label: "Projects" },
+      { key: "contact", label: "Contact" },
+    ],
+    []
+  );
 
-  const sectionRefs = useRef<Record<SectionKey, HTMLElement | null>>({
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const sectionElsRef = useRef<Record<SectionKey, HTMLElement | null>>({
     profile: null,
     education: null,
     skills: null,
@@ -178,94 +38,121 @@ export default function Page() {
     contact: null,
   });
 
-  const setRef = (key: SectionKey) => (el: HTMLElement | null) => {
-    sectionRefs.current[key] = el;
+  const [active, setActive] = useState<SectionKey>("profile");
+
+  const setSectionRef = (key: SectionKey) => (el: HTMLElement | null) => {
+    sectionElsRef.current[key] = el;
   };
 
-  const scrollTo = (key: SectionKey) => {
-    const el = sectionRefs.current[key];
-    if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  const scrollToSection = (key: SectionKey) => {
+    const el = sectionElsRef.current[key];
+    const scroller = scrollerRef.current;
+    if (!el || !scroller) return;
+
+    const top = el.offsetTop - HEADER_H;
+    scroller.scrollTo({ top, behavior: "smooth" });
   };
 
   useEffect(() => {
-    const entries: { key: SectionKey; el: HTMLElement }[] = [];
-    for (const s of SECTIONS) {
-      const el = sectionRefs.current[s.key];
-      if (el) entries.push({ key: s.key, el });
-    }
-    if (!entries.length) return;
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
 
-    const io = new IntersectionObserver(
-      (obs) => {
-        const visible = obs
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
-        if (!visible) return;
-        const found = entries.find((x) => x.el === visible.target);
-        if (found) setViewing(found.key);
-      },
-      { root: null, threshold: [0.2, 0.35, 0.5, 0.65] }
-    );
+    const handler = () => {
+      const y = scroller.scrollTop + HEADER_H + 8;
+      let bestKey: SectionKey = "profile";
+      let bestDist = Number.POSITIVE_INFINITY;
 
-    for (const x of entries) io.observe(x.el);
-    return () => io.disconnect();
+      (Object.keys(sectionElsRef.current) as SectionKey[]).forEach((k) => {
+        const el = sectionElsRef.current[k];
+        if (!el) return;
+        const d = Math.abs(el.offsetTop - y);
+        if (d < bestDist) {
+          bestDist = d;
+          bestKey = k;
+        }
+      });
+
+      setActive(bestKey);
+    };
+
+    handler();
+    scroller.addEventListener("scroll", handler, { passive: true });
+    return () => scroller.removeEventListener("scroll", handler);
   }, []);
 
-  const navItems = useMemo(() => SECTIONS, []);
+  const linkClass =
+    "cursor-pointer select-none px-4 py-2 rounded-xl text-[15px] md:text-[16px] " +
+    "text-white/80 hover:text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 transition";
+
+  const pillButton =
+    "cursor-pointer inline-flex items-center justify-center px-5 py-2.5 rounded-xl " +
+    "border border-white/15 bg-white/[0.06] text-white/85 hover:bg-white/15 hover:text-white " +
+    "transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30";
+
+  const primaryPill =
+    "cursor-pointer inline-flex items-center justify-center px-5 py-2.5 rounded-xl " +
+    "border border-white/15 bg-white/[0.08] text-white/90 hover:bg-white/18 hover:text-white " +
+    "transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30";
+
+  const chip =
+    "inline-flex items-center rounded-full border border-white/10 bg-white/[0.06] " +
+    "px-3 py-1 text-[12px] md:text-[13px] text-white/80";
+
+  const card =
+    "rounded-2xl border border-white/10 bg-white/[0.06] shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset]";
 
   return (
-    <main className="relative min-h-screen w-full overflow-x-hidden bg-black text-white">
+    <div className="relative min-h-screen text-white">
+      {/* Background (premium gradient, like your earlier screenshots) */}
       <div
-        aria-hidden
         className="pointer-events-none fixed inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(900px 600px at 18% 30%, rgba(120,70,255,0.22), transparent 60%)," +
-            "radial-gradient(900px 600px at 78% 22%, rgba(0,255,170,0.12), transparent 60%)," +
-            "radial-gradient(900px 600px at 55% 85%, rgba(255,120,80,0.10), transparent 60%)," +
-            "linear-gradient(180deg, rgba(10,10,12,1) 0%, rgba(0,0,0,1) 100%)",
+            "radial-gradient(1100px 700px at 18% 18%, rgba(90,110,255,0.28), transparent 60%)," +
+            "radial-gradient(1000px 700px at 82% 20%, rgba(30,210,160,0.22), transparent 60%)," +
+            "radial-gradient(1200px 850px at 50% 92%, rgba(210,60,255,0.18), transparent 65%)," +
+            "linear-gradient(180deg, rgba(0,0,0,0.92), rgba(0,0,0,0.96))",
+          filter: "saturate(115%)",
         }}
       />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_50%_30%,rgba(255,255,255,0.06),transparent_55%)]" />
 
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/35 backdrop-blur-xl">
-        <div className="mx-auto flex h-[74px] max-w-6xl items-center justify-between px-4 md:px-6">
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-semibold tracking-wide text-white/90 md:text-base">
-              {PROFILE.name}
-            </span>
-            <span className="hidden text-xs text-white/50 md:inline">
-              Viewing: {viewing}
-            </span>
+      {/* Header */}
+      <header
+        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b border-white/10"
+        style={{ height: HEADER_H }}
+      >
+        <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-4 md:px-6">
+          <div className="text-[15px] md:text-[16px] font-semibold tracking-wide text-white/90">
+            Arun Teja Reddy Kallam
           </div>
 
-          <nav className="hidden items-center gap-2 md:flex">
-            {navItems.map((it) => (
+          <nav className="hidden md:flex items-center gap-2">
+            {sections.map((s) => (
               <button
-                key={it.key}
-                onClick={() => scrollTo(it.key)}
-                className={[
-                  "cursor-pointer select-none rounded-full px-4 py-2 text-sm font-medium text-white/80",
-                  "hover:bg-white/10 hover:text-white hover:ring-1 hover:ring-white/20",
-                  "focus:outline-none focus:ring-2 focus:ring-white/30",
-                ].join(" ")}
+                key={s.key}
+                onClick={() => scrollToSection(s.key)}
+                className={linkClass + (active === s.key ? " text-white" : "")}
                 type="button"
-                title={it.label}
               >
-                {it.label}
+                {s.label}
               </button>
             ))}
           </nav>
 
           <div className="md:hidden">
             <select
-              value={viewing}
-              onChange={(e) => scrollTo(e.target.value as SectionKey)}
-              className="cursor-pointer rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-sm text-white/85 outline-none"
+              className="cursor-pointer rounded-xl border border-white/15 bg-black/40 px-3 py-2 text-white/90 outline-none"
+              value={active}
+              onChange={(e) => {
+                const k = e.target.value as SectionKey;
+                setActive(k);
+                scrollToSection(k);
+              }}
             >
-              {navItems.map((it) => (
-                <option key={it.key} value={it.key}>
-                  {it.label}
+              {sections.map((s) => (
+                <option key={s.key} value={s.key}>
+                  {s.label}
                 </option>
               ))}
             </select>
@@ -273,454 +160,501 @@ export default function Page() {
         </div>
       </header>
 
-      {/* PROFILE */}
-      <SectionShell
-        id="profile"
-        setRef={setRef}
-        title="Profile"
-        subtitle="A quick, recruiter-friendly snapshot."
+      {/* Scroller (snap + fixed header offset) */}
+      <div
+        ref={scrollerRef}
+        className="h-screen overflow-y-auto scroll-smooth"
+        style={{
+          paddingTop: HEADER_H,
+          scrollSnapType: "y mandatory",
+        }}
       >
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:items-start">
-          <div className="md:col-span-5">
-            <div className="flex flex-col items-start">
+        {/* Shared section wrapper:
+            - exact viewport height
+            - centered content
+            - never overflows past one page
+        */}
+        <Section
+          refCb={setSectionRef("profile")}
+          title="Profile"
+          subtitle="A quick, recruiter-friendly snapshot."
+        >
+          <div className="grid h-full w-full grid-cols-1 items-center gap-8 lg:grid-cols-2">
+            {/* Left: photo + name */}
+            <div className="flex flex-col items-center lg:items-start">
               <div className="relative">
+                <div className="absolute -inset-2 rounded-full bg-white/10 blur-2xl" />
                 <img
-                  src={PROFILE.photoPath}
-                  alt={`${PROFILE.name} profile`}
-                  className="h-[250px] w-[250px] rounded-full object-cover ring-2 ring-white/20 md:h-[320px] md:w-[320px]"
+                  src="/profile.jpg"
+                  alt="Arun Teja Reddy Kallam"
+                  className="relative h-[240px] w-[240px] md:h-[280px] md:w-[280px] rounded-full object-cover border border-white/20 shadow-[0_25px_70px_rgba(0,0,0,0.55)]"
                 />
-                <div className="pointer-events-none absolute inset-0 rounded-full shadow-[0_0_80px_rgba(0,0,0,0.35)]" />
               </div>
-              <h1 className="mt-5 text-4xl font-semibold tracking-tight text-white md:text-5xl">
-                {PROFILE.name}
+
+              <h1 className="mt-7 text-4xl md:text-5xl font-semibold tracking-tight text-white">
+                Arun Teja Reddy <br className="hidden sm:block" /> Kallam
               </h1>
             </div>
-          </div>
 
-          <div className="md:col-span-7">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/7 px-4 py-2 text-sm text-white/85">
-              <span className="h-2 w-2 rounded-full bg-emerald-400" />
-              <span>{PROFILE.status}</span>
-            </div>
-
-            <p className="text-lg leading-relaxed text-white/80 md:text-xl">
-              {PROFILE.tagline}
-            </p>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href={`mailto:${PROFILE.email}`}
-                className="cursor-pointer rounded-2xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 hover:bg-white/12 hover:text-white hover:ring-1 hover:ring-white/20"
-              >
-                Email
-              </a>
-              <a
-                href={PROFILE.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                className="cursor-pointer rounded-2xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 hover:bg-white/12 hover:text-white hover:ring-1 hover:ring-white/20"
-              >
-                LinkedIn
-              </a>
-              <a
-                href={PROFILE.github}
-                target="_blank"
-                rel="noreferrer"
-                className="cursor-pointer rounded-2xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 hover:bg-white/12 hover:text-white hover:ring-1 hover:ring-white/20"
-              >
-                GitHub
-              </a>
-              <a
-                href={PROFILE.resumePath}
-                target="_blank"
-                rel="noreferrer"
-                className="cursor-pointer rounded-2xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 hover:bg-white/12 hover:text-white hover:ring-1 hover:ring-white/20"
-              >
-                Resume
-              </a>
-            </div>
-
-            <Card className="mt-6 p-5">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div>
-                  <div className="text-xs uppercase tracking-wide text-white/55">
-                    Location
-                  </div>
-                  <div className="mt-1 text-base font-semibold text-white/90">
-                    {PROFILE.location}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-xs uppercase tracking-wide text-white/55">
-                    Degree
-                  </div>
-                  <div className="mt-1 text-base font-semibold text-white/90">
-                    {PROFILE.degree}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-xs uppercase tracking-wide text-white/55">
-                    GPA
-                  </div>
-                  <div className="mt-1 text-base font-semibold text-white/90">
-                    {PROFILE.gpa}
-                  </div>
-                </div>
+            {/* Right: info */}
+            <div className="flex flex-col items-start gap-5">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-[13px] md:text-[14px] text-white/85">
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                Open to internships (SDE, SWE, Data Analyst, Full-Stack)
               </div>
-            </Card>
-          </div>
-        </div>
-      </SectionShell>
 
-      {/* EDUCATION */}
-      <SectionShell
-        id="education"
-        setRef={setRef}
-        title="Education"
-        subtitle="Academic background + strengths."
-      >
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-          <Card className="lg:col-span-7 p-6">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <div className="text-xl font-semibold text-white">
-                  Arizona State University • Tempe, AZ
-                </div>
-                <div className="mt-1 text-white/80">
-                  B.S. in Computer Science • GPA: 4.0 • Dean’s List
-                </div>
-              </div>
-              <div className="text-sm text-white/60">Aug 2023 — May 2027</div>
-            </div>
-
-            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
-              <Card className="p-4">
-                <div className="text-xs uppercase tracking-wide text-white/55">
-                  Focus
-                </div>
-                <div className="mt-1 text-lg font-semibold text-white/90">
-                  Web + Data
-                </div>
-              </Card>
-              <Card className="p-4">
-                <div className="text-xs uppercase tracking-wide text-white/55">
-                  Strength
-                </div>
-                <div className="mt-1 text-lg font-semibold text-white/90">
-                  Systems + UI
-                </div>
-              </Card>
-              <Card className="p-4">
-                <div className="text-xs uppercase tracking-wide text-white/55">
-                  Output
-                </div>
-                <div className="mt-1 text-lg font-semibold text-white/90">
-                  Projects + Internships
-                </div>
-              </Card>
-            </div>
-          </Card>
-
-          <Card className="lg:col-span-5 p-6">
-            <div className="text-lg font-semibold text-white">
-              Academic Highlights
-            </div>
-            <div className="mt-4 space-y-3">
-              <Card className="p-4">
-                <div className="font-semibold text-white/95">Top-tier GPA</div>
-                <div className="mt-1 text-sm text-white/75">
-                  4.0 GPA with Dean’s List recognition — consistent performance
-                  across core CS courses.
-                </div>
-              </Card>
-              <Card className="p-4">
-                <div className="font-semibold text-white/95">Strong foundation</div>
-                <div className="mt-1 text-sm text-white/75">
-                  Solid grasp of DS&A, OS, PL, Discrete Math, and
-                  Probability/Statistics.
-                </div>
-              </Card>
-              <Card className="p-4">
-                <div className="font-semibold text-white/95">HCI + Data viz</div>
-                <div className="mt-1 text-sm text-white/75">
-                  Able to design usable interfaces and communicate insights with
-                  clean dashboards.
-                </div>
-              </Card>
-            </div>
-
-            <div className="mt-5">
-              <div className="text-sm font-semibold text-white/85">Quick links</div>
-              <div className="mt-3 flex flex-col gap-3">
-                <a
-                  className="cursor-pointer rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white/85 hover:bg-white/12 hover:text-white hover:ring-1 hover:ring-white/20"
-                  href={PROFILE.resumePath}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  View Resume (PDF)
-                </a>
-                <a
-                  className="cursor-pointer rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white/85 hover:bg-white/12 hover:text-white hover:ring-1 hover:ring-white/20"
-                  href={PROFILE.github}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Explore GitHub
-                </a>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="lg:col-span-12 p-6">
-            <div className="flex items-center justify-between gap-3">
-              <div className="text-lg font-semibold text-white">
-                Relevant Coursework
-              </div>
-              <div className="text-sm text-white/60">{COURSEWORK.length} courses</div>
-            </div>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {COURSEWORK.map((c) => (
-                <Chip key={c}>{c}</Chip>
-              ))}
-            </div>
-          </Card>
-        </div>
-      </SectionShell>
-
-      {/* SKILLS */}
-      <SectionShell
-        id="skills"
-        setRef={setRef}
-        title="Skills"
-        subtitle="Technical stack + what I build."
-      >
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-          <div className="lg:col-span-12 grid grid-cols-1 gap-6 md:grid-cols-2">
-            {SKILL_GROUPS.map((g) => (
-              <Card key={g.title} className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="text-lg font-semibold text-white">{g.title}</div>
-                  <div className="text-sm text-white/60">{g.items.length}</div>
-                </div>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {g.items.map((x) => (
-                    <Chip key={x}>{x}</Chip>
-                  ))}
-                </div>
-              </Card>
-            ))}
-          </div>
-
-          <div className="lg:col-span-12 grid grid-cols-1 gap-6 md:grid-cols-3">
-            <Card className="p-6">
-              <div className="text-lg font-semibold text-white">Frontend</div>
-              <p className="mt-2 text-sm text-white/75">
-                Build clean, responsive UI with React/Next.js and strong UX
-                fundamentals.
+              <p className="text-[16px] md:text-[18px] leading-relaxed text-white/80 max-w-xl">
+                CS student at ASU building clean web apps and data-driven products. Focused on
+                shipping polished UI, reliable APIs, and measurable impact.
               </p>
-            </Card>
-            <Card className="p-6">
-              <div className="text-lg font-semibold text-white">Backend</div>
-              <p className="mt-2 text-sm text-white/75">
-                Design REST APIs, auth flows (JWT), and reliable server-side logic.
-              </p>
-            </Card>
-            <Card className="p-6">
-              <div className="text-lg font-semibold text-white">Data</div>
-              <p className="mt-2 text-sm text-white/75">
-                Clean datasets, validate quality, compute KPIs, and present insights
-                clearly.
-              </p>
-            </Card>
-          </div>
-        </div>
-      </SectionShell>
 
-      {/* EXPERIENCE */}
-      <SectionShell
-        id="experience"
-        setRef={setRef}
-        title="Experience"
-        subtitle="Internships + measurable work."
-      >
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {EXPERIENCE.map((x) => (
-            <Card key={x.title} className="p-6">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <div className="text-xl font-semibold text-white">
-                    {x.title} • {x.company}
-                  </div>
-                  <div className="mt-1 text-sm text-white/60">{x.meta}</div>
-                </div>
-              </div>
-
-              <div className="mt-4 flex flex-wrap gap-2">
-                {x.tags.map((t) => (
-                  <Chip key={t}>{t}</Chip>
-                ))}
-              </div>
-
-              <ul className="mt-5 space-y-3 text-sm leading-relaxed text-white/80">
-                {x.bullets.map((b, i) => (
-                  <li key={i} className="flex gap-3">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/60" />
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-          ))}
-        </div>
-      </SectionShell>
-
-      {/* PROJECTS */}
-      <SectionShell
-        id="projects"
-        setRef={setRef}
-        title="Projects"
-        subtitle="Selected work with impact + stack."
-      >
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {PROJECTS.map((p) => (
-            <Card key={p.name} className="p-6">
-              <div className="text-xl font-semibold text-white">{p.name}</div>
-              <div className="mt-1 text-sm text-white/65">{p.subtitle}</div>
-
-              <div className="mt-4 flex flex-wrap gap-2">
-                {p.stack.map((s) => (
-                  <Chip key={s}>{s}</Chip>
-                ))}
-              </div>
-
-              <div className="mt-5">
-                <div className="text-sm font-semibold text-white/85">Impact</div>
-                <ul className="mt-3 space-y-3 text-sm leading-relaxed text-white/80">
-                  {p.bullets.map((b, i) => (
-                    <li key={i} className="flex gap-3">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/60" />
-                      <span>{b}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </SectionShell>
-
-      {/* CONTACT */}
-      <SectionShell
-        id="contact"
-        setRef={setRef}
-        title="Contact"
-        subtitle="Fast ways to reach me."
-      >
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-          <Card className="lg:col-span-7 p-6">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <Card className="p-5">
-                <div className="text-xs uppercase tracking-wide text-white/55">
+              <div className="flex flex-wrap gap-3">
+                <a className={primaryPill} href="mailto:akallam04@gmail.com" target="_blank" rel="noreferrer">
                   Email
-                </div>
-                <a
-                  className="mt-2 block text-base font-semibold text-white/90 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60"
-                  href={`mailto:${PROFILE.email}`}
-                >
-                  {PROFILE.email}
                 </a>
-              </Card>
-              <Card className="p-5">
-                <div className="text-xs uppercase tracking-wide text-white/55">
-                  Phone
-                </div>
                 <a
-                  className="mt-2 block text-base font-semibold text-white/90 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60"
-                  href={`tel:${PROFILE.phone.replace(/[^\d+]/g, "")}`}
+                  className={pillButton}
+                  href="https://www.linkedin.com/in/akallam3"
+                  target="_blank"
+                  rel="noreferrer"
                 >
-                  {PROFILE.phone}
-                </a>
-              </Card>
-              <Card className="p-5">
-                <div className="text-xs uppercase tracking-wide text-white/55">
                   LinkedIn
-                </div>
-                <a
-                  className="mt-2 block break-all text-base font-semibold text-white/90 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60"
-                  href={PROFILE.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  linkedin.com/in/akallam3
                 </a>
-              </Card>
-              <Card className="p-5">
-                <div className="text-xs uppercase tracking-wide text-white/55">
+                <a className={pillButton} href="https://github.com/akallam04" target="_blank" rel="noreferrer">
                   GitHub
-                </div>
-                <a
-                  className="mt-2 block break-all text-base font-semibold text-white/90 hover:text-white underline underline-offset-4 decoration-white/20 hover:decoration-white/60"
-                  href={PROFILE.github}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  github.com/akallam04
                 </a>
-              </Card>
+                <a className={pillButton} href="/resume.pdf" target="_blank" rel="noreferrer">
+                  Resume
+                </a>
+              </div>
+
+              <div className={"w-full " + card}>
+                <div className="grid grid-cols-1 gap-4 p-5 md:grid-cols-3">
+                  <Stat label="Location" value="Tempe, AZ" />
+                  <Stat label="Degree" value="B.S. CS (ASU)" />
+                  <Stat label="GPA" value="4.0 (Dean’s List)" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </Section>
+
+        <Section
+          refCb={setSectionRef("education")}
+          title="Education"
+          subtitle="Academic background + strengths."
+        >
+          {/* Fit within one page: use 2-col layout; right column is compact; coursework wraps */}
+          <div className="grid h-full w-full grid-cols-1 gap-6 xl:grid-cols-2">
+            <div className={"h-full " + card + " p-6 md:p-7 overflow-hidden"}>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-xl md:text-2xl font-semibold text-white/95">
+                    Arizona State University • Tempe, AZ
+                  </div>
+                  <div className="mt-2 text-white/75">
+                    B.S. in Computer Science • GPA: 4.0 • Dean’s List
+                  </div>
+                </div>
+                <div className="text-sm text-white/60 whitespace-nowrap">Aug 2023 — May 2027</div>
+              </div>
+
+              <div className="mt-5 grid grid-cols-3 gap-3">
+                <Mini label="Focus" value="Web + Data" />
+                <Mini label="Strength" value="Systems + UI" />
+                <Mini label="Output" value="Projects + Internships" />
+              </div>
+
+              <div className="mt-6 flex items-center justify-between">
+                <div className="text-lg font-semibold text-white/90">Relevant Coursework</div>
+                <div className="text-sm text-white/55">10 courses</div>
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                {[
+                  "Data Structures & Algorithms",
+                  "Object-Oriented Programming",
+                  "Software Engineering",
+                  "Operating Systems",
+                  "Principles of Programming Languages",
+                  "Intro to Human-Computer Interaction",
+                  "Foundations of Data Visualization",
+                  "Discrete Mathematics",
+                  "Probability & Statistics",
+                  "Computer Organization & Assembly",
+                ].map((c) => (
+                  <span key={c} className={chip}>
+                    {c}
+                  </span>
+                ))}
+              </div>
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href={PROFILE.resumePath}
-                target="_blank"
-                rel="noreferrer"
-                className="cursor-pointer rounded-2xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 hover:bg-white/12 hover:text-white hover:ring-1 hover:ring-white/20"
-              >
-                View Resume (PDF)
-              </a>
-              <a
-                href={PROFILE.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                className="cursor-pointer rounded-2xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white/85 hover:bg-white/12 hover:text-white hover:ring-1 hover:ring-white/20"
-              >
-                Message on LinkedIn
-              </a>
-            </div>
-          </Card>
+            <div className="grid h-full grid-rows-[1fr_auto] gap-6">
+              <div className={card + " p-6 md:p-7 overflow-hidden"}>
+                <div className="text-lg md:text-xl font-semibold text-white/90">Academic Highlights</div>
+                <div className="mt-4 grid gap-3">
+                  <Highlight
+                    title="Top-tier GPA"
+                    body="4.0 GPA with Dean’s List recognition — consistent performance across core CS courses."
+                  />
+                  <Highlight
+                    title="Strong foundation"
+                    body="Solid grasp of DS&A, OS, PL, Discrete Math, and Probability/Statistics."
+                  />
+                  <Highlight
+                    title="HCI + Data viz"
+                    body="Able to design usable interfaces and communicate insights with clean dashboards."
+                  />
+                </div>
+              </div>
 
-          <Card className="lg:col-span-5 p-6">
-            <div className="text-lg font-semibold text-white">
-              What you can expect
+              <div className={card + " p-6 md:p-7"}>
+                <div className="text-lg font-semibold text-white/90">Quick links</div>
+                <div className="mt-4 flex flex-col gap-3">
+                  <a className={pillButton} href="/resume.pdf" target="_blank" rel="noreferrer">
+                    View Resume (PDF)
+                  </a>
+                  <a className={pillButton} href="https://github.com/akallam04" target="_blank" rel="noreferrer">
+                    Explore GitHub
+                  </a>
+                </div>
+              </div>
             </div>
-            <div className="mt-4 space-y-3">
-              <Card className="p-4">
-                <div className="font-semibold text-white/95">
-                  Polished UI + clean code
-                </div>
-                <div className="mt-1 text-sm text-white/75">
-                  I care about layout, readability, and shipping professional interfaces.
-                </div>
-              </Card>
-              <Card className="p-4">
-                <div className="font-semibold text-white/95">
-                  Reliable backend fundamentals
-                </div>
-                <div className="mt-1 text-sm text-white/75">
-                  I build stable APIs, auth flows, and predictable data handling.
-                </div>
-              </Card>
-              <Card className="p-4">
-                <div className="font-semibold text-white/95">Data mindset</div>
-                <div className="mt-1 text-sm text-white/75">
-                  I’m comfortable turning messy data into usable structure and insight.
-                </div>
-              </Card>
+          </div>
+        </Section>
+
+        <Section
+          refCb={setSectionRef("skills")}
+          title="Skills"
+          subtitle="Technical stack + what I build."
+        >
+          {/* Compact layout so header stays visible; everything fits */}
+          <div className="grid h-full w-full grid-cols-1 gap-5 xl:grid-cols-2">
+            <SkillCard title="Languages" count="6" items={["JavaScript", "Python", "SQL", "Java", "HTML", "CSS"]} />
+            <SkillCard title="Web" count="6" items={["React", "Next.js", "Node.js", "Express.js", "REST APIs", "JWT Auth"]} />
+            <SkillCard title="Data" count="6" items={["Tableau", "Excel", "Google Sheets", "Pandas", "NumPy (basic)", "KPI Analysis"]} />
+            <SkillCard title="Databases" count="2" items={["MySQL", "MongoDB"]} />
+            <div className={card + " p-6 md:p-7 xl:col-span-2"}>
+              <div className="text-lg font-semibold text-white/90">Tools</div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {["Git", "GitHub", "VS Code", "IntelliJ"].map((t) => (
+                  <span key={t} className={chip}>
+                    {t}
+                  </span>
+                ))}
+              </div>
             </div>
-          </Card>
+          </div>
+        </Section>
+
+        <Section
+          refCb={setSectionRef("experience")}
+          title="Experience"
+          subtitle="Internships + measurable work."
+        >
+          {/* Side-by-side on desktop, stacked on mobile; centered vertically */}
+          <div className="grid h-full w-full grid-cols-1 gap-6 xl:grid-cols-2">
+            <ExperienceCard
+              role="Junior Data Analyst"
+              company="Food Forest AI"
+              meta="Remote • Jun 2025 — Jul 2025"
+              tags={["Data Quality", "Python", "Sheets/Excel", "Enrichment"]}
+              bullets={[
+                "Cleaned and validated datasets for 500+ company profiles using Excel/Google Sheets and Python, ensuring accuracy across business, contact, and geographic fields.",
+                "Extracted and standardized capabilities, certifications, and product data from websites, directories, and LinkedIn to deliver structured enrichment.",
+                "Automated Python QA checks to flag missing values, anomalies, and formatting issues—reducing manual review and producing ingestion-ready datasets.",
+              ]}
+            />
+            <ExperienceCard
+              role="Full-Stack Web Development Intern"
+              company="Prodigy InfoTech"
+              meta="Remote • Sep 2024 — Oct 2024"
+              tags={["Frontend", "JavaScript", "Responsive UI", "GitHub"]}
+              bullets={[
+                "Built responsive web pages using HTML, CSS, and JavaScript, implementing interactive UI components and clean layouts.",
+                "Completed structured development tasks aligned with deadlines and real-world requirements; iterated based on feedback.",
+                "Used GitHub for version control, task submission, and incremental improvements.",
+              ]}
+            />
+          </div>
+        </Section>
+
+        <Section
+          refCb={setSectionRef("projects")}
+          title="Projects"
+          subtitle="Selected work with impact + stack."
+        >
+          <div className="grid h-full w-full grid-cols-1 gap-6 xl:grid-cols-2">
+            <ProjectCard
+              title="Goalsetter — Full-Stack MERN App"
+              subtitle="Auth + CRUD + production-ready UX patterns"
+              tags={["React", "Node.js/Express", "MongoDB", "JWT Auth", "REST APIs"]}
+              bullets={[
+                "Built a full-stack goals tracking app with JWT-based authentication, protected routes, and responsive React UI.",
+                "Developed REST APIs with validation, error handling, and MongoDB persistence.",
+                "Improved UX with loading/error states and filters; documented setup and usage clearly.",
+              ]}
+            />
+            <ProjectCard
+              title="Sales Insights — Analytics Dashboard"
+              subtitle="KPI-driven analysis + interactive visualization"
+              tags={["MySQL", "Excel", "Tableau"]}
+              bullets={[
+                "Analyzed sales data using MySQL to compute KPIs (revenue trends, top customers/products, regional performance).",
+                "Built an interactive Tableau dashboard with drilldowns and filters to visualize drivers over time.",
+                "Documented assumptions and query logic for reproducible stakeholder-ready insights.",
+              ]}
+            />
+          </div>
+        </Section>
+
+        <Section
+          refCb={setSectionRef("contact")}
+          title="Contact"
+          subtitle="Fast ways to reach me."
+        >
+          {/* Single set of contact info (no duplicates), fills space professionally */}
+          <div className="grid h-full w-full grid-cols-1 gap-6 xl:grid-cols-2">
+            <div className={card + " p-6 md:p-7"}>
+              <div className="text-lg md:text-xl font-semibold text-white/90">Reach me</div>
+              <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <CopyRow label="Email" value="akallam04@gmail.com" />
+                <CopyRow label="Phone" value="(480) 937-6420" />
+                <LinkRow label="LinkedIn" value="linkedin.com/in/akallam3" href="https://www.linkedin.com/in/akallam3" />
+                <LinkRow label="GitHub" value="github.com/akallam04" href="https://github.com/akallam04" />
+              </div>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <a className={primaryPill} href="mailto:akallam04@gmail.com" target="_blank" rel="noreferrer">
+                  Email me
+                </a>
+                <a className={pillButton} href="/resume.pdf" target="_blank" rel="noreferrer">
+                  Open resume
+                </a>
+              </div>
+            </div>
+
+            <div className={card + " p-6 md:p-7"}>
+              <div className="text-lg md:text-xl font-semibold text-white/90">What I optimize for</div>
+              <div className="mt-5 grid gap-3">
+                <Highlight title="Polished UI + clean code" body="I care about layout, readability, and shipping professional interfaces." />
+                <Highlight title="Reliable backend fundamentals" body="I build stable APIs, auth flows, and predictable data handling." />
+                <Highlight title="Data mindset" body="I’m comfortable turning messy data into usable structure and insight." />
+              </div>
+            </div>
+          </div>
+        </Section>
+
+        <div className="h-8" />
+      </div>
+    </div>
+  );
+}
+
+function Section({
+  title,
+  subtitle,
+  children,
+  refCb,
+}: {
+  title: string;
+  subtitle: string;
+  children: React.ReactNode;
+  refCb: (el: HTMLElement | null) => void;
+}) {
+  return (
+    <section
+      ref={refCb}
+      className="mx-auto max-w-6xl px-4 md:px-6"
+      style={{
+        height: `calc(100vh - ${HEADER_H}px)`,
+        scrollSnapAlign: "start",
+        scrollSnapStop: "always",
+      }}
+    >
+      {/* The key: keep header visible + center content, and prevent overflow */}
+      <div className="h-full py-10 md:py-12 flex flex-col">
+        <div className="shrink-0">
+          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-white">{title}</h2>
+          <p className="mt-2 text-white/65">{subtitle}</p>
         </div>
-      </SectionShell>
-    </main>
+
+        <div className="mt-8 flex-1 min-h-0">
+          {/* min-h-0 is critical to prevent overflow glitches */}
+          <div className="h-full min-h-0">{children}</div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <div className="text-[12px] tracking-widest uppercase text-white/45">{label}</div>
+      <div className="mt-1 text-[16px] md:text-[17px] font-semibold text-white/92">{value}</div>
+    </div>
+  );
+}
+
+function Mini({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-4">
+      <div className="text-[12px] tracking-widest uppercase text-white/45">{label}</div>
+      <div className="mt-1 text-[15px] md:text-[16px] font-semibold text-white/92">{value}</div>
+    </div>
+  );
+}
+
+function Highlight({ title, body }: { title: string; body: string }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-4">
+      <div className="font-semibold text-white/92">{title}</div>
+      <div className="mt-2 text-white/70 text-[14px] leading-relaxed">{body}</div>
+    </div>
+  );
+}
+
+function SkillCard({ title, count, items }: { title: string; count: string; items: string[] }) {
+  const chip =
+    "inline-flex items-center rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[12px] md:text-[13px] text-white/80";
+  const card =
+    "rounded-2xl border border-white/10 bg-white/[0.06] shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset]";
+  return (
+    <div className={card + " p-6 md:p-7 overflow-hidden"}>
+      <div className="flex items-center justify-between">
+        <div className="text-lg font-semibold text-white/90">{title}</div>
+        <div className="text-sm text-white/55">{count}</div>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {items.map((x) => (
+          <span key={x} className={chip}>
+            {x}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ExperienceCard({
+  role,
+  company,
+  meta,
+  tags,
+  bullets,
+}: {
+  role: string;
+  company: string;
+  meta: string;
+  tags: string[];
+  bullets: string[];
+}) {
+  const card =
+    "rounded-2xl border border-white/10 bg-white/[0.06] shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset]";
+  const chip =
+    "inline-flex items-center rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[12px] md:text-[13px] text-white/80";
+  return (
+    <div className={card + " p-6 md:p-7 h-full overflow-hidden"}>
+      <div className="text-xl md:text-2xl font-semibold text-white/95">
+        {role} • {company}
+      </div>
+      <div className="mt-1 text-white/60 text-sm">{meta}</div>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {tags.map((t) => (
+          <span key={t} className={chip}>
+            {t}
+          </span>
+        ))}
+      </div>
+
+      <ul className="mt-5 space-y-3 text-white/75 text-[14px] leading-relaxed">
+        {bullets.map((b, i) => (
+          <li key={i} className="flex gap-3">
+            <span className="mt-2 h-1.5 w-1.5 rounded-full bg-white/40 shrink-0" />
+            <span className="min-w-0">{b}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function ProjectCard({
+  title,
+  subtitle,
+  tags,
+  bullets,
+}: {
+  title: string;
+  subtitle: string;
+  tags: string[];
+  bullets: string[];
+}) {
+  const card =
+    "rounded-2xl border border-white/10 bg-white/[0.06] shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset]";
+  const chip =
+    "inline-flex items-center rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[12px] md:text-[13px] text-white/80";
+  return (
+    <div className={card + " p-6 md:p-7 h-full overflow-hidden"}>
+      <div className="text-xl md:text-2xl font-semibold text-white/95">{title}</div>
+      <div className="mt-1 text-white/65">{subtitle}</div>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {tags.map((t) => (
+          <span key={t} className={chip}>
+            {t}
+          </span>
+        ))}
+      </div>
+
+      <ul className="mt-5 space-y-3 text-white/75 text-[14px] leading-relaxed">
+        {bullets.map((b, i) => (
+          <li key={i} className="flex gap-3">
+            <span className="mt-2 h-1.5 w-1.5 rounded-full bg-white/40 shrink-0" />
+            <span className="min-w-0">{b}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function CopyRow({ label, value }: { label: string; value: string }) {
+  const card =
+    "rounded-2xl border border-white/10 bg-white/[0.06] shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset]";
+  const btn =
+    "cursor-pointer rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2 text-[13px] text-white/80 hover:bg-white/15 hover:text-white transition";
+  return (
+    <div className={card + " p-4 flex items-center justify-between gap-3"}>
+      <div className="min-w-0">
+        <div className="text-[12px] tracking-widest uppercase text-white/45">{label}</div>
+        <div className="mt-1 text-white/88 font-semibold truncate">{value}</div>
+      </div>
+      <button
+        type="button"
+        className={btn}
+        onClick={() => navigator.clipboard.writeText(value)}
+      >
+        Copy
+      </button>
+    </div>
+  );
+}
+
+function LinkRow({ label, value, href }: { label: string; value: string; href: string }) {
+  const card =
+    "rounded-2xl border border-white/10 bg-white/[0.06] shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset]";
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className={card + " p-4 block cursor-pointer hover:bg-white/[0.10] transition"}
+    >
+      <div className="text-[12px] tracking-widest uppercase text-white/45">{label}</div>
+      <div className="mt-1 text-white/88 font-semibold truncate">{value}</div>
+    </a>
   );
 }
