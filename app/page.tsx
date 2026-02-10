@@ -58,7 +58,7 @@ export default function Page() {
               </a>
               <a
                 className="rounded-xl border border-zinc-800 px-4 py-2 text-sm font-medium hover:bg-zinc-900"
-                href="https://linkedin.com/in/your-linkedin"
+                href="https://www.linkedin.com/in/akallam3/"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -66,7 +66,7 @@ export default function Page() {
               </a>
               <a
                 className="rounded-xl border border-zinc-800 px-4 py-2 text-sm font-medium hover:bg-zinc-900"
-                href="https://github.com/your-username"
+                href="https://github.com/akallam04"
                 target="_blank"
                 rel="noreferrer"
               >
