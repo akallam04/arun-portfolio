@@ -75,11 +75,11 @@ export default function Page() {
               <a
                 className="rounded-xl border border-zinc-800 px-4 py-2 text-sm font-medium hover:bg-zinc-900"
                 href="/resume.pdf"
-                target="_blank"
-                rel="noreferrer"
+                download
               >
                 Resume
               </a>
+
             </div>
           </div>
 
