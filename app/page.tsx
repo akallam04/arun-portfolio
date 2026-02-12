@@ -24,7 +24,7 @@ function cn(...classes: Array<string | false | null | undefined>) {
 
 function Chip({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded-full border border-white/12 bg-white/[0.05] px-3 py-1 text-[12px] leading-none text-white/80">
+    <span className="inline-flex items-center rounded-full border border-white/12 bg-white/[0.06] px-3 py-1 text-[12px] leading-none text-white/80 backdrop-blur-md">
       {children}
     </span>
   );
@@ -40,7 +40,8 @@ function Card({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-white/12 bg-white/[0.06] shadow-[0_10px_35px_rgba(0,0,0,0.35)] backdrop-blur-xl",
+        // Apple-ish frosted glass
+        "rounded-2xl border border-white/14 bg-white/[0.08] shadow-[0_18px_55px_rgba(0,0,0,0.45)] backdrop-blur-2xl",
         className
       )}
     >
@@ -69,7 +70,7 @@ function CopyButton({ value }: { value: string }) {
           window.setTimeout(() => setCopied(false), 1200);
         } catch {}
       }}
-      className="rounded-xl border border-white/12 bg-white/[0.06] px-3 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
+      className="rounded-xl border border-white/12 bg-white/[0.08] px-3 py-2 text-sm text-white/85 backdrop-blur-xl transition hover:bg-white/[0.12] hover:text-white"
     >
       {copied ? "Copied" : "Copy"}
     </button>
@@ -123,7 +124,7 @@ export default function Page() {
 
   const rootRef = useRef<HTMLDivElement | null>(null);
 
-  // No createRef / Map typing issues: callback refs stored in a ref object
+  // callback refs — no createRef/Map TS drama
   const elByKeyRef = useRef<Record<SectionKey, HTMLElement | null>>({
     profile: null,
     education: null,
@@ -136,11 +137,9 @@ export default function Page() {
   const [active, setActive] = useState<SectionKey>("profile");
 
   useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-
     const obs = new IntersectionObserver(
       (entries) => {
+        // choose the most visible section
         const vis = entries
           .filter((e) => e.isIntersecting)
           .sort(
@@ -155,7 +154,7 @@ export default function Page() {
       {
         root: null,
         threshold: [0.35, 0.5, 0.65],
-        rootMargin: `-${NAV_H + 8}px 0px -35% 0px`,
+        rootMargin: `-${NAV_H + 10}px 0px -35% 0px`,
       }
     );
 
@@ -174,28 +173,37 @@ export default function Page() {
   };
 
   const hoverOnly =
-    "border-transparent bg-transparent text-white/80 hover:border-white/16 hover:bg-white/[0.07] hover:text-white";
+    "border-transparent bg-transparent text-white/80 hover:border-white/16 hover:bg-white/[0.09] hover:text-white";
 
   const activeStyle =
-    "border-white/22 bg-white/[0.04] text-white shadow-[0_0_0_1px_rgba(255,255,255,0.05)_inset]";
+    "border-white/22 bg-white/[0.10] text-white shadow-[0_0_0_1px_rgba(255,255,255,0.07)_inset]";
+
+  const activeLabel =
+    sections.find((s) => s.key === active)?.label ?? active;
+
+  // shared section height: one “screen” under the nav
+  const sectionMinH = `calc(100vh - ${NAV_H}px)`;
+
+  // shared “Contact-like” frame: centered content and consistent spacing
+  const SectionFrame = ({ children }: { children: React.ReactNode }) => (
+    <div
+      className="mx-auto w-full max-w-6xl px-4"
+      style={{ minHeight: sectionMinH }}
+    >
+      <div className="flex min-h-[inherit] items-center py-10">
+        <div className="w-full">{children}</div>
+      </div>
+    </div>
+  );
 
   return (
     <div ref={rootRef} className="min-h-screen text-white">
-      {/* Background (back to the nicer blue/green/purple glow style) */}
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-black">
-        <div
-          className="absolute inset-0 opacity-90"
-          style={{
-            background:
-              "radial-gradient(900px 700px at 12% 20%, rgba(59,130,246,0.38), transparent 60%), radial-gradient(900px 700px at 88% 18%, rgba(16,185,129,0.32), transparent 62%), radial-gradient(1100px 850px at 50% 92%, rgba(168,85,247,0.28), transparent 65%), radial-gradient(900px 700px at 30% 70%, rgba(236,72,153,0.10), transparent 55%)",
-          }}
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.60),rgba(0,0,0,0.80))]" />
-      </div>
+      {/* Background comes from layout.tsx + globals.css (.bg-apple).
+          Nothing else needed here. */}
 
       {/* Top Nav */}
       <header
-        className="sticky top-0 z-50 border-b border-white/10 bg-black/35 backdrop-blur-xl"
+        className="sticky top-0 z-50 border-b border-white/10 bg-black/35 backdrop-blur-2xl"
         style={{ height: NAV_H }}
       >
         <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-between gap-3 px-4">
@@ -204,7 +212,7 @@ export default function Page() {
               Arun Teja Reddy Kallam
             </div>
             <div className="truncate text-xs text-white/55">
-              Viewing: {active}
+              Viewing: {activeLabel}
             </div>
           </div>
 
@@ -230,22 +238,19 @@ export default function Page() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-6xl px-4">
-        {/* Shared section layout: same “Contact-like” placement for every section */}
-        <div className="space-y-12 py-10">
-          {/* PROFILE */}
-          <section
-            data-key="profile"
-            ref={(el) => {
-              elByKeyRef.current.profile = el;
-            }}
-            className="scroll-mt-[90px]"
-            style={{ scrollMarginTop: NAV_H + 18 }}
-          >
-            <div
-              className="grid items-center gap-6 lg:grid-cols-2"
-              style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
-            >
+      {/* Snap fixes “sections merging” and makes each section behave like Contact */}
+      <main className="snap-y snap-mandatory">
+        {/* PROFILE */}
+        <section
+          data-key="profile"
+          ref={(el) => {
+            elByKeyRef.current.profile = el;
+          }}
+          className="snap-start"
+          style={{ scrollMarginTop: NAV_H + 18 }}
+        >
+          <SectionFrame>
+            <div className="grid items-center gap-6 lg:grid-cols-2">
               <div className="space-y-3">
                 <h1 className="text-5xl font-semibold tracking-tight md:text-6xl">
                   Profile
@@ -255,7 +260,7 @@ export default function Page() {
                 </p>
 
                 <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center">
-                  <div className="relative h-[240px] w-[240px] overflow-hidden rounded-full border border-white/14 bg-white/[0.03] shadow-[0_10px_35px_rgba(0,0,0,0.45)] md:h-[280px] md:w-[280px]">
+                  <div className="relative h-[240px] w-[240px] overflow-hidden rounded-full border border-white/14 bg-white/[0.06] shadow-[0_18px_60px_rgba(0,0,0,0.50)] backdrop-blur-2xl md:h-[280px] md:w-[280px]">
                     <Image
                       src="/avatar.jpg"
                       alt="Arun Teja Reddy Kallam"
@@ -271,7 +276,7 @@ export default function Page() {
                       <br />
                       Kallam
                     </div>
-                    <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/75">
+                    <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.08] px-4 py-2 text-sm text-white/75 backdrop-blur-2xl">
                       <IconDot />
                       Open to internships (SDE, SWE, Data Analyst, Full-Stack)
                     </div>
@@ -290,7 +295,7 @@ export default function Page() {
                   <div className="flex flex-wrap gap-2">
                     <a
                       href="mailto:akallam04@gmail.com"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
+                      className="rounded-xl border border-white/12 bg-white/[0.08] px-4 py-2 text-sm text-white/85 backdrop-blur-2xl transition hover:bg-white/[0.12] hover:text-white"
                     >
                       Email
                     </a>
@@ -298,7 +303,7 @@ export default function Page() {
                       href="https://linkedin.com/in/akallam3"
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
+                      className="rounded-xl border border-white/12 bg-white/[0.08] px-4 py-2 text-sm text-white/85 backdrop-blur-2xl transition hover:bg-white/[0.12] hover:text-white"
                     >
                       LinkedIn
                     </a>
@@ -306,7 +311,7 @@ export default function Page() {
                       href="https://github.com/akallam04"
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
+                      className="rounded-xl border border-white/12 bg-white/[0.08] px-4 py-2 text-sm text-white/85 backdrop-blur-2xl transition hover:bg-white/[0.12] hover:text-white"
                     >
                       GitHub
                     </a>
@@ -314,7 +319,7 @@ export default function Page() {
                       href="/resume.pdf"
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
+                      className="rounded-xl border border-white/12 bg-white/[0.08] px-4 py-2 text-sm text-white/85 backdrop-blur-2xl transition hover:bg-white/[0.12] hover:text-white"
                     >
                       Resume
                     </a>
@@ -351,21 +356,20 @@ export default function Page() {
                 </div>
               </Card>
             </div>
-          </section>
+          </SectionFrame>
+        </section>
 
-          {/* EDUCATION */}
-          <section
-            data-key="education"
-            ref={(el) => {
-              elByKeyRef.current.education = el;
-            }}
-            className="scroll-mt-[90px]"
-            style={{ scrollMarginTop: NAV_H + 18 }}
-          >
-            <div
-              className="grid items-center gap-6 lg:grid-cols-2"
-              style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
-            >
+        {/* EDUCATION */}
+        <section
+          data-key="education"
+          ref={(el) => {
+            elByKeyRef.current.education = el;
+          }}
+          className="snap-start"
+          style={{ scrollMarginTop: NAV_H + 18 }}
+        >
+          <SectionFrame>
+            <div className="grid items-center gap-6 lg:grid-cols-2">
               <div className="space-y-3">
                 <h2 className="text-5xl font-semibold tracking-tight md:text-6xl">
                   Education
@@ -421,17 +425,21 @@ export default function Page() {
                       </div>
                       <div className="text-xs text-white/55">10 courses</div>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      <Chip>Data Structures & Algorithms</Chip>
-                      <Chip>Object-Oriented Programming</Chip>
-                      <Chip>Software Engineering</Chip>
-                      <Chip>Operating Systems</Chip>
-                      <Chip>Principles of Programming Languages</Chip>
-                      <Chip>Intro to Human-Computer Interaction</Chip>
-                      <Chip>Foundations of Data Visualization</Chip>
-                      <Chip>Discrete Mathematics</Chip>
-                      <Chip>Probability & Statistics</Chip>
-                      <Chip>Computer Organization & Assembly</Chip>
+
+                    {/* Prevent overflow: internal scroll if needed */}
+                    <div className="max-h-[170px] overflow-auto pr-2">
+                      <div className="flex flex-wrap gap-2">
+                        <Chip>Data Structures & Algorithms</Chip>
+                        <Chip>Object-Oriented Programming</Chip>
+                        <Chip>Software Engineering</Chip>
+                        <Chip>Operating Systems</Chip>
+                        <Chip>Principles of Programming Languages</Chip>
+                        <Chip>Intro to Human-Computer Interaction</Chip>
+                        <Chip>Foundations of Data Visualization</Chip>
+                        <Chip>Discrete Mathematics</Chip>
+                        <Chip>Probability & Statistics</Chip>
+                        <Chip>Computer Organization & Assembly</Chip>
+                      </div>
                     </div>
                   </div>
                 </Card>
@@ -482,7 +490,7 @@ export default function Page() {
                       href="/resume.pdf"
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-3 text-center text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
+                      className="rounded-xl border border-white/12 bg-white/[0.08] px-4 py-3 text-center text-sm text-white/85 backdrop-blur-2xl transition hover:bg-white/[0.12] hover:text-white"
                     >
                       View Resume (PDF)
                     </a>
@@ -490,7 +498,7 @@ export default function Page() {
                       href="https://github.com/akallam04"
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-3 text-center text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
+                      className="rounded-xl border border-white/12 bg-white/[0.08] px-4 py-3 text-center text-sm text-white/85 backdrop-blur-2xl transition hover:bg-white/[0.12] hover:text-white"
                     >
                       Explore GitHub
                     </a>
@@ -498,21 +506,20 @@ export default function Page() {
                 </Card>
               </div>
             </div>
-          </section>
+          </SectionFrame>
+        </section>
 
-          {/* SKILLS */}
-          <section
-            data-key="skills"
-            ref={(el) => {
-              elByKeyRef.current.skills = el;
-            }}
-            className="scroll-mt-[90px]"
-            style={{ scrollMarginTop: NAV_H + 18 }}
-          >
-            <div
-              className="grid items-center gap-6 lg:grid-cols-2"
-              style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
-            >
+        {/* SKILLS */}
+        <section
+          data-key="skills"
+          ref={(el) => {
+            elByKeyRef.current.skills = el;
+          }}
+          className="snap-start"
+          style={{ scrollMarginTop: NAV_H + 18 }}
+        >
+          <SectionFrame>
+            <div className="grid items-center gap-6 lg:grid-cols-2">
               <div className="space-y-3">
                 <h2 className="text-5xl font-semibold tracking-tight md:text-6xl">
                   Skills
@@ -631,48 +638,42 @@ export default function Page() {
                 </Card>
               </div>
             </div>
-          </section>
+          </SectionFrame>
+        </section>
 
-          {/* EXPERIENCE */}
-          <section
-            data-key="experience"
-            ref={(el) => {
-              elByKeyRef.current.experience = el;
-            }}
-            className="scroll-mt-[90px]"
-            style={{ scrollMarginTop: NAV_H + 18 }}
-          >
-            <div
-              className="grid items-center gap-6"
-              style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
-            >
-              <div className="space-y-3">
-                <h2 className="text-5xl font-semibold tracking-tight md:text-6xl">
-                  Experience
-                </h2>
-                <p className="text-white/70">Internships + measurable work.</p>
-              </div>
+        {/* EXPERIENCE */}
+        <section
+          data-key="experience"
+          ref={(el) => {
+            elByKeyRef.current.experience = el;
+          }}
+          className="snap-start"
+          style={{ scrollMarginTop: NAV_H + 18 }}
+        >
+          <SectionFrame>
+            <div className="space-y-3">
+              <h2 className="text-5xl font-semibold tracking-tight md:text-6xl">
+                Experience
+              </h2>
+              <p className="text-white/70">Internships + measurable work.</p>
 
               <div className="grid gap-6 lg:grid-cols-2">
                 <Card className="p-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="text-xl font-semibold text-white/92">
-                        Junior Data Analyst • Food Forest AI
-                      </div>
-                      <div className="mt-1 text-sm text-white/60">
-                        Remote • Jun 2025 — Jul 2025
-                      </div>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        <Chip>Data Quality</Chip>
-                        <Chip>Python</Chip>
-                        <Chip>Sheets/Excel</Chip>
-                        <Chip>Enrichment</Chip>
-                      </div>
-                    </div>
+                  <div className="text-xl font-semibold text-white/92">
+                    Junior Data Analyst • Food Forest AI
+                  </div>
+                  <div className="mt-1 text-sm text-white/60">
+                    Remote • Jun 2025 — Jul 2025
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <Chip>Data Quality</Chip>
+                    <Chip>Python</Chip>
+                    <Chip>Sheets/Excel</Chip>
+                    <Chip>Enrichment</Chip>
                   </div>
 
-                  <ul className="mt-5 space-y-3 text-sm leading-relaxed text-white/75">
+                  {/* Keep the section within one screen: internal scroll if needed */}
+                  <ul className="mt-5 max-h-[240px] space-y-3 overflow-auto pr-2 text-sm leading-relaxed text-white/75">
                     <li className="flex gap-3">
                       <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
                       Cleaned and validated datasets for 500+ company profiles
@@ -695,24 +696,20 @@ export default function Page() {
                 </Card>
 
                 <Card className="p-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="text-xl font-semibold text-white/92">
-                        Full-Stack Web Development Intern • Prodigy InfoTech
-                      </div>
-                      <div className="mt-1 text-sm text-white/60">
-                        Remote • Sep 2024 — Oct 2024
-                      </div>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        <Chip>Frontend</Chip>
-                        <Chip>JavaScript</Chip>
-                        <Chip>Responsive UI</Chip>
-                        <Chip>GitHub</Chip>
-                      </div>
-                    </div>
+                  <div className="text-xl font-semibold text-white/92">
+                    Full-Stack Web Development Intern • Prodigy InfoTech
+                  </div>
+                  <div className="mt-1 text-sm text-white/60">
+                    Remote • Sep 2024 — Oct 2024
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <Chip>Frontend</Chip>
+                    <Chip>JavaScript</Chip>
+                    <Chip>Responsive UI</Chip>
+                    <Chip>GitHub</Chip>
                   </div>
 
-                  <ul className="mt-5 space-y-3 text-sm leading-relaxed text-white/75">
+                  <ul className="mt-5 max-h-[240px] space-y-3 overflow-auto pr-2 text-sm leading-relaxed text-white/75">
                     <li className="flex gap-3">
                       <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
                       Built responsive web pages using HTML, CSS, and JavaScript,
@@ -732,29 +729,24 @@ export default function Page() {
                 </Card>
               </div>
             </div>
-          </section>
+          </SectionFrame>
+        </section>
 
-          {/* PROJECTS */}
-          <section
-            data-key="projects"
-            ref={(el) => {
-              elByKeyRef.current.projects = el;
-            }}
-            className="scroll-mt-[90px]"
-            style={{ scrollMarginTop: NAV_H + 18 }}
-          >
-            <div
-              className="grid items-center gap-6"
-              style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
-            >
-              <div className="space-y-3">
-                <h2 className="text-5xl font-semibold tracking-tight md:text-6xl">
-                  Projects
-                </h2>
-                <p className="text-white/70">
-                  Selected work with impact + stack.
-                </p>
-              </div>
+        {/* PROJECTS */}
+        <section
+          data-key="projects"
+          ref={(el) => {
+            elByKeyRef.current.projects = el;
+          }}
+          className="snap-start"
+          style={{ scrollMarginTop: NAV_H + 18 }}
+        >
+          <SectionFrame>
+            <div className="space-y-3">
+              <h2 className="text-5xl font-semibold tracking-tight md:text-6xl">
+                Projects
+              </h2>
+              <p className="text-white/70">Selected work with impact + stack.</p>
 
               <div className="grid gap-6 lg:grid-cols-2">
                 <Card className="p-6">
@@ -775,9 +767,9 @@ export default function Page() {
 
                   <div className="mt-5">
                     <div className="mb-2 text-sm font-semibold text-white/85">
-                      Impact
+                      Highlights
                     </div>
-                    <ul className="space-y-2 text-sm text-white/75">
+                    <ul className="max-h-[220px] space-y-2 overflow-auto pr-2 text-sm text-white/75">
                       <li className="flex gap-3">
                         <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
                         Protected routes + JWT sessions
@@ -810,9 +802,9 @@ export default function Page() {
 
                   <div className="mt-5">
                     <div className="mb-2 text-sm font-semibold text-white/85">
-                      Impact
+                      Highlights
                     </div>
-                    <ul className="space-y-2 text-sm text-white/75">
+                    <ul className="max-h-[220px] space-y-2 overflow-auto pr-2 text-sm text-white/75">
                       <li className="flex gap-3">
                         <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
                         Revenue trends & segmentation
@@ -830,21 +822,20 @@ export default function Page() {
                 </Card>
               </div>
             </div>
-          </section>
+          </SectionFrame>
+        </section>
 
-          {/* CONTACT (keep style, tighten spacing + show full email) */}
-          <section
-            data-key="contact"
-            ref={(el) => {
-              elByKeyRef.current.contact = el;
-            }}
-            className="scroll-mt-[90px] pb-10"
-            style={{ scrollMarginTop: NAV_H + 18 }}
-          >
-            <div
-              className="grid items-center gap-6 lg:grid-cols-2"
-              style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
-            >
+        {/* CONTACT (keep style, tighten spacing + show full email) */}
+        <section
+          data-key="contact"
+          ref={(el) => {
+            elByKeyRef.current.contact = el;
+          }}
+          className="snap-start"
+          style={{ scrollMarginTop: NAV_H + 18 }}
+        >
+          <SectionFrame>
+            <div className="grid items-center gap-6 lg:grid-cols-2">
               <div className="space-y-3">
                 <h2 className="text-5xl font-semibold tracking-tight md:text-6xl">
                   Contact
@@ -856,6 +847,7 @@ export default function Page() {
                     Reach me
                   </div>
 
+                  {/* Less “empty space”: tighter grid + tighter cards */}
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
                     <Card className="p-4">
                       <div className="text-xs tracking-wider text-white/50">
@@ -913,7 +905,7 @@ export default function Page() {
                   <div className="mt-4 flex flex-wrap gap-2">
                     <a
                       href="mailto:akallam04@gmail.com"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
+                      className="rounded-xl border border-white/12 bg-white/[0.08] px-4 py-2 text-sm text-white/85 backdrop-blur-2xl transition hover:bg-white/[0.12] hover:text-white"
                     >
                       Email me
                     </a>
@@ -921,7 +913,7 @@ export default function Page() {
                       href="/resume.pdf"
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
+                      className="rounded-xl border border-white/12 bg-white/[0.08] px-4 py-2 text-sm text-white/85 backdrop-blur-2xl transition hover:bg-white/[0.12] hover:text-white"
                     >
                       Open resume
                     </a>
@@ -939,8 +931,8 @@ export default function Page() {
                       Polished UI + clean code
                     </div>
                     <div className="mt-1 text-sm text-white/70">
-                      I care about layout, readability, and shipping
-                      professional interfaces.
+                      I care about layout, readability, and shipping professional
+                      interfaces.
                     </div>
                   </Card>
                   <Card className="p-4">
@@ -953,9 +945,7 @@ export default function Page() {
                     </div>
                   </Card>
                   <Card className="p-4">
-                    <div className="font-semibold text-white/90">
-                      Data mindset
-                    </div>
+                    <div className="font-semibold text-white/90">Data mindset</div>
                     <div className="mt-1 text-sm text-white/70">
                       I’m comfortable turning messy data into usable structure
                       and insight.
@@ -964,8 +954,8 @@ export default function Page() {
                 </div>
               </Card>
             </div>
-          </section>
-        </div>
+          </SectionFrame>
+        </section>
       </main>
     </div>
   );
