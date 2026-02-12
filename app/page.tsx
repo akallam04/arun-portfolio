@@ -86,7 +86,7 @@ export default function Page() {
         key: "profile",
         label: "Profile",
         title: "Profile",
-        subtitle: "A quick, recruiter-friendly snapshot.",
+        
       },
       {
         key: "education",
