@@ -242,28 +242,27 @@ export default function Page() {
               style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
             >
               <div className="space-y-6">
-                <div className="lg:-mt-8">
-                  <h1 className="text-5xl font-semibold tracking-tight md:text-6xl">
-                    Profile
-                  </h1>
-                </div>
+  <h1 className="text-5xl font-semibold tracking-tight md:text-6xl -translate-y-2 -translate-x-2">
+    Profile
+  </h1>
 
-                <div className="flex flex-col items-start gap-6">
-                  <div className="relative h-[300px] w-[300px] overflow-hidden rounded-full border border-white/14 bg-white/[0.03] shadow-[0_14px_50px_rgba(0,0,0,0.55)] md:h-[340px] md:w-[340px]">
-                    <Image
-                      src="/avatar.jpg"
-                      alt="Arun Teja Reddy Kallam"
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                  </div>
+  <div className="mt-2">
+    <div className="relative h-[300px] w-[300px] overflow-hidden rounded-full border border-white/14 bg-white/[0.03] shadow-[0_10px_35px_rgba(0,0,0,0.45)] md:h-[360px] md:w-[360px]">
+      <Image
+        src="/avatar.jpg"
+        alt="Arun Teja Reddy Kallam"
+        fill
+        className="object-cover"
+        priority
+      />
+    </div>
 
-                  <div className="text-4xl font-semibold leading-tight md:text-5xl whitespace-nowrap">
-                    Arun Teja Reddy Kallam
-                  </div>
-                </div>
-              </div>
+    <div className="mt-8 text-[44px] font-semibold leading-tight md:text-[54px] -translate-x-4">
+      Arun Teja Reddy Kallam
+    </div>
+  </div>
+</div>
+
 
               <Card className="p-6">
                 <div className="space-y-4">
