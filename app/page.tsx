@@ -70,9 +70,60 @@ function CopyButton({ value }: { value: string }) {
         } catch {}
       }}
       className="rounded-xl border border-white/12 bg-white/[0.06] px-3 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
+      type="button"
     >
       {copied ? "Copied" : "Copy"}
     </button>
+  );
+}
+
+function PillLink({
+  href,
+  children,
+  className,
+}: {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <a
+      href={href}
+      target={href.startsWith("/") ? undefined : "_blank"}
+      rel={href.startsWith("/") ? undefined : "noreferrer"}
+      className={cn(
+        "inline-flex items-center justify-center rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white",
+        className
+      )}
+    >
+      {children}
+    </a>
+  );
+}
+
+function SkillCard({
+  title,
+  count,
+  items,
+  className,
+}: {
+  title: string;
+  count: number;
+  items: string[];
+  className?: string;
+}) {
+  return (
+    <Card className={cn("p-5", className)}>
+      <div className="flex items-start justify-between gap-3">
+        <div className="text-lg font-semibold text-white/92">{title}</div>
+        <div className="text-xs text-white/55">{count}</div>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {items.map((x) => (
+          <Chip key={x}>{x}</Chip>
+        ))}
+      </div>
+    </Card>
   );
 }
 
@@ -81,12 +132,7 @@ export default function Page() {
 
   const sections: SectionDef[] = useMemo(
     () => [
-      {
-        key: "profile",
-        label: "Profile",
-        title: "Profile",
-        subtitle: "",
-      },
+      { key: "profile", label: "Profile", title: "Profile", subtitle: "" },
       {
         key: "education",
         label: "Education",
@@ -217,6 +263,7 @@ export default function Page() {
                       "whitespace-nowrap rounded-xl border px-3 py-2 text-sm transition",
                       isActive ? activeStyle : hoverOnly
                     )}
+                    type="button"
                   >
                     {s.label}
                   </button>
@@ -272,41 +319,21 @@ export default function Page() {
 
                   <p className="text-lg leading-relaxed text-white/80">
                     CS student at ASU building clean web apps and data-driven
-                    products. Focused on shipping polished UI, reliable APIs, and
-                    measurable impact.
+                    products. Focused on shipping polished UI, reliable APIs,
+                    and measurable impact.
                   </p>
 
                   <div className="flex flex-wrap gap-2">
-                    <a
-                      href="mailto:akallam04@gmail.com"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
-                      Email
-                    </a>
-                    <a
-                      href="https://linkedin.com/in/akallam3"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
+                    <PillLink href="mailto:akallam04@gmail.com">Email</PillLink>
+                    <PillLink href="https://linkedin.com/in/akallam3">
                       LinkedIn
-                    </a>
-                    <a
-                      href="https://github.com/akallam04"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
+                    </PillLink>
+                    <PillLink href="https://github.com/akallam04">
                       GitHub
-                    </a>
-                    <a
-                      href="/resume.pdf"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
+                    </PillLink>
+                    <PillLink href="/resume.pdf" className="cursor-pointer">
                       Resume
-                    </a>
+                    </PillLink>
                   </div>
 
                   <Card className="p-4">
@@ -466,22 +493,12 @@ export default function Page() {
                     Quick links
                   </div>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    <a
-                      href="/resume.pdf"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-3 text-center text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
+                    <PillLink href="/resume.pdf" className="py-3">
                       View Resume (PDF)
-                    </a>
-                    <a
-                      href="https://github.com/akallam04"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-3 text-center text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
+                    </PillLink>
+                    <PillLink href="https://github.com/akallam04" className="py-3">
                       Explore GitHub
-                    </a>
+                    </PillLink>
                   </div>
                 </Card>
               </div>
@@ -497,7 +514,7 @@ export default function Page() {
             style={{ scrollMarginTop: NAV_H + 18 }}
           >
             <div
-              className="grid items-center gap-6 lg:grid-cols-2"
+              className="grid items-start gap-6 lg:grid-cols-2"
               style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
             >
               <div className="space-y-3">
@@ -507,116 +524,81 @@ export default function Page() {
                 <p className="text-white/70">Technical stack + what I build.</p>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <Card className="p-5">
-                    <div className="flex items-start justify-between">
-                      <div className="text-lg font-semibold text-white/92">
-                        Languages
-                      </div>
-                      <div className="text-xs text-white/55">6</div>
+                  <SkillCard
+                    title="Languages"
+                    count={6}
+                    items={["JavaScript", "Python", "SQL", "Java", "HTML", "CSS"]}
+                  />
+                  <SkillCard
+                    title="Web"
+                    count={6}
+                    items={[
+                      "React",
+                      "Next.js",
+                      "Node.js",
+                      "Express.js",
+                      "REST APIs",
+                      "JWT Auth",
+                    ]}
+                  />
+                  <SkillCard
+                    title="Data"
+                    count={6}
+                    items={[
+                      "Tableau",
+                      "Excel",
+                      "Google Sheets",
+                      "Pandas",
+                      "NumPy (basic)",
+                      "KPI Analysis",
+                    ]}
+                  />
+                  <SkillCard
+                    title="Databases"
+                    count={2}
+                    items={["MySQL", "MongoDB"]}
+                  />
+                </div>
+
+                <SkillCard
+                  title="Tools"
+                  count={4}
+                  items={["Git", "GitHub", "VS Code", "IntelliJ"]}
+                  className="sm:col-span-2"
+                />
+              </div>
+
+              <Card className="p-6">
+                <div className="text-xl font-semibold text-white/92">
+                  Strengths recruiters care about
+                </div>
+                <div className="mt-4 grid gap-3">
+                  <Card className="p-4">
+                    <div className="font-semibold text-white/90">
+                      Product-ready UI
                     </div>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <Chip>JavaScript</Chip>
-                      <Chip>Python</Chip>
-                      <Chip>SQL</Chip>
-                      <Chip>Java</Chip>
-                      <Chip>HTML</Chip>
-                      <Chip>CSS</Chip>
+                    <div className="mt-1 text-sm text-white/70">
+                      Consistent components, spacing, and responsive layouts.
                     </div>
                   </Card>
-
-                  <Card className="p-5">
-                    <div className="flex items-start justify-between">
-                      <div className="text-lg font-semibold text-white/92">
-                        Web
-                      </div>
-                      <div className="text-xs text-white/55">6</div>
+                  <Card className="p-4">
+                    <div className="font-semibold text-white/90">
+                      Reliable APIs
                     </div>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <Chip>React</Chip>
-                      <Chip>Next.js</Chip>
-                      <Chip>Node.js</Chip>
-                      <Chip>Express.js</Chip>
-                      <Chip>REST APIs</Chip>
-                      <Chip>JWT Auth</Chip>
+                    <div className="mt-1 text-sm text-white/70">
+                      Clean REST patterns, auth flows (JWT), and validation.
                     </div>
                   </Card>
-
-                  <Card className="p-5">
-                    <div className="flex items-start justify-between">
-                      <div className="text-lg font-semibold text-white/92">
-                        Data
-                      </div>
-                      <div className="text-xs text-white/55">6</div>
+                  <Card className="p-4">
+                    <div className="font-semibold text-white/90">
+                      Data comfort
                     </div>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <Chip>Tableau</Chip>
-                      <Chip>Excel</Chip>
-                      <Chip>Google Sheets</Chip>
-                      <Chip>Pandas</Chip>
-                      <Chip>NumPy (basic)</Chip>
-                      <Chip>KPI Analysis</Chip>
-                    </div>
-                  </Card>
-
-                  <Card className="p-5">
-                    <div className="flex items-start justify-between">
-                      <div className="text-lg font-semibold text-white/92">
-                        Databases
-                      </div>
-                      <div className="text-xs text-white/55">2</div>
-                    </div>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <Chip>MySQL</Chip>
-                      <Chip>MongoDB</Chip>
+                    <div className="mt-1 text-sm text-white/70">
+                      KPI thinking, cleaning, and communicating insights clearly.
                     </div>
                   </Card>
                 </div>
-              </div>
-
-              <div className="space-y-6">
-                <Card className="p-6">
-                  <div className="text-xl font-semibold text-white/92">
-                    What I optimize for
-                  </div>
-                  <div className="mt-4 grid gap-3">
-                    <Card className="p-4">
-                      <div className="font-semibold text-white/90">
-                        Frontend
-                      </div>
-                      <div className="mt-1 text-sm text-white/70">
-                        Build clean, responsive UI with React/Next.js and strong
-                        UX fundamentals.
-                      </div>
-                    </Card>
-                    <Card className="p-4">
-                      <div className="font-semibold text-white/90">Backend</div>
-                      <div className="mt-1 text-sm text-white/70">
-                        Design REST APIs, auth flows (JWT), and reliable
-                        server-side logic.
-                      </div>
-                    </Card>
-                    <Card className="p-4">
-                      <div className="font-semibold text-white/90">Data</div>
-                      <div className="mt-1 text-sm text-white/70">
-                        Clean datasets, validate quality, compute KPIs, and
-                        present insights clearly.
-                      </div>
-                    </Card>
-                  </div>
-                </Card>
-
-                <Card className="p-6">
-                  <div className="text-xl font-semibold text-white/92">
-                    Tooling
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <Chip>Git</Chip>
-                    <Chip>GitHub</Chip>
-                    <Chip>VS Code</Chip>
-                    <Chip>IntelliJ</Chip>
-                  </div>
-                </Card>
-              </div>
+              </Card>
             </div>
           </section>
 
@@ -639,22 +621,58 @@ export default function Page() {
                 <p className="text-white/70">Internships + measurable work.</p>
               </div>
 
+              <Card className="p-5">
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <div>
+                    <div className="text-xs tracking-wider text-white/50">
+                      HIGHLIGHT
+                    </div>
+                    <div className="mt-1 font-semibold text-white/90">
+                      500+ profiles cleaned
+                    </div>
+                    <div className="mt-1 text-sm text-white/70">
+                      QA + enrichment workflows
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs tracking-wider text-white/50">
+                      STACK
+                    </div>
+                    <div className="mt-1 font-semibold text-white/90">
+                      Python + Sheets/Excel
+                    </div>
+                    <div className="mt-1 text-sm text-white/70">
+                      Validation + automation
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs tracking-wider text-white/50">
+                      DELIVERY
+                    </div>
+                    <div className="mt-1 font-semibold text-white/90">
+                      Responsive UI work
+                    </div>
+                    <div className="mt-1 text-sm text-white/70">
+                      Iteration via feedback
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
               <div className="grid gap-6 lg:grid-cols-2">
                 <Card className="p-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="text-xl font-semibold text-white/92">
-                        Junior Data Analyst • Food Forest AI
-                      </div>
-                      <div className="mt-1 text-sm text-white/60">
-                        Remote • Jun 2025 — Jul 2025
-                      </div>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        <Chip>Data Quality</Chip>
-                        <Chip>Python</Chip>
-                        <Chip>Sheets/Excel</Chip>
-                        <Chip>Enrichment</Chip>
-                      </div>
+                  <div className="min-w-0">
+                    <div className="text-xl font-semibold text-white/92">
+                      Junior Data Analyst • Food Forest AI
+                    </div>
+                    <div className="mt-1 text-sm text-white/60">
+                      Remote • Jun 2025 — Jul 2025
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <Chip>Data Quality</Chip>
+                      <Chip>Python</Chip>
+                      <Chip>Sheets/Excel</Chip>
+                      <Chip>Enrichment</Chip>
                     </div>
                   </div>
 
@@ -681,20 +699,18 @@ export default function Page() {
                 </Card>
 
                 <Card className="p-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="text-xl font-semibold text-white/92">
-                        Full-Stack Web Development Intern • Prodigy InfoTech
-                      </div>
-                      <div className="mt-1 text-sm text-white/60">
-                        Remote • Sep 2024 — Oct 2024
-                      </div>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        <Chip>Frontend</Chip>
-                        <Chip>JavaScript</Chip>
-                        <Chip>Responsive UI</Chip>
-                        <Chip>GitHub</Chip>
-                      </div>
+                  <div className="min-w-0">
+                    <div className="text-xl font-semibold text-white/92">
+                      Full-Stack Web Development Intern • Prodigy InfoTech
+                    </div>
+                    <div className="mt-1 text-sm text-white/60">
+                      Remote • Sep 2024 — Oct 2024
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <Chip>Frontend</Chip>
+                      <Chip>JavaScript</Chip>
+                      <Chip>Responsive UI</Chip>
+                      <Chip>GitHub</Chip>
                     </div>
                   </div>
 
@@ -736,7 +752,9 @@ export default function Page() {
                 <h2 className="text-5xl font-semibold tracking-tight md:text-6xl">
                   Projects
                 </h2>
-                <p className="text-white/70">Selected work with impact + stack.</p>
+                <p className="text-white/70">
+                  Selected work with impact + stack.
+                </p>
               </div>
 
               <div className="grid gap-6 lg:grid-cols-2">
@@ -750,14 +768,12 @@ export default function Page() {
                         Auth + CRUD + production-ready UX patterns
                       </div>
                     </div>
-                    <a
-                      href="https://github.com/akallam04"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="shrink-0 rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
+                    <PillLink
+                      href="https://github.com/akallam04/goalsetter-plus"
+                      className="shrink-0 px-3 py-2"
                     >
                       GitHub
-                    </a>
+                    </PillLink>
                   </div>
 
                   <div className="mt-4 flex flex-wrap gap-2">
@@ -768,11 +784,11 @@ export default function Page() {
                     <Chip>REST APIs</Chip>
                   </div>
 
-                  <Card className="mt-5 p-5">
-                    <div className="text-sm font-semibold text-white/90">
+                  <Card className="mt-5 p-4">
+                    <div className="mb-2 text-sm font-semibold text-white/85">
                       Impact
                     </div>
-                    <ul className="mt-3 space-y-2 text-sm text-white/75">
+                    <ul className="space-y-2 text-sm text-white/75">
                       <li className="flex gap-3">
                         <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
                         Protected routes + JWT sessions
@@ -817,14 +833,6 @@ export default function Page() {
                         KPI-driven analysis + interactive visualization
                       </div>
                     </div>
-                    <a
-                      href="https://github.com/akallam04"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="shrink-0 rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
-                      GitHub
-                    </a>
                   </div>
 
                   <div className="mt-4 flex flex-wrap gap-2">
@@ -833,11 +841,11 @@ export default function Page() {
                     <Chip>Tableau</Chip>
                   </div>
 
-                  <Card className="mt-5 p-5">
-                    <div className="text-sm font-semibold text-white/90">
+                  <Card className="mt-5 p-4">
+                    <div className="mb-2 text-sm font-semibold text-white/85">
                       Impact
                     </div>
-                    <ul className="mt-3 space-y-2 text-sm text-white/75">
+                    <ul className="space-y-2 text-sm text-white/75">
                       <li className="flex gap-3">
                         <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
                         Revenue trends & segmentation
@@ -884,7 +892,7 @@ export default function Page() {
             style={{ scrollMarginTop: NAV_H + 18 }}
           >
             <div
-              className="grid items-center gap-6 lg:grid-cols-2"
+              className="grid items-center gap-6"
               style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
             >
               <div className="space-y-3">
@@ -892,117 +900,72 @@ export default function Page() {
                   Contact
                 </h2>
                 <p className="text-white/70">Fast ways to reach me.</p>
-
-                <Card className="p-6">
-                  <div className="text-xl font-semibold text-white/92">
-                    Reach me
-                  </div>
-
-                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    <Card className="p-4">
-                      <div className="text-xs tracking-wider text-white/50">
-                        EMAIL
-                      </div>
-                      <div className="mt-1 break-all font-semibold text-white/92">
-                        akallam04@gmail.com
-                      </div>
-                      <div className="mt-3">
-                        <CopyButton value="akallam04@gmail.com" />
-                      </div>
-                    </Card>
-
-                    <Card className="p-4">
-                      <div className="text-xs tracking-wider text-white/50">
-                        PHONE
-                      </div>
-                      <div className="mt-1 font-semibold text-white/92">
-                        (480) 937-6420
-                      </div>
-                      <div className="mt-3">
-                        <CopyButton value="(480) 937-6420" />
-                      </div>
-                    </Card>
-
-                    <Card className="p-4">
-                      <div className="text-xs tracking-wider text-white/50">
-                        LINKEDIN
-                      </div>
-                      <a
-                        href="https://linkedin.com/in/akallam3"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-1 block break-all font-semibold text-white/92 underline decoration-white/20 underline-offset-4 hover:decoration-white/50"
-                      >
-                        linkedin.com/in/akallam3
-                      </a>
-                    </Card>
-
-                    <Card className="p-4">
-                      <div className="text-xs tracking-wider text-white/50">
-                        GITHUB
-                      </div>
-                      <a
-                        href="https://github.com/akallam04"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-1 block break-all font-semibold text-white/92 underline decoration-white/20 underline-offset-4 hover:decoration-white/50"
-                      >
-                        github.com/akallam04
-                      </a>
-                    </Card>
-                  </div>
-
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <a
-                      href="mailto:akallam04@gmail.com"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
-                      Email me
-                    </a>
-                    <a
-                      href="/resume.pdf"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
-                      Open resume
-                    </a>
-                  </div>
-                </Card>
               </div>
 
               <Card className="p-6">
                 <div className="text-xl font-semibold text-white/92">
-                  What I optimize for
+                  Reach me
                 </div>
-                <div className="mt-4 grid gap-3">
-                  <Card className="p-4">
-                    <div className="font-semibold text-white/90">
-                      Polished UI + clean code
+
+                <div className="mt-5 grid gap-4 md:grid-cols-2">
+                  <Card className="p-5">
+                    <div className="text-xs tracking-wider text-white/50">
+                      EMAIL
                     </div>
-                    <div className="mt-1 text-sm text-white/70">
-                      I care about layout, readability, and shipping
-                      professional interfaces.
+                    <div className="mt-1 break-all font-semibold text-white/92">
+                      akallam04@gmail.com
                     </div>
-                  </Card>
-                  <Card className="p-4">
-                    <div className="font-semibold text-white/90">
-                      Reliable backend fundamentals
-                    </div>
-                    <div className="mt-1 text-sm text-white/70">
-                      I build stable APIs, auth flows, and predictable data
-                      handling.
+                    <div className="mt-3">
+                      <CopyButton value="akallam04@gmail.com" />
                     </div>
                   </Card>
-                  <Card className="p-4">
-                    <div className="font-semibold text-white/90">
-                      Data mindset
+
+                  <Card className="p-5">
+                    <div className="text-xs tracking-wider text-white/50">
+                      PHONE
                     </div>
-                    <div className="mt-1 text-sm text-white/70">
-                      I’m comfortable turning messy data into usable structure
-                      and insight.
+                    <div className="mt-1 font-semibold text-white/92">
+                      (480) 937-6420
+                    </div>
+                    <div className="mt-3">
+                      <CopyButton value="(480) 937-6420" />
                     </div>
                   </Card>
+
+                  <Card className="p-5">
+                    <div className="text-xs tracking-wider text-white/50">
+                      LINKEDIN
+                    </div>
+                    <a
+                      href="https://linkedin.com/in/akallam3"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-1 block break-all font-semibold text-white/92 underline decoration-white/20 underline-offset-4 hover:decoration-white/50"
+                    >
+                      linkedin.com/in/akallam3
+                    </a>
+                  </Card>
+
+                  <Card className="p-5">
+                    <div className="text-xs tracking-wider text-white/50">
+                      GITHUB
+                    </div>
+                    <a
+                      href="https://github.com/akallam04"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-1 block break-all font-semibold text-white/92 underline decoration-white/20 underline-offset-4 hover:decoration-white/50"
+                    >
+                      github.com/akallam04
+                    </a>
+                  </Card>
+                </div>
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                  <PillLink href="mailto:akallam04@gmail.com">Email me</PillLink>
+                  <PillLink href="/resume.pdf" className="cursor-pointer">
+                    Open resume
+                  </PillLink>
                 </div>
               </Card>
             </div>
