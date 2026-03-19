@@ -242,27 +242,26 @@ export default function Page() {
               style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
             >
               <div className="space-y-6">
-  <h1 className="text-5xl font-semibold tracking-tight md:text-6xl -translate-y-2 -translate-x-2">
-    Profile
-  </h1>
+                <h1 className="text-5xl font-semibold tracking-tight md:text-6xl -translate-y-2 -translate-x-2">
+                  Profile
+                </h1>
 
-  <div className="mt-2">
-    <div className="relative h-[300px] w-[300px] overflow-hidden rounded-full border border-white/14 bg-white/[0.03] shadow-[0_10px_35px_rgba(0,0,0,0.45)] md:h-[360px] md:w-[360px]">
-      <Image
-        src="/avatar.jpg"
-        alt="Arun Teja Reddy Kallam"
-        fill
-        className="object-cover"
-        priority
-      />
-    </div>
+                <div className="mt-2">
+                  <div className="relative h-[300px] w-[300px] overflow-hidden rounded-full border border-white/14 bg-white/[0.03] shadow-[0_10px_35px_rgba(0,0,0,0.45)] md:h-[360px] md:w-[360px]">
+                    <Image
+                      src="/avatar.jpg"
+                      alt="Arun Teja Reddy Kallam"
+                      fill
+                      className="object-cover"
+                      priority
+                    />
+                  </div>
 
-    <div className="mt-8 text-[44px] font-semibold leading-tight md:text-[54px] -translate-x-4">
-      Arun Teja Reddy Kallam
-    </div>
-  </div>
-</div>
-
+                  <div className="mt-8 text-[44px] font-semibold leading-tight md:text-[54px] -translate-x-4">
+                    Arun Teja Reddy Kallam
+                  </div>
+                </div>
+              </div>
 
               <Card className="p-6">
                 <div className="space-y-4">
@@ -737,18 +736,28 @@ export default function Page() {
                 <h2 className="text-5xl font-semibold tracking-tight md:text-6xl">
                   Projects
                 </h2>
-                <p className="text-white/70">
-                  Selected work with impact + stack.
-                </p>
+                <p className="text-white/70">Selected work with impact + stack.</p>
               </div>
 
               <div className="grid gap-6 lg:grid-cols-2">
                 <Card className="p-6">
-                  <div className="text-2xl font-semibold text-white/92">
-                    Goalsetter — Full-Stack MERN App
-                  </div>
-                  <div className="mt-1 text-sm text-white/65">
-                    Auth + CRUD + production-ready UX patterns
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <div className="text-2xl font-semibold text-white/92">
+                        Goalsetter — Full-Stack MERN App
+                      </div>
+                      <div className="mt-1 text-sm text-white/65">
+                        Auth + CRUD + production-ready UX patterns
+                      </div>
+                    </div>
+                    <a
+                      href="https://github.com/akallam04"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="shrink-0 rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
+                    >
+                      GitHub
+                    </a>
                   </div>
 
                   <div className="mt-4 flex flex-wrap gap-2">
@@ -759,11 +768,11 @@ export default function Page() {
                     <Chip>REST APIs</Chip>
                   </div>
 
-                  <div className="mt-5">
-                    <div className="mb-2 text-sm font-semibold text-white/85">
+                  <Card className="mt-5 p-5">
+                    <div className="text-sm font-semibold text-white/90">
                       Impact
                     </div>
-                    <ul className="space-y-2 text-sm text-white/75">
+                    <ul className="mt-3 space-y-2 text-sm text-white/75">
                       <li className="flex gap-3">
                         <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
                         Protected routes + JWT sessions
@@ -777,15 +786,45 @@ export default function Page() {
                         Clean UI with consistent components
                       </li>
                     </ul>
-                  </div>
+                  </Card>
+
+                  <ul className="mt-5 space-y-3 text-sm leading-relaxed text-white/75">
+                    <li className="flex gap-3">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
+                      Built a full-stack goals tracking app with JWT-based
+                      authentication, protected routes, and responsive React UI.
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
+                      Developed REST APIs with validation, error handling, and
+                      MongoDB persistence.
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
+                      Improved UX with loading/error states and filters;
+                      documented setup and usage clearly.
+                    </li>
+                  </ul>
                 </Card>
 
                 <Card className="p-6">
-                  <div className="text-2xl font-semibold text-white/92">
-                    Sales Insights — Analytics Dashboard
-                  </div>
-                  <div className="mt-1 text-sm text-white/65">
-                    KPI-driven analysis + interactive visualization
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <div className="text-2xl font-semibold text-white/92">
+                        Sales Insights — Analytics Dashboard
+                      </div>
+                      <div className="mt-1 text-sm text-white/65">
+                        KPI-driven analysis + interactive visualization
+                      </div>
+                    </div>
+                    <a
+                      href="https://github.com/akallam04"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="shrink-0 rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
+                    >
+                      GitHub
+                    </a>
                   </div>
 
                   <div className="mt-4 flex flex-wrap gap-2">
@@ -794,11 +833,11 @@ export default function Page() {
                     <Chip>Tableau</Chip>
                   </div>
 
-                  <div className="mt-5">
-                    <div className="mb-2 text-sm font-semibold text-white/85">
+                  <Card className="mt-5 p-5">
+                    <div className="text-sm font-semibold text-white/90">
                       Impact
                     </div>
-                    <ul className="space-y-2 text-sm text-white/75">
+                    <ul className="mt-3 space-y-2 text-sm text-white/75">
                       <li className="flex gap-3">
                         <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
                         Revenue trends & segmentation
@@ -812,7 +851,25 @@ export default function Page() {
                         Interactive dashboard filters
                       </li>
                     </ul>
-                  </div>
+                  </Card>
+
+                  <ul className="mt-5 space-y-3 text-sm leading-relaxed text-white/75">
+                    <li className="flex gap-3">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
+                      Analyzed sales data using MySQL to compute KPIs (revenue
+                      trends, top customers/products, regional performance).
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
+                      Built an interactive Tableau dashboard with drilldowns and
+                      filters to visualize drivers over time.
+                    </li>
+                    <li className="flex gap-3">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
+                      Documented assumptions and query logic for reproducible
+                      stakeholder-ready insights.
+                    </li>
+                  </ul>
                 </Card>
               </div>
             </div>
