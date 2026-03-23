@@ -190,7 +190,7 @@ export default function Page() {
 
               {/* LEFT — photo + name stacked */}
               <div className="flex flex-col gap-5">
-                <div className="relative h-80 w-80 overflow-hidden rounded-3xl border border-white/[0.08] shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
+                <div className="relative h-96 w-80 overflow-hidden rounded-3xl border border-white/[0.08] shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
                   <Image
                     src="/avatar.jpg"
                     alt="Arun Teja Reddy Kallam"
@@ -210,32 +210,41 @@ export default function Page() {
               </div>
 
               {/* RIGHT — info */}
-              <div className="space-y-7">
-                <div className="inline-flex items-center gap-2.5 rounded-full border border-emerald-500/20 bg-emerald-500/[0.07] px-4 py-2 text-sm text-emerald-400">
+              <div className="flex flex-col justify-center gap-8">
+                <div className="inline-flex w-fit items-center gap-2.5 rounded-full border border-emerald-500/20 bg-emerald-500/[0.07] px-4 py-2 text-sm text-emerald-400">
                   <IconDot />
                   Open to internships — SDE · SWE · Data · Full-Stack
                 </div>
 
-                <p className="text-xl leading-relaxed text-white/50">
-                  CS student at ASU building full-stack web apps, reliable
-                  APIs, and data-driven products. Focused on shipping clean UI
-                  and measurable impact.
-                </p>
+                <div>
+                  <p className="text-2xl leading-relaxed text-white/65 font-light">
+                    CS student at ASU building
+                  </p>
+                  <p className="text-2xl leading-relaxed font-semibold text-white">
+                    full-stack apps, reliable APIs,
+                  </p>
+                  <p className="text-2xl leading-relaxed font-semibold text-white">
+                    and data-driven products.
+                  </p>
+                </div>
 
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/40">
-                  <span>Tempe, AZ</span>
-                  <span className="text-white/15">·</span>
-                  <span>B.S. Computer Science · ASU</span>
-                  <span className="text-white/15">·</span>
-                  <span className="font-semibold text-emerald-400/80">GPA 4.0 · Dean&apos;s List</span>
-                  <span className="text-white/15">·</span>
-                  <span>Graduating May 2027</span>
+                <div>
+                  <div className="mb-2.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/25">
+                    Core Stack
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {["React", "Next.js", "Node.js", "Python", "FastAPI", "SQL", "MongoDB"].map((t) => (
+                      <span key={t} className="rounded-lg border border-white/[0.09] bg-white/[0.04] px-3 py-1.5 text-sm text-white/60">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="flex flex-wrap gap-2.5">
                   <a
                     href="mailto:akallam04@gmail.com"
-                    className="rounded-xl bg-white px-6 py-2.5 text-sm font-semibold text-black transition hover:bg-white/90 active:scale-[0.97]"
+                    className="rounded-xl border border-white/25 px-6 py-2.5 text-sm font-semibold text-white/85 transition hover:bg-white hover:text-black hover:border-white active:scale-[0.97]"
                   >
                     Email me
                   </a>
@@ -249,7 +258,7 @@ export default function Page() {
                       href={btn.href}
                       target={btn.ext ? "_blank" : undefined}
                       rel={btn.ext ? "noreferrer" : undefined}
-                      className="rounded-xl border border-white/12 bg-white/[0.05] px-6 py-2.5 text-sm text-white/70 transition hover:bg-white/10 hover:text-white"
+                      className="rounded-xl border border-white/10 bg-white/[0.03] px-6 py-2.5 text-sm text-white/55 transition hover:bg-white/[0.09] hover:text-white hover:border-white/20"
                     >
                       {btn.label}
                     </a>
