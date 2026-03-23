@@ -201,10 +201,10 @@ export default function Page() {
                 </div>
                 <div className="leading-none">
                   <div className="text-[clamp(40px,5.5vw,68px)] font-bold tracking-tight text-white">
-                    Arun Teja
+                    Arun Teja Reddy
                   </div>
                   <div className="text-[clamp(40px,5.5vw,68px)] font-bold tracking-tight text-white/70">
-                    Reddy Kallam
+                    Kallam
                   </div>
                 </div>
               </div>
@@ -222,24 +222,14 @@ export default function Page() {
                   and measurable impact.
                 </p>
 
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                  {[
-                    { label: "Location", value: "Tempe, AZ" },
-                    { label: "Degree", value: "B.S. Computer Science" },
-                    { label: "GPA", value: "4.0 · Dean's List" },
-                    { label: "University", value: "Arizona State" },
-                    { label: "Graduating", value: "May 2027" },
-                    { label: "Status", value: "Open to Work" },
-                  ].map((stat) => (
-                    <div key={stat.label} className="rounded-xl border border-white/[0.07] bg-white/[0.03] p-3">
-                      <div className="text-[10px] font-semibold uppercase tracking-widest text-white/25">
-                        {stat.label}
-                      </div>
-                      <div className="mt-1 text-sm font-semibold text-white/75">
-                        {stat.value}
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/40">
+                  <span>Tempe, AZ</span>
+                  <span className="text-white/15">·</span>
+                  <span>B.S. Computer Science · ASU</span>
+                  <span className="text-white/15">·</span>
+                  <span className="font-semibold text-emerald-400/80">GPA 4.0 · Dean&apos;s List</span>
+                  <span className="text-white/15">·</span>
+                  <span>Graduating May 2027</span>
                 </div>
 
                 <div className="flex flex-wrap gap-2.5">
@@ -415,7 +405,7 @@ export default function Page() {
               <div className="h-px flex-1 bg-white/[0.06]" />
             </div>
 
-            <div className="space-y-5">
+            <div className="grid gap-5 lg:grid-cols-2">
               {[
                 {
                   idx: "01",
@@ -424,6 +414,8 @@ export default function Page() {
                   location: "Remote",
                   period: "Jun 2025 — Jul 2025",
                   tags: ["Python", "Data Quality", "Excel / Sheets", "QA Automation"],
+                  accent: "rgba(59,130,246,0.07)",
+                  dot: "bg-blue-400/60",
                   bullets: [
                     "Cleaned and validated datasets for 500+ company profiles using Excel/Google Sheets and Python, ensuring accuracy across business, contact, and geographic fields.",
                     "Extracted and standardized capabilities, certifications, and product data from websites, directories, and LinkedIn to deliver structured enrichment datasets.",
@@ -432,11 +424,13 @@ export default function Page() {
                 },
                 {
                   idx: "02",
-                  role: "Full-Stack Web Development Intern",
+                  role: "Web Development Intern",
                   company: "Prodigy InfoTech",
                   location: "Remote",
                   period: "Sep 2024 — Oct 2024",
                   tags: ["HTML / CSS / JS", "Responsive UI", "GitHub"],
+                  accent: "rgba(16,185,129,0.07)",
+                  dot: "bg-emerald-400/60",
                   bullets: [
                     "Built responsive web pages with interactive UI components across multiple mini-projects using HTML, CSS, and JavaScript.",
                     "Completed structured development tasks on deadline; iterated based on feedback and used GitHub for version control.",
@@ -444,27 +438,31 @@ export default function Page() {
                   ],
                 },
               ].map((exp) => (
-                <Card key={exp.company} className="p-7">
-                  <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+                <div
+                  key={exp.company}
+                  className="flex flex-col rounded-2xl border border-white/[0.08] p-7 backdrop-blur-xl"
+                  style={{ background: exp.accent }}
+                >
+                  <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="text-xs font-semibold uppercase tracking-widest text-white/22">{exp.idx}</div>
                       <div className="mt-1 text-xl font-bold text-white">{exp.role}</div>
-                      <div className="mt-0.5 text-base text-white/42">{exp.company} · {exp.location}</div>
+                      <div className="mt-0.5 text-base text-white/45">{exp.company} · {exp.location}</div>
                     </div>
-                    <div className="shrink-0 text-sm text-white/28">{exp.period}</div>
+                    <div className="shrink-0 text-sm text-white/30">{exp.period}</div>
                   </div>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {exp.tags.map((t) => <Chip key={t}>{t}</Chip>)}
                   </div>
-                  <ul className="mt-5 space-y-2.5">
+                  <ul className="mt-5 space-y-3">
                     {exp.bullets.map((b, i) => (
-                      <li key={i} className="flex gap-3 text-base leading-relaxed text-white/52">
-                        <span className="mt-[11px] h-1 w-1 shrink-0 rounded-full bg-white/20" />
+                      <li key={i} className="flex gap-3 text-base leading-relaxed text-white/70">
+                        <span className={`mt-[11px] h-1.5 w-1.5 shrink-0 rounded-full ${exp.dot}`} />
                         {b}
                       </li>
                     ))}
                   </ul>
-                </Card>
+                </div>
               ))}
             </div>
           </div>
