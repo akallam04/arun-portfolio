@@ -18,10 +18,10 @@ export const metadata: Metadata = {
     "Computer Science student at ASU building web apps and data-driven products. Open to internships.",
   icons: {
     icon: [
-      { url: "/favicon.ico" },
-      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-16.png", type: "image/png", sizes: "16x16" },
     ],
-    apple: [{ url: "/apple-icon.png", type: "image/png" }],
   },
 };
 
