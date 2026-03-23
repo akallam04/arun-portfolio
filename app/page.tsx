@@ -296,21 +296,12 @@ export default function Page() {
                   </div>
                 </div>
 
-                <div className="mt-4 flex items-center gap-3">
-                  <span className="rounded-lg bg-emerald-500/[0.12] border border-emerald-500/20 px-3 py-1 text-sm font-bold text-emerald-400">
-                    GPA 4.0
-                  </span>
-                  <span className="rounded-lg bg-white/[0.05] border border-white/[0.08] px-3 py-1 text-sm text-white/55">
-                    Dean&apos;s List
-                  </span>
-                  <span className="rounded-lg bg-white/[0.05] border border-white/[0.08] px-3 py-1 text-sm text-white/55">
-                    Expected May 2027
-                  </span>
-                </div>
-
                 <div className="mt-7 border-t border-white/[0.06] pt-6">
-                  <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/25">
-                    Relevant Coursework
+                  <div className="mb-4 flex items-center gap-3">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/60">
+                      Relevant Coursework
+                    </span>
+                    <div className="h-px flex-1 bg-white/[0.08]" />
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {[
