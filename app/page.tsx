@@ -4,19 +4,12 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
 type SectionKey =
-  | "profile"
+  | "home"
   | "education"
   | "skills"
   | "experience"
   | "projects"
   | "contact";
-
-type SectionDef = {
-  key: SectionKey;
-  label: string;
-  title: string;
-  subtitle: string;
-};
 
 function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -24,7 +17,7 @@ function cn(...classes: Array<string | false | null | undefined>) {
 
 function Chip({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded-full border border-white/12 bg-white/[0.05] px-3 py-1 text-[12px] leading-none text-white/80">
+    <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-0.5 text-[11.5px] leading-5 text-white/70">
       {children}
     </span>
   );
@@ -40,7 +33,7 @@ function Card({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-white/12 bg-white/[0.06] shadow-[0_10px_35px_rgba(0,0,0,0.35)] backdrop-blur-xl",
+        "rounded-2xl border border-white/[0.08] bg-white/[0.04] shadow-[0_4px_24px_rgba(0,0,0,0.25)] backdrop-blur-xl",
         className
       )}
     >
@@ -51,9 +44,9 @@ function Card({
 
 function IconDot() {
   return (
-    <span className="relative inline-flex h-2.5 w-2.5">
-      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/45" />
-      <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
+    <span className="relative inline-flex h-2 w-2">
+      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/50" />
+      <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
     </span>
   );
 }
@@ -66,65 +59,42 @@ function CopyButton({ value }: { value: string }) {
         try {
           await navigator.clipboard.writeText(value);
           setCopied(true);
-          window.setTimeout(() => setCopied(false), 1200);
+          window.setTimeout(() => setCopied(false), 1500);
         } catch {}
       }}
-      className="rounded-xl border border-white/12 bg-white/[0.06] px-3 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
+      className="text-xs text-white/40 hover:text-white/70 transition"
     >
-      {copied ? "Copied" : "Copy"}
+      {copied ? "✓ Copied" : "Copy"}
     </button>
   );
 }
 
-export default function Page() {
-  const NAV_H = 76;
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <div className="flex items-center gap-4">
+      <h2 className="text-2xl font-bold tracking-tight text-white">{title}</h2>
+      <div className="h-px flex-1 bg-white/[0.07]" />
+    </div>
+  );
+}
 
-  const sections: SectionDef[] = useMemo(
+const NAV_H = 60;
+
+export default function Page() {
+  const sections = useMemo(
     () => [
-      {
-        key: "profile",
-        label: "Profile",
-        title: "Profile",
-        subtitle: "",
-      },
-      {
-        key: "education",
-        label: "Education",
-        title: "Education",
-        subtitle: "Academic background + strengths.",
-      },
-      {
-        key: "skills",
-        label: "Skills",
-        title: "Skills",
-        subtitle: "Technical stack + what I build.",
-      },
-      {
-        key: "experience",
-        label: "Experience",
-        title: "Experience",
-        subtitle: "Internships + measurable work.",
-      },
-      {
-        key: "projects",
-        label: "Projects",
-        title: "Projects",
-        subtitle: "Selected work with impact + stack.",
-      },
-      {
-        key: "contact",
-        label: "Contact",
-        title: "Contact",
-        subtitle: "Fast ways to reach me.",
-      },
+      { key: "home" as SectionKey, label: "Home" },
+      { key: "education" as SectionKey, label: "Education" },
+      { key: "skills" as SectionKey, label: "Skills" },
+      { key: "experience" as SectionKey, label: "Experience" },
+      { key: "projects" as SectionKey, label: "Projects" },
+      { key: "contact" as SectionKey, label: "Contact" },
     ],
     []
   );
 
-  const rootRef = useRef<HTMLDivElement | null>(null);
-
   const elByKeyRef = useRef<Record<SectionKey, HTMLElement | null>>({
-    profile: null,
+    home: null,
     education: null,
     skills: null,
     experience: null,
@@ -132,17 +102,16 @@ export default function Page() {
     contact: null,
   });
 
-  const [active, setActive] = useState<SectionKey>("profile");
+  const [active, setActive] = useState<SectionKey>("home");
 
   useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-
     const obs = new IntersectionObserver(
       (entries) => {
         const vis = entries
           .filter((e) => e.isIntersecting)
-          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0));
+          .sort(
+            (a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0)
+          );
         const top = vis[0]?.target?.getAttribute("data-key") as
           | SectionKey
           | undefined;
@@ -150,8 +119,8 @@ export default function Page() {
       },
       {
         root: null,
-        threshold: [0.35, 0.5, 0.65],
-        rootMargin: `-${NAV_H + 8}px 0px -35% 0px`,
+        threshold: [0.2, 0.4, 0.6],
+        rootMargin: `-${NAV_H + 8}px 0px -30% 0px`,
       }
     );
 
@@ -169,691 +138,603 @@ export default function Page() {
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const hoverOnly =
-    "border-transparent bg-transparent text-white/80 hover:border-white/16 hover:bg-white/[0.07] hover:text-white";
-
-  const activeStyle =
-    "border-white/22 bg-white/[0.04] text-white shadow-[0_0_0_1px_rgba(255,255,255,0.05)_inset]";
-
   return (
-    <div ref={rootRef} className="min-h-screen text-white">
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-black">
+    <div className="min-h-screen text-white">
+      {/* Background */}
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[#05070c]">
         <div
-          className="absolute inset-0 opacity-90"
+          className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(900px 700px at 12% 20%, rgba(59,130,246,0.38), transparent 60%), radial-gradient(900px 700px at 88% 18%, rgba(16,185,129,0.32), transparent 62%), radial-gradient(1100px 850px at 50% 92%, rgba(168,85,247,0.28), transparent 65%), radial-gradient(900px 700px at 30% 70%, rgba(236,72,153,0.10), transparent 55%)",
+              "radial-gradient(ellipse 800px 550px at 10% 15%, rgba(59,130,246,0.22) 0%, transparent 60%), radial-gradient(ellipse 700px 500px at 90% 8%, rgba(16,185,129,0.15) 0%, transparent 55%), radial-gradient(ellipse 900px 650px at 55% 98%, rgba(168,85,247,0.18) 0%, transparent 60%)",
           }}
         />
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.60),rgba(0,0,0,0.80))]" />
       </div>
 
+      {/* Nav */}
       <header
-        className="sticky top-0 z-50 border-b border-white/10 bg-black/35 backdrop-blur-xl"
+        className="sticky top-0 z-50 border-b border-white/[0.06] bg-black/50 backdrop-blur-2xl"
         style={{ height: NAV_H }}
       >
-        <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-between gap-3 px-4">
-          <div className="min-w-0">
-            <div className="truncate text-sm font-semibold text-white/90">
-              Arun Teja Reddy Kallam
-            </div>
-            <div className="truncate text-xs text-white/55">Viewing: {active}</div>
-          </div>
+        <div className="mx-auto flex h-full w-full max-w-5xl items-center justify-between px-6">
+          <button
+            onClick={() => scrollTo("home")}
+            className="text-sm font-bold text-white/80 hover:text-white transition tracking-tight"
+          >
+            AK
+          </button>
 
-          <nav className="max-w-[70%] overflow-x-auto">
-            <div className="flex items-center gap-2">
-              {sections.map((s) => {
-                const isActive = active === s.key;
-                return (
-                  <button
-                    key={s.key}
-                    onClick={() => scrollTo(s.key)}
-                    className={cn(
-                      "whitespace-nowrap rounded-xl border px-3 py-2 text-sm transition",
-                      isActive ? activeStyle : hoverOnly
-                    )}
-                  >
-                    {s.label}
-                  </button>
-                );
-              })}
-            </div>
+          <nav className="flex items-center gap-0.5">
+            {sections.map((s) => {
+              const isActive = active === s.key;
+              return (
+                <button
+                  key={s.key}
+                  onClick={() => scrollTo(s.key)}
+                  className={cn(
+                    "rounded-lg px-3 py-1.5 text-sm transition",
+                    isActive
+                      ? "bg-white/[0.09] text-white"
+                      : "text-white/45 hover:text-white/80 hover:bg-white/[0.04]"
+                  )}
+                >
+                  {s.label}
+                </button>
+              );
+            })}
           </nav>
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-6xl px-4">
-        <div className="space-y-12 py-10">
-          {/* PROFILE */}
-          <section
-            data-key="profile"
-            ref={(el) => {
-              elByKeyRef.current.profile = el;
-            }}
-            className="scroll-mt-[90px]"
-            style={{ scrollMarginTop: NAV_H + 18 }}
-          >
-            <div
-              className="grid items-center gap-6 lg:grid-cols-2"
-              style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
-            >
-              <div className="space-y-6">
-                <h1 className="text-5xl font-semibold tracking-tight md:text-6xl -translate-y-2 -translate-x-2">
-                  Profile
-                </h1>
-
-                <div className="mt-2">
-                  <div className="relative h-[300px] w-[300px] overflow-hidden rounded-full border border-white/14 bg-white/[0.03] shadow-[0_10px_35px_rgba(0,0,0,0.45)] md:h-[360px] md:w-[360px]">
-                    <Image
-                      src="/avatar.jpg"
-                      alt="Arun Teja Reddy Kallam"
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                  </div>
-
-                  <div className="mt-8 text-[44px] font-semibold leading-tight md:text-[54px] -translate-x-4">
-                    Arun Teja Reddy Kallam
-                  </div>
-                </div>
+      <main className="mx-auto w-full max-w-5xl px-6">
+        {/* ─── HERO ──────────────────────────────────── */}
+        <section
+          data-key="home"
+          ref={(el) => {
+            elByKeyRef.current.home = el;
+          }}
+          className="flex min-h-[calc(100vh-60px)] flex-col justify-center py-20"
+          style={{ scrollMarginTop: NAV_H + 12 }}
+        >
+          <div className="grid gap-10 lg:grid-cols-[1fr_260px] lg:items-center">
+            <div className="space-y-7">
+              {/* Status badge */}
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/[0.07] px-3.5 py-1.5 text-xs text-emerald-400/90">
+                <IconDot />
+                Open to internships — SDE · SWE · Data · Full-Stack
               </div>
 
-              <Card className="p-6">
-                <div className="space-y-4">
-                  <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/75">
-                    <IconDot />
-                    Open to internships (SDE, SWE, Data Analyst, Full-Stack)
-                  </div>
+              {/* Name + tagline */}
+              <div>
+                <h1 className="text-5xl font-bold tracking-tight text-white md:text-[68px] md:leading-[1.05]">
+                  Arun Teja
+                  <br />
+                  Reddy Kallam
+                </h1>
+                <p className="mt-4 max-w-lg text-lg text-white/50 leading-relaxed">
+                  CS student at ASU building full-stack web apps, reliable APIs,
+                  and data-driven products.
+                </p>
+              </div>
 
-                  <p className="text-lg leading-relaxed text-white/80">
-                    CS student at ASU building clean web apps and data-driven products.
-                    Focused on shipping polished UI, reliable APIs, and measurable impact.
-                  </p>
+              {/* CTAs */}
+              <div className="flex flex-wrap items-center gap-2.5">
+                <a
+                  href="mailto:akallam04@gmail.com"
+                  className="rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-white/90 active:scale-[0.98]"
+                >
+                  Email me
+                </a>
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-xl border border-white/12 bg-white/[0.06] px-5 py-2.5 text-sm text-white/80 transition hover:bg-white/[0.10] hover:text-white"
+                >
+                  Resume
+                </a>
+                <a
+                  href="https://github.com/akallam04"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-xl border border-white/12 bg-white/[0.06] px-5 py-2.5 text-sm text-white/80 transition hover:bg-white/[0.10] hover:text-white"
+                >
+                  GitHub
+                </a>
+                <a
+                  href="https://linkedin.com/in/akallam3"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-xl border border-white/12 bg-white/[0.06] px-5 py-2.5 text-sm text-white/80 transition hover:bg-white/[0.10] hover:text-white"
+                >
+                  LinkedIn
+                </a>
+              </div>
 
-                  <div className="flex flex-wrap gap-2">
-                    <a
-                      href="mailto:akallam04@gmail.com"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
-                      Email
-                    </a>
-                    <a
-                      href="https://linkedin.com/in/akallam3"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
-                      LinkedIn
-                    </a>
-                    <a
-                      href="https://github.com/akallam04"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
-                      GitHub
-                    </a>
-                    <a
-                      href="/resume.pdf"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
-                      Resume
-                    </a>
-                  </div>
-
-                  <Card className="p-4">
-                    <div className="grid gap-4 sm:grid-cols-3">
-                      <div>
-                        <div className="text-xs tracking-wider text-white/50">
-                          LOCATION
-                        </div>
-                        <div className="mt-1 font-semibold text-white/90">
-                          Tempe, AZ
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-xs tracking-wider text-white/50">
-                          DEGREE
-                        </div>
-                        <div className="mt-1 font-semibold text-white/90">
-                          B.S. CS (ASU)
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-xs tracking-wider text-white/50">
-                          GPA
-                        </div>
-                        <div className="mt-1 font-semibold text-white/90">
-                          4.0 (Dean’s List)
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                </div>
-              </Card>
+              {/* Quick stats */}
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-1.5 text-sm text-white/40">
+                <span>Tempe, AZ</span>
+                <span className="text-white/15">·</span>
+                <span>B.S. Computer Science · ASU</span>
+                <span className="text-white/15">·</span>
+                <span className="text-emerald-400/80">GPA 4.0 · Dean&apos;s List</span>
+                <span className="text-white/15">·</span>
+                <span>May 2027</span>
+              </div>
             </div>
-          </section>
 
-          {/* EDUCATION */}
+            {/* Avatar */}
+            <div className="hidden lg:flex lg:justify-end">
+              <div className="relative h-56 w-56 overflow-hidden rounded-3xl border border-white/[0.08] shadow-[0_16px_48px_rgba(0,0,0,0.55)]">
+                <Image
+                  src="/avatar.jpg"
+                  alt="Arun Teja Reddy Kallam"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className="space-y-20 pb-24">
+          {/* ─── EDUCATION ─────────────────────────────── */}
           <section
             data-key="education"
             ref={(el) => {
               elByKeyRef.current.education = el;
             }}
-            className="scroll-mt-[90px]"
-            style={{ scrollMarginTop: NAV_H + 18 }}
+            style={{ scrollMarginTop: NAV_H + 12 }}
           >
-            <div
-              className="grid items-center gap-6 lg:grid-cols-2"
-              style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
-            >
+            <SectionHeader title="Education" />
+
+            <div className="mt-6 grid gap-4 lg:grid-cols-[1.6fr_1fr]">
+              <Card className="p-6">
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <div className="text-[13px] text-white/45 font-medium">
+                      Arizona State University · Tempe, AZ
+                    </div>
+                    <div className="mt-1 text-lg font-semibold text-white">
+                      B.S. in Computer Science
+                    </div>
+                    <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm">
+                      <span className="font-semibold text-emerald-400">GPA 4.0</span>
+                      <span className="text-white/20">·</span>
+                      <span className="text-white/50">Dean&apos;s List</span>
+                    </div>
+                  </div>
+                  <div className="mt-2 shrink-0 text-sm text-white/35 sm:mt-0 sm:text-right">
+                    Aug 2023 — May 2027
+                  </div>
+                </div>
+
+                <div className="mt-5 border-t border-white/[0.06] pt-5">
+                  <div className="mb-3 text-[11px] font-semibold uppercase tracking-widest text-white/35">
+                    Relevant Coursework
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {[
+                      "Data Structures & Algorithms",
+                      "Object-Oriented Programming",
+                      "Software Engineering",
+                      "Operating Systems",
+                      "Principles of Programming Languages",
+                      "Human-Computer Interaction",
+                      "Foundations of Data Visualization",
+                      "Discrete Mathematics",
+                      "Probability & Statistics",
+                      "Computer Organization & Assembly",
+                    ].map((c) => (
+                      <Chip key={c}>{c}</Chip>
+                    ))}
+                  </div>
+                </div>
+              </Card>
+
               <div className="space-y-3">
-                <h2 className="text-5xl font-semibold tracking-tight md:text-6xl">
-                  Education
-                </h2>
-                <p className="text-white/70">Academic background + strengths.</p>
-
-                <Card className="p-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="text-xl font-semibold text-white/92">
-                        Arizona State University • Tempe, AZ
+                {[
+                  {
+                    title: "Top-tier GPA",
+                    tag: "4.0 / 4.0",
+                    desc: "Dean's List — consistent performance across all core CS courses.",
+                  },
+                  {
+                    title: "CS Foundations",
+                    desc: "DS&A, Operating Systems, Programming Languages, Discrete Math.",
+                  },
+                  {
+                    title: "HCI + Visualization",
+                    desc: "Designing usable interfaces and communicating data insights clearly.",
+                  },
+                ].map((item) => (
+                  <Card key={item.title} className="p-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="text-sm font-semibold text-white/85">
+                        {item.title}
                       </div>
-                      <div className="mt-2 text-white/75">
-                        B.S. in Computer Science • GPA: 4.0 • Dean’s List
-                      </div>
+                      {item.tag && (
+                        <span className="text-xs font-semibold text-emerald-400">
+                          {item.tag}
+                        </span>
+                      )}
                     </div>
-                    <div className="shrink-0 text-sm text-white/60">
-                      Aug 2023 — May 2027
+                    <div className="mt-1 text-sm text-white/50 leading-relaxed">
+                      {item.desc}
                     </div>
-                  </div>
-
-                  {/* removed FOCUS / STRENGTH / OUTPUT blocks */}
-
-                  <div className="mt-5">
-                    <div className="mb-2 flex items-center justify-between">
-                      <div className="text-sm font-semibold text-white/90">
-                        Relevant Coursework
-                      </div>
-                      <div className="text-xs text-white/55">10 courses</div>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      <Chip>Data Structures & Algorithms</Chip>
-                      <Chip>Object-Oriented Programming</Chip>
-                      <Chip>Software Engineering</Chip>
-                      <Chip>Operating Systems</Chip>
-                      <Chip>Principles of Programming Languages</Chip>
-                      <Chip>Intro to Human-Computer Interaction</Chip>
-                      <Chip>Foundations of Data Visualization</Chip>
-                      <Chip>Discrete Mathematics</Chip>
-                      <Chip>Probability & Statistics</Chip>
-                      <Chip>Computer Organization & Assembly</Chip>
-                    </div>
-                  </div>
-                </Card>
-              </div>
-
-              <div className="space-y-6">
-                <Card className="p-6">
-                  <div className="text-xl font-semibold text-white/92">
-                    Academic Highlights
-                  </div>
-                  <div className="mt-4 grid gap-3">
-                    <Card className="p-4">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="font-semibold text-white/90">Top-tier GPA</div>
-                        <Chip>4.0</Chip>
-                      </div>
-                      <div className="mt-2 text-sm text-white/70">
-                        Dean’s List recognition with consistent performance across core CS courses.
-                      </div>
-                    </Card>
-
-                    <Card className="p-4">
-                      <div className="font-semibold text-white/90">Strong foundation</div>
-                      <div className="mt-2 text-sm text-white/70">
-                        DS&A, Operating Systems, Programming Languages, Discrete Math, and Probability/Statistics.
-                      </div>
-                    </Card>
-
-                    <Card className="p-4">
-                      <div className="font-semibold text-white/90">HCI + Data visualization</div>
-                      <div className="mt-2 text-sm text-white/70">
-                        Comfortable designing usable interfaces and communicating insights with clean dashboards.
-                      </div>
-                    </Card>
-                  </div>
-                </Card>
-
-                <Card className="p-6">
-                  <div className="text-xl font-semibold text-white/92">Quick links</div>
-                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    <a
-                      href="/resume.pdf"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-3 text-center text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
-                      View Resume (PDF)
-                    </a>
-                    <a
-                      href="https://github.com/akallam04"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-3 text-center text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
-                      Explore GitHub
-                    </a>
-                  </div>
-                </Card>
+                  </Card>
+                ))}
               </div>
             </div>
           </section>
 
-          {/* SKILLS */}
+          {/* ─── SKILLS ────────────────────────────────── */}
           <section
             data-key="skills"
             ref={(el) => {
               elByKeyRef.current.skills = el;
             }}
-            className="scroll-mt-[90px]"
-            style={{ scrollMarginTop: NAV_H + 18 }}
+            style={{ scrollMarginTop: NAV_H + 12 }}
           >
-            <div
-              className="grid items-center gap-6"
-              style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
-            >
-              <div className="space-y-3">
-                <h2 className="text-5xl font-semibold tracking-tight md:text-6xl">
-                  Skills
-                </h2>
-                <p className="text-white/70">Technical stack + what I build.</p>
-              </div>
+            <SectionHeader title="Skills" />
 
-              {/* removed “Strengths recruiters care about” completely */}
-              <div className="grid gap-6 lg:grid-cols-2">
-                <Card className="p-5">
-                  <div className="flex items-start justify-between">
-                    <div className="text-lg font-semibold text-white/92">Languages</div>
-                    <div className="text-xs text-white/55">6</div>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                {
+                  label: "Languages",
+                  items: [
+                    "JavaScript",
+                    "TypeScript",
+                    "Python",
+                    "SQL",
+                    "Java",
+                    "HTML",
+                    "CSS",
+                  ],
+                },
+                {
+                  label: "Web & Frameworks",
+                  items: [
+                    "React",
+                    "Next.js",
+                    "Node.js",
+                    "Express.js",
+                    "FastAPI",
+                    "Redux Toolkit",
+                    "REST APIs",
+                    "JWT Auth",
+                  ],
+                },
+                {
+                  label: "AI / LLM",
+                  items: [
+                    "OpenAI API",
+                    "Prompt Engineering",
+                    "LLM Output Validation",
+                    "Pydantic",
+                    "Few-shot Prompting",
+                  ],
+                },
+                {
+                  label: "Data & Analytics",
+                  items: [
+                    "Tableau",
+                    "Power BI",
+                    "Excel",
+                    "Google Sheets",
+                    "Pandas",
+                    "NumPy",
+                    "KPI Analysis",
+                  ],
+                },
+                {
+                  label: "Databases",
+                  items: ["MySQL", "MongoDB Atlas"],
+                },
+                {
+                  label: "Tools & DevOps",
+                  items: [
+                    "Git",
+                    "GitHub",
+                    "Docker",
+                    "Vercel",
+                    "Postman",
+                    "VS Code",
+                    "IntelliJ",
+                  ],
+                },
+              ].map((group) => (
+                <Card key={group.label} className="p-5">
+                  <div className="mb-3 text-sm font-semibold text-white/80">
+                    {group.label}
                   </div>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <Chip>JavaScript</Chip>
-                    <Chip>Python</Chip>
-                    <Chip>SQL</Chip>
-                    <Chip>Java</Chip>
-                    <Chip>HTML</Chip>
-                    <Chip>CSS</Chip>
+                  <div className="flex flex-wrap gap-1.5">
+                    {group.items.map((item) => (
+                      <Chip key={item}>{item}</Chip>
+                    ))}
                   </div>
                 </Card>
-
-                <Card className="p-5">
-                  <div className="flex items-start justify-between">
-                    <div className="text-lg font-semibold text-white/92">Web</div>
-                    <div className="text-xs text-white/55">6</div>
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <Chip>React</Chip>
-                    <Chip>Next.js</Chip>
-                    <Chip>Node.js</Chip>
-                    <Chip>Express.js</Chip>
-                    <Chip>REST APIs</Chip>
-                    <Chip>JWT Auth</Chip>
-                  </div>
-                </Card>
-
-                <Card className="p-5">
-                  <div className="flex items-start justify-between">
-                    <div className="text-lg font-semibold text-white/92">Data</div>
-                    <div className="text-xs text-white/55">6</div>
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <Chip>Tableau</Chip>
-                    <Chip>Excel</Chip>
-                    <Chip>Google Sheets</Chip>
-                    <Chip>Pandas</Chip>
-                    <Chip>NumPy (basic)</Chip>
-                    <Chip>KPI Analysis</Chip>
-                  </div>
-                </Card>
-
-                <Card className="p-5">
-                  <div className="flex items-start justify-between">
-                    <div className="text-lg font-semibold text-white/92">
-                      Databases
-                    </div>
-                    <div className="text-xs text-white/55">2</div>
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <Chip>MySQL</Chip>
-                    <Chip>MongoDB</Chip>
-                  </div>
-                </Card>
-
-                <Card className="p-6 lg:col-span-2">
-                  <div className="flex items-start justify-between">
-                    <div className="text-xl font-semibold text-white/92">Tools</div>
-                    <div className="text-xs text-white/55">4</div>
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <Chip>Git</Chip>
-                    <Chip>GitHub</Chip>
-                    <Chip>VS Code</Chip>
-                    <Chip>IntelliJ</Chip>
-                  </div>
-                </Card>
-              </div>
+              ))}
             </div>
           </section>
 
-          {/* EXPERIENCE */}
+          {/* ─── EXPERIENCE ────────────────────────────── */}
           <section
             data-key="experience"
             ref={(el) => {
               elByKeyRef.current.experience = el;
             }}
-            className="scroll-mt-[90px]"
-            style={{ scrollMarginTop: NAV_H + 18 }}
+            style={{ scrollMarginTop: NAV_H + 12 }}
           >
-            <div
-              className="grid items-center gap-6"
-              style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
-            >
-              <div className="space-y-3">
-                <h2 className="text-5xl font-semibold tracking-tight md:text-6xl">
-                  Experience
-                </h2>
-                <p className="text-white/70">Internships + measurable work.</p>
-              </div>
+            <SectionHeader title="Experience" />
 
-              <div className="grid gap-6 lg:grid-cols-2">
-                <Card className="p-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="text-xl font-semibold text-white/92">
-                        Junior Data Analyst • Food Forest AI
+            <div className="mt-6 space-y-4">
+              {[
+                {
+                  role: "Junior Data Analyst",
+                  company: "Food Forest AI",
+                  location: "Remote",
+                  period: "Jun 2025 — Jul 2025",
+                  tags: ["Python", "Data Quality", "Excel / Sheets", "QA Automation"],
+                  bullets: [
+                    "Cleaned and validated datasets for 500+ company profiles using Excel/Google Sheets and Python, ensuring accuracy across business, contact, and geographic fields.",
+                    "Extracted and standardized capabilities, certifications, and product data from websites, directories, and LinkedIn to deliver structured enrichment datasets.",
+                    "Automated Python QA checks to flag missing values, anomalies, and formatting issues — reducing manual review and producing ingestion-ready datasets.",
+                  ],
+                },
+                {
+                  role: "Full-Stack Web Development Intern",
+                  company: "Prodigy InfoTech",
+                  location: "Remote",
+                  period: "Sep 2024 — Oct 2024",
+                  tags: ["HTML / CSS / JS", "Responsive UI", "GitHub"],
+                  bullets: [
+                    "Built responsive web pages with interactive UI components across multiple mini-projects using HTML, CSS, and JavaScript.",
+                    "Completed structured development tasks aligned with deadlines; iterated based on feedback and used GitHub for version control.",
+                    "Gained hands-on front-end experience with component structuring and team-based code quality standards.",
+                  ],
+                },
+              ].map((exp) => (
+                <Card key={exp.company} className="p-6">
+                  <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <div className="text-base font-semibold text-white">
+                        {exp.role}
                       </div>
-                      <div className="mt-1 text-sm text-white/60">
-                        Remote • Jun 2025 — Jul 2025
+                      <div className="mt-0.5 text-sm text-white/45">
+                        {exp.company} · {exp.location}
                       </div>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        <Chip>Data Quality</Chip>
-                        <Chip>Python</Chip>
-                        <Chip>Sheets/Excel</Chip>
-                        <Chip>Enrichment</Chip>
-                      </div>
+                    </div>
+                    <div className="mt-1 shrink-0 text-sm text-white/35 sm:mt-0">
+                      {exp.period}
                     </div>
                   </div>
 
-                  <ul className="mt-5 space-y-3 text-sm leading-relaxed text-white/75">
-                    <li className="flex gap-3">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
-                      Cleaned and validated datasets for 500+ company profiles using
-                      Excel/Google Sheets and Python, ensuring accuracy across business,
-                      contact, and geographic fields.
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
-                      Extracted and standardized capabilities, certifications, and product
-                      data from websites/directories to deliver structured enrichment.
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
-                      Automated Python QA checks to flag missing values and formatting
-                      issues—reducing manual review and improving ingestion readiness.
-                    </li>
-                  </ul>
-                </Card>
-
-                <Card className="p-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="text-xl font-semibold text-white/92">
-                        Full-Stack Web Development Intern • Prodigy InfoTech
-                      </div>
-                      <div className="mt-1 text-sm text-white/60">
-                        Remote • Sep 2024 — Oct 2024
-                      </div>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        <Chip>Frontend</Chip>
-                        <Chip>JavaScript</Chip>
-                        <Chip>Responsive UI</Chip>
-                        <Chip>GitHub</Chip>
-                      </div>
-                    </div>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {exp.tags.map((t) => (
+                      <Chip key={t}>{t}</Chip>
+                    ))}
                   </div>
 
-                  <ul className="mt-5 space-y-3 text-sm leading-relaxed text-white/75">
-                    <li className="flex gap-3">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
-                      Built responsive web pages using HTML, CSS, and JavaScript,
-                      implementing interactive components and clean layouts.
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
-                      Completed structured development tasks aligned with deadlines; iterated
-                      based on feedback.
-                    </li>
-                    <li className="flex gap-3">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
-                      Used GitHub for version control, task submissions, and incremental
-                      improvements.
-                    </li>
+                  <ul className="mt-4 space-y-2">
+                    {exp.bullets.map((b, i) => (
+                      <li
+                        key={i}
+                        className="flex gap-3 text-sm leading-relaxed text-white/55"
+                      >
+                        <span className="mt-[9px] h-1 w-1 shrink-0 rounded-full bg-white/25" />
+                        {b}
+                      </li>
+                    ))}
                   </ul>
                 </Card>
-              </div>
+              ))}
             </div>
           </section>
 
-          {/* PROJECTS */}
+          {/* ─── PROJECTS ──────────────────────────────── */}
           <section
             data-key="projects"
             ref={(el) => {
               elByKeyRef.current.projects = el;
             }}
-            className="scroll-mt-[90px]"
-            style={{ scrollMarginTop: NAV_H + 18 }}
+            style={{ scrollMarginTop: NAV_H + 12 }}
           >
-            <div
-              className="grid items-center gap-6"
-              style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
-            >
-              <div className="space-y-3">
-                <h2 className="text-5xl font-semibold tracking-tight md:text-6xl">
-                  Projects
-                </h2>
-                <p className="text-white/70">Selected work with impact + stack.</p>
-              </div>
+            <SectionHeader title="Projects" />
 
-              <div className="grid gap-6 lg:grid-cols-2">
-                <Card className="p-6">
-                  <div className="text-2xl font-semibold text-white/92">
-                    Goalsetter — Full-Stack MERN App
-                  </div>
-                  <div className="mt-1 text-sm text-white/65">
-                    Auth + CRUD + production-ready UX patterns
-                  </div>
-
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <Chip>React</Chip>
-                    <Chip>Node.js/Express</Chip>
-                    <Chip>MongoDB</Chip>
-                    <Chip>JWT Auth</Chip>
-                    <Chip>REST APIs</Chip>
-                  </div>
-
-                  <div className="mt-5">
-                    <div className="mb-2 text-sm font-semibold text-white/85">
-                      Impact
+            <div className="mt-6 grid gap-4 lg:grid-cols-3">
+              {[
+                {
+                  name: "LLM Multilingual Feedback API",
+                  desc: "FastAPI service that analyzes learner sentences and returns structured feedback: corrected sentence, error list, CEFR difficulty, and a correctness flag.",
+                  tags: ["Python", "FastAPI", "OpenAI API", "Pydantic", "Docker"],
+                  bullets: [
+                    "Few-shot prompting with GPT-4o-mini for reliable structured JSON output",
+                    "Pydantic post-processing layer normalizing LLM outputs",
+                    "10+ unit, schema, and integration tests covering non-Latin scripts and edge cases",
+                  ],
+                  github: "https://github.com/akallam04",
+                },
+                {
+                  name: "Goalsetter+",
+                  desc: "Full-stack MERN goal-tracking app with JWT auth, protected routes, and a React UI featuring filtering, search, sorting, and overdue detection.",
+                  tags: ["React", "Node.js", "Express", "MongoDB", "Redux Toolkit", "JWT"],
+                  bullets: [
+                    "REST API with express-validator and MongoDB Atlas persistence",
+                    "Stats endpoint: total / active / completed / overdue counts",
+                    "Redux Toolkit global state + Axios with loading & error states",
+                  ],
+                  github: "https://github.com/akallam04",
+                },
+                {
+                  name: "Sales Insights Dashboard",
+                  desc: "Business analytics dashboard built with MySQL and Tableau for stakeholder-facing KPI visualization and trend analysis.",
+                  tags: ["MySQL", "Excel", "Tableau"],
+                  bullets: [
+                    "SQL queries for revenue trends, top customers & products",
+                    "Regional performance analysis across business segments",
+                    "Interactive Tableau dashboard with filters and drill-downs",
+                  ],
+                  github: "https://github.com/akallam04",
+                },
+              ].map((proj) => (
+                <Card key={proj.name} className="flex flex-col p-6">
+                  <div className="flex-1">
+                    <div className="font-semibold text-white/90">{proj.name}</div>
+                    <p className="mt-2 text-sm leading-relaxed text-white/50">
+                      {proj.desc}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {proj.tags.map((t) => (
+                        <Chip key={t}>{t}</Chip>
+                      ))}
                     </div>
-                    <ul className="space-y-2 text-sm text-white/75">
-                      <li className="flex gap-3">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
-                        Protected routes + JWT sessions
-                      </li>
-                      <li className="flex gap-3">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
-                        Validation + error states
-                      </li>
-                      <li className="flex gap-3">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
-                        Clean UI with consistent components
-                      </li>
+                    <ul className="mt-4 space-y-2">
+                      {proj.bullets.map((h, i) => (
+                        <li
+                          key={i}
+                          className="flex gap-2.5 text-sm leading-relaxed text-white/50"
+                        >
+                          <span className="mt-[9px] h-1 w-1 shrink-0 rounded-full bg-blue-400/50" />
+                          {h}
+                        </li>
+                      ))}
                     </ul>
                   </div>
-                </Card>
-
-                <Card className="p-6">
-                  <div className="text-2xl font-semibold text-white/92">
-                    Sales Insights — Analytics Dashboard
-                  </div>
-                  <div className="mt-1 text-sm text-white/65">
-                    KPI-driven analysis + interactive visualization
-                  </div>
-
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <Chip>MySQL</Chip>
-                    <Chip>Excel</Chip>
-                    <Chip>Tableau</Chip>
-                  </div>
-
-                  <div className="mt-5">
-                    <div className="mb-2 text-sm font-semibold text-white/85">
-                      Impact
-                    </div>
-                    <ul className="space-y-2 text-sm text-white/75">
-                      <li className="flex gap-3">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
-                        Revenue trends & segmentation
-                      </li>
-                      <li className="flex gap-3">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
-                        Top customers/products analysis
-                      </li>
-                      <li className="flex gap-3">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
-                        Interactive dashboard filters
-                      </li>
-                    </ul>
+                  <div className="mt-5 border-t border-white/[0.06] pt-4">
+                    <a
+                      href={proj.github}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-white/35 transition hover:text-white/70"
+                    >
+                      View on GitHub →
+                    </a>
                   </div>
                 </Card>
-              </div>
+              ))}
             </div>
           </section>
 
-          {/* CONTACT */}
+          {/* ─── CONTACT ───────────────────────────────── */}
           <section
             data-key="contact"
             ref={(el) => {
               elByKeyRef.current.contact = el;
             }}
-            className="scroll-mt-[90px] pb-10"
-            style={{ scrollMarginTop: NAV_H + 18 }}
+            className="pb-6"
+            style={{ scrollMarginTop: NAV_H + 12 }}
           >
-            <div
-              className="grid items-center gap-6 lg:grid-cols-2"
-              style={{ minHeight: `calc(100vh - ${NAV_H}px - 40px)` }}
-            >
-              <div className="space-y-3">
-                <h2 className="text-5xl font-semibold tracking-tight md:text-6xl">
-                  Contact
-                </h2>
-                <p className="text-white/70">Fast ways to reach me.</p>
+            <SectionHeader title="Contact" />
 
-                <Card className="p-6">
-                  <div className="text-xl font-semibold text-white/92">Reach me</div>
-
-                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    <Card className="p-4">
-                      <div className="text-xs tracking-wider text-white/50">EMAIL</div>
-                      <div className="mt-1 break-all font-semibold text-white/92">
-                        akallam04@gmail.com
-                      </div>
-                      <div className="mt-3">
-                        <CopyButton value="akallam04@gmail.com" />
-                      </div>
-                    </Card>
-
-                    <Card className="p-4">
-                      <div className="text-xs tracking-wider text-white/50">PHONE</div>
-                      <div className="mt-1 font-semibold text-white/92">
-                        (480) 937-6420
-                      </div>
-                      <div className="mt-3">
-                        <CopyButton value="(480) 937-6420" />
-                      </div>
-                    </Card>
-
-                    <Card className="p-4">
-                      <div className="text-xs tracking-wider text-white/50">LINKEDIN</div>
-                      <a
-                        href="https://linkedin.com/in/akallam3"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-1 block break-all font-semibold text-white/92 underline decoration-white/20 underline-offset-4 hover:decoration-white/50"
-                      >
-                        linkedin.com/in/akallam3
-                      </a>
-                    </Card>
-
-                    <Card className="p-4">
-                      <div className="text-xs tracking-wider text-white/50">GITHUB</div>
-                      <a
-                        href="https://github.com/akallam04"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-1 block break-all font-semibold text-white/92 underline decoration-white/20 underline-offset-4 hover:decoration-white/50"
-                      >
-                        github.com/akallam04
-                      </a>
-                    </Card>
-                  </div>
-
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <a
-                      href="mailto:akallam04@gmail.com"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
+            <div className="mt-6 grid gap-4 lg:grid-cols-2">
+              <Card className="p-6">
+                <div className="mb-5 text-sm font-semibold text-white/80">
+                  Get in touch
+                </div>
+                <div className="space-y-4">
+                  {[
+                    {
+                      label: "Email",
+                      value: "akallam04@gmail.com",
+                      href: "mailto:akallam04@gmail.com",
+                      copy: "akallam04@gmail.com",
+                    },
+                    {
+                      label: "Phone",
+                      value: "(480) 937-6420",
+                      href: "tel:4809376420",
+                      copy: "(480) 937-6420",
+                    },
+                    {
+                      label: "LinkedIn",
+                      value: "linkedin.com/in/akallam3",
+                      href: "https://linkedin.com/in/akallam3",
+                    },
+                    {
+                      label: "GitHub",
+                      value: "github.com/akallam04",
+                      href: "https://github.com/akallam04",
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      className="flex items-center justify-between gap-4"
                     >
-                      Email me
-                    </a>
-                    <a
-                      href="/resume.pdf"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-xl border border-white/12 bg-white/[0.06] px-4 py-2 text-sm text-white/85 transition hover:bg-white/[0.10] hover:text-white"
-                    >
-                      Open resume
-                    </a>
-                  </div>
-                </Card>
-              </div>
+                      <div className="min-w-0">
+                        <div className="text-[10px] font-semibold uppercase tracking-widest text-white/30">
+                          {item.label}
+                        </div>
+                        <a
+                          href={item.href}
+                          target={
+                            item.href.startsWith("http") ? "_blank" : undefined
+                          }
+                          rel={
+                            item.href.startsWith("http")
+                              ? "noreferrer"
+                              : undefined
+                          }
+                          className="mt-0.5 block truncate text-sm font-medium text-white/75 transition hover:text-white"
+                        >
+                          {item.value}
+                        </a>
+                      </div>
+                      {item.copy && <CopyButton value={item.copy} />}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <a
+                    href="mailto:akallam04@gmail.com"
+                    className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90 active:scale-[0.98]"
+                  >
+                    Send email
+                  </a>
+                  <a
+                    href="/resume.pdf"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-xl border border-white/12 bg-white/[0.05] px-4 py-2 text-sm text-white/75 transition hover:bg-white/[0.09] hover:text-white"
+                  >
+                    Download resume
+                  </a>
+                </div>
+              </Card>
 
               <Card className="p-6">
-                <div className="text-xl font-semibold text-white/92">
+                <div className="mb-5 text-sm font-semibold text-white/80">
                   What I optimize for
                 </div>
-                <div className="mt-4 grid gap-3">
-                  <Card className="p-4">
-                    <div className="font-semibold text-white/90">Polished UI + clean code</div>
-                    <div className="mt-1 text-sm text-white/70">
-                      I care about layout, readability, and shipping professional interfaces.
+                <div className="space-y-5">
+                  {[
+                    {
+                      title: "Polished UI + clean code",
+                      desc: "I care about layout, readability, and shipping professional interfaces.",
+                    },
+                    {
+                      title: "Reliable backend fundamentals",
+                      desc: "Stable APIs, auth flows, and predictable data handling.",
+                    },
+                    {
+                      title: "Data mindset",
+                      desc: "Comfortable turning messy data into usable structure and insight.",
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.title}
+                      className="border-l-2 border-white/[0.08] pl-4"
+                    >
+                      <div className="text-sm font-medium text-white/80">
+                        {item.title}
+                      </div>
+                      <div className="mt-0.5 text-sm text-white/45">
+                        {item.desc}
+                      </div>
                     </div>
-                  </Card>
-                  <Card className="p-4">
-                    <div className="font-semibold text-white/90">Reliable backend fundamentals</div>
-                    <div className="mt-1 text-sm text-white/70">
-                      I build stable APIs, auth flows, and predictable data handling.
-                    </div>
-                  </Card>
-                  <Card className="p-4">
-                    <div className="font-semibold text-white/90">Data mindset</div>
-                    <div className="mt-1 text-sm text-white/70">
-                      I’m comfortable turning messy data into usable structure and insight.
-                    </div>
-                  </Card>
+                  ))}
                 </div>
               </Card>
             </div>

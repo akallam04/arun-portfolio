@@ -50,8 +50,8 @@ html {
 
 body {
   color: var(--text);
-  background: transparent; /* IMPORTANT: lets .bg-apple show through */
-  font-family: Arial, Helvetica, sans-serif;
+  background: transparent;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
 /* ===== Background glow (Apple-like) ===== */
