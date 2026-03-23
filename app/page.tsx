@@ -284,22 +284,32 @@ export default function Page() {
             </div>
 
             <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
-              <Card className="p-7">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+              {/* Main card */}
+              <Card className="p-8">
+                <div className="flex items-start justify-between gap-4">
                   <div>
-                    <div className="text-sm text-white/38">Arizona State University · Tempe, AZ</div>
-                    <div className="mt-1.5 text-2xl font-bold text-white">B.S. in Computer Science</div>
-                    <div className="mt-1.5 flex items-center gap-2.5">
-                      <span className="text-base font-bold text-emerald-400">GPA 4.0</span>
-                      <span className="text-white/18">·</span>
-                      <span className="text-base text-white/45">Dean&apos;s List</span>
-                    </div>
+                    <div className="text-sm text-white/35">Arizona State University · Tempe, AZ</div>
+                    <div className="mt-2 text-3xl font-bold text-white">B.S. in Computer Science</div>
                   </div>
-                  <div className="shrink-0 text-sm text-white/28">Aug 2023 — May 2027</div>
+                  <div className="shrink-0 text-right">
+                    <div className="text-xs text-white/28">Aug 2023 — May 2027</div>
+                  </div>
                 </div>
 
-                <div className="mt-6 border-t border-white/[0.06] pt-6">
-                  <div className="mb-3 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/25">
+                <div className="mt-4 flex items-center gap-3">
+                  <span className="rounded-lg bg-emerald-500/[0.12] border border-emerald-500/20 px-3 py-1 text-sm font-bold text-emerald-400">
+                    GPA 4.0
+                  </span>
+                  <span className="rounded-lg bg-white/[0.05] border border-white/[0.08] px-3 py-1 text-sm text-white/55">
+                    Dean&apos;s List
+                  </span>
+                  <span className="rounded-lg bg-white/[0.05] border border-white/[0.08] px-3 py-1 text-sm text-white/55">
+                    Expected May 2027
+                  </span>
+                </div>
+
+                <div className="mt-7 border-t border-white/[0.06] pt-6">
+                  <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/25">
                     Relevant Coursework
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -319,20 +329,48 @@ export default function Page() {
                 </div>
               </Card>
 
-              <div className="space-y-4">
-                {[
-                  { title: "Top-tier GPA", tag: "4.0 / 4.0", desc: "Dean's List recognition — consistent performance across all core CS courses." },
-                  { title: "CS Foundations", desc: "DS&A, Operating Systems, Programming Languages, Discrete Math, and Probability/Statistics." },
-                  { title: "HCI + Visualization", desc: "Designing usable interfaces and communicating insights through clean dashboards." },
-                ].map((item) => (
-                  <Card key={item.title} className="p-5">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="text-base font-bold text-white/82">{item.title}</div>
-                      {item.tag && <span className="shrink-0 text-sm font-bold text-emerald-400">{item.tag}</span>}
-                    </div>
-                    <div className="mt-1.5 text-base leading-relaxed text-white/48">{item.desc}</div>
-                  </Card>
-                ))}
+              {/* Right column */}
+              <div className="flex flex-col gap-4">
+                {/* Academic stats */}
+                <Card className="p-6">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/25 mb-4">
+                    Academic Highlights
+                  </div>
+                  <div className="space-y-3">
+                    {[
+                      { label: "GPA", value: "4.0 / 4.0", color: "text-emerald-400" },
+                      { label: "Standing", value: "Dean's List" },
+                      { label: "Graduating", value: "May 2027" },
+                    ].map((stat) => (
+                      <div key={stat.label} className="flex items-center justify-between border-b border-white/[0.05] pb-3 last:border-0 last:pb-0">
+                        <span className="text-sm text-white/40">{stat.label}</span>
+                        <span className={`text-sm font-semibold ${stat.color ?? "text-white/75"}`}>{stat.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+
+                {/* Focus areas */}
+                <Card className="flex-1 p-6">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/25 mb-4">
+                    Focus Areas
+                  </div>
+                  <div className="space-y-3">
+                    {[
+                      { icon: "⬡", label: "Full-Stack Development", desc: "Web apps end-to-end, APIs, and databases" },
+                      { icon: "⬡", label: "Data & Analytics", desc: "Visualization, pipelines, and insight delivery" },
+                      { icon: "⬡", label: "AI / LLM Engineering", desc: "Prompt design, structured outputs, validation" },
+                    ].map((area) => (
+                      <div key={area.label} className="flex gap-3">
+                        <span className="mt-0.5 text-xs text-white/20">{area.icon}</span>
+                        <div>
+                          <div className="text-sm font-semibold text-white/75">{area.label}</div>
+                          <div className="text-xs text-white/38 leading-relaxed">{area.desc}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
               </div>
             </div>
           </div>
