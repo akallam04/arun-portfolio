@@ -513,14 +513,14 @@ export default function Page() {
           className="flex min-h-[calc(100vh-60px)] items-center"
           style={{ scrollMarginTop: NAV_H }}
         >
-          <div className="mx-auto w-full max-w-6xl px-8 py-12">
-            <div className="mb-8 flex items-center gap-4">
+          <div className="mx-auto w-full max-w-6xl px-8 py-8">
+            <div className="mb-6 flex items-center gap-4">
               <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/20">04</span>
               <h2 className="text-4xl font-bold tracking-tight text-white md:text-5xl">Projects</h2>
               <div className="h-px flex-1 bg-white/[0.06]" />
             </div>
 
-            <div className="grid gap-5 lg:grid-cols-3">
+            <div className="grid gap-4 lg:grid-cols-3">
               {[
                 {
                   num: "01",
@@ -567,34 +567,36 @@ export default function Page() {
               ].map((proj) => (
                 <div
                   key={proj.name}
-                  className="flex flex-col rounded-2xl border border-white/[0.08] p-6 backdrop-blur-xl"
+                  className="flex flex-col rounded-2xl border border-white/[0.08] p-5 backdrop-blur-xl"
                   style={{ background: proj.accent }}
                 >
                   <div className="flex-1">
-                    <div className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/22">{proj.num}</div>
-                    <div className="text-xl font-bold text-white/90">{proj.name}</div>
-                    <p className="mt-2.5 text-base leading-relaxed text-white/48">{proj.desc}</p>
-                    <div className="mt-4 flex flex-wrap gap-1.5">
+                    <div className="mb-2 flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold uppercase tracking-widest text-white/22">{proj.num}</span>
+                        <span className="text-base font-bold text-white/90">{proj.name}</span>
+                      </div>
+                      <a
+                        href={proj.github}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="shrink-0 rounded-lg border border-white/[0.10] px-2.5 py-1 text-xs text-white/35 transition hover:border-white/20 hover:text-white/65"
+                      >
+                        GitHub →
+                      </a>
+                    </div>
+                    <p className="mt-1.5 text-sm leading-relaxed text-white/48">{proj.desc}</p>
+                    <div className="mt-3 flex flex-wrap gap-1">
                       {proj.tags.map((t) => <Chip key={t}>{t}</Chip>)}
                     </div>
-                    <ul className="mt-4 space-y-2">
+                    <ul className="mt-3 space-y-1.5">
                       {proj.bullets.map((h, i) => (
-                        <li key={i} className="flex gap-3 text-base leading-relaxed text-white/46">
-                          <span className={cn("mt-[11px] h-1 w-1 shrink-0 rounded-full", proj.dot)} />
+                        <li key={i} className="flex gap-3 text-sm leading-relaxed text-white/46">
+                          <span className={cn("mt-[9px] h-1 w-1 shrink-0 rounded-full", proj.dot)} />
                           {h}
                         </li>
                       ))}
                     </ul>
-                  </div>
-                  <div className="mt-5 border-t border-white/[0.06] pt-4">
-                    <a
-                      href={proj.github}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-sm text-white/30 transition hover:text-white/65"
-                    >
-                      View on GitHub →
-                    </a>
                   </div>
                 </div>
               ))}
