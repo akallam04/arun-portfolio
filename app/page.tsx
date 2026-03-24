@@ -391,12 +391,12 @@ export default function Page() {
                 {
                   label: "Web & Frameworks",
                   accent: "rgba(16,185,129,0.08)",
-                  items: ["React", "Next.js", "Node.js", "Express.js", "FastAPI", "Redux Toolkit", "REST APIs", "JWT Auth"],
+                  items: ["React", "Next.js", "Node.js", "Express.js", "FastAPI", "Redux Toolkit", "Recharts", "REST APIs", "JWT Auth"],
                 },
                 {
                   label: "AI / LLM",
                   accent: "rgba(168,85,247,0.09)",
-                  items: ["OpenAI API", "Prompt Engineering", "LLM Output Validation", "Pydantic", "Few-shot Prompting"],
+                  items: ["OpenAI API", "Anthropic API", "Prompt Engineering", "LLM Output Validation", "Pydantic", "Few-shot Prompting"],
                 },
                 {
                   label: "Data & Analytics",
@@ -411,7 +411,7 @@ export default function Page() {
                 {
                   label: "Tools & DevOps",
                   accent: "rgba(20,184,166,0.08)",
-                  items: ["Git", "GitHub", "Docker", "Vercel", "Postman", "VS Code", "IntelliJ"],
+                  items: ["Git", "GitHub", "Docker", "Vercel", "Render", "Postman", "VS Code", "IntelliJ"],
                 },
               ].map((group) => (
                 <div
@@ -539,12 +539,12 @@ export default function Page() {
                 {
                   num: "02",
                   name: "Goalsetter+",
-                  desc: "Full-stack MERN goal-tracking app with JWT auth, protected routes, and a React UI featuring filtering, search, sorting, and overdue detection.",
-                  tags: ["React", "Node.js", "Express", "MongoDB", "Redux Toolkit", "JWT"],
+                  desc: "Production-deployed MERN goal-tracking app with AI-powered SMART goal suggestions, analytics dashboards, subtask tracking, and natural language due date parsing.",
+                  tags: ["React", "Node.js", "Express", "MongoDB", "Redux Toolkit", "JWT", "Recharts", "Anthropic API", "Vercel", "Render"],
                   bullets: [
-                    "REST API with express-validator and MongoDB Atlas persistence",
-                    "Stats endpoint: total / active / completed / overdue counts",
-                    "Redux Toolkit global state + Axios with loading & error states",
+                    "Claude Haiku integration generating 3 SMART goals from a description — one-click add to goals list",
+                    "Recharts analytics dashboard: goal completion trends and category breakdowns with customizable periods",
+                    "chrono-node NLP date parsing, subtask tracking, sharing, and rate-limited REST API deployed on Render",
                   ],
                   github: "https://github.com/akallam04/goalsetter-plus",
                   accent: "rgba(59,130,246,0.07)",
