@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 
 type SectionKey =
   | "home"
@@ -188,16 +187,32 @@ export default function Page() {
           <div className="mx-auto w-full max-w-6xl px-8 py-12">
             <div className="grid items-center gap-12 lg:grid-cols-2">
 
-              {/* LEFT — photo + name stacked */}
+              {/* LEFT — avatar + name stacked */}
               <div className="flex flex-col gap-5">
-                <div className="relative h-96 w-80 overflow-hidden rounded-3xl border border-white/[0.08] shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
-                  <Image
-                    src="/avatar.jpg"
-                    alt="Arun Teja Reddy Kallam"
-                    fill
-                    className="object-cover"
-                    priority
-                  />
+                <div className="group relative h-96 w-80 cursor-pointer select-none">
+                  {/* glow ring on hover */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-violet-500/20 via-blue-500/10 to-emerald-500/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
+                  {/* card */}
+                  <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.04] to-white/[0.01] shadow-[0_24px_80px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-transform duration-300 group-hover:scale-[1.02]">
+                    {/* subtle grid pattern */}
+                    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+                    {/* orbit ring */}
+                    <div className="absolute h-64 w-64 rounded-full border border-white/[0.06] transition-all duration-700 group-hover:scale-110 group-hover:border-violet-400/20" />
+                    <div className="absolute h-48 w-48 rounded-full border border-white/[0.04] transition-all duration-500 group-hover:scale-110 group-hover:border-blue-400/15" />
+                    {/* AK monogram */}
+                    <div className="relative z-10 bg-gradient-to-br from-white via-white/90 to-white/60 bg-clip-text text-[88px] font-black leading-none tracking-tighter text-transparent transition-all duration-300 group-hover:from-violet-200 group-hover:via-white group-hover:to-blue-200">
+                      AK
+                    </div>
+                    {/* AI badge */}
+                    <div className="absolute bottom-6 right-6 flex items-center gap-1.5 rounded-full border border-violet-400/30 bg-violet-500/10 px-3 py-1.5 backdrop-blur-sm transition-all duration-300 group-hover:border-violet-400/60 group-hover:bg-violet-500/20">
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet-400" />
+                      <span className="text-xs font-semibold tracking-widest text-violet-300">AI</span>
+                    </div>
+                    {/* top-left subtle label */}
+                    <div className="absolute left-5 top-5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/15 transition-colors duration-300 group-hover:text-white/30">
+                      Portfolio
+                    </div>
+                  </div>
                 </div>
                 <div className="leading-none">
                   <div className="text-[clamp(40px,5.5vw,68px)] font-bold tracking-tight text-white">
