@@ -16,13 +16,6 @@ export const metadata: Metadata = {
   title: "Arun Teja Reddy Kallam | Portfolio",
   description:
     "Computer Science student at ASU building web apps and data-driven products. Open to internships.",
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
-      { url: "/favicon-16.png", type: "image/png", sizes: "16x16" },
-    ],
-  },
 };
 
 export default function RootLayout({
