@@ -389,12 +389,12 @@ export default function Page() {
                 {
                   label: "Web & Frameworks",
                   accent: "rgba(16,185,129,0.08)",
-                  items: ["React", "Next.js", "Node.js", "Express.js", "FastAPI", "Redux Toolkit", "Recharts", "REST APIs", "JWT Auth"],
+                  items: ["React", "Next.js", "Node.js", "Express.js", "FastAPI", "Streamlit", "Plotly", "SQLAlchemy", "Redux Toolkit", "Recharts", "REST APIs", "JWT Auth"],
                 },
                 {
                   label: "AI / LLM",
                   accent: "rgba(168,85,247,0.09)",
-                  items: ["OpenAI API", "Anthropic API", "Prompt Engineering", "LLM Output Validation", "Pydantic", "Few-shot Prompting"],
+                  items: ["Claude API", "OpenAI API", "Prompt Engineering", "LLM Output Validation", "Pydantic", "Few-shot Prompting"],
                 },
                 {
                   label: "Data & Analytics",
@@ -409,7 +409,7 @@ export default function Page() {
                 {
                   label: "Tools & DevOps",
                   accent: "rgba(20,184,166,0.08)",
-                  items: ["Git", "GitHub", "Docker", "Vercel", "Render", "Postman", "VS Code", "IntelliJ"],
+                  items: ["Git", "GitHub", "Docker", "Vercel", "Render", "Streamlit Cloud", "Railway", "Postman", "VS Code", "IntelliJ"],
                 },
               ].map((group) => (
                 <div
@@ -551,14 +551,15 @@ export default function Page() {
                 {
                   num: "03",
                   name: "Sales Insights Dashboard",
-                  desc: "Business analytics dashboard built with MySQL and Tableau for stakeholder-facing KPI visualization and trend analysis.",
-                  tags: ["MySQL", "Excel", "Tableau"],
+                  desc: "Interactive analytics dashboard over 94,073 AtliQ Hardware transactions — live on Streamlit Cloud, backed by a Railway-hosted MySQL database.",
+                  tags: ["Python", "MySQL", "SQLAlchemy", "Streamlit", "Plotly"],
                   bullets: [
-                    "SQL queries for revenue trends, top customers & products",
-                    "Regional performance analysis across business segments",
-                    "Interactive Tableau dashboard with filters and drill-downs",
+                    "MySQL pipeline with a sales_cleaned view normalizing multi-currency data, joining 5 tables, resolving 7 data-quality issues",
+                    "10 KPI queries using window functions (LAG, SUM OVER PARTITION BY); surfaced one customer driving ~33% of INR 51.77 Cr revenue",
+                    "Year/market/zone filters with CSV fallback layer; deployed on Streamlit Cloud + Railway",
                   ],
-                  github: "https://github.com/akallam04",
+                  github: "https://github.com/akallam04/sales-insights-dashboard",
+                  live: "https://sales-insights-dashboard.streamlit.app",
                   accent: "rgba(16,185,129,0.07)",
                   dot: "bg-emerald-400/55",
                 },
@@ -574,14 +575,26 @@ export default function Page() {
                         <span className="text-xs font-semibold uppercase tracking-widest text-white/22">{proj.num}</span>
                         <span className="text-base font-bold text-white/90">{proj.name}</span>
                       </div>
-                      <a
-                        href={proj.github}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="shrink-0 rounded-lg border border-white/[0.10] px-2.5 py-1 text-xs text-white/35 transition hover:border-white/20 hover:text-white/65"
-                      >
-                        GitHub →
-                      </a>
+                      <div className="flex items-center gap-1.5">
+                        {"live" in proj && proj.live && (
+                          <a
+                            href={proj.live as string}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="shrink-0 rounded-lg border border-emerald-500/30 bg-emerald-500/[0.07] px-2.5 py-1 text-xs text-emerald-400/80 transition hover:border-emerald-400/50 hover:text-emerald-400"
+                          >
+                            Live ↗
+                          </a>
+                        )}
+                        <a
+                          href={proj.github}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="shrink-0 rounded-lg border border-white/[0.10] px-2.5 py-1 text-xs text-white/35 transition hover:border-white/20 hover:text-white/65"
+                        >
+                          GitHub →
+                        </a>
+                      </div>
                     </div>
                     <p className="mt-1.5 text-sm leading-relaxed text-white/48">{proj.desc}</p>
                     <div className="mt-3 flex flex-wrap gap-1">
