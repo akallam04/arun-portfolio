@@ -545,6 +545,7 @@ export default function Page() {
                     "chrono-node NLP date parsing, subtask tracking, sharing, and rate-limited REST API deployed on Render",
                   ],
                   github: "https://github.com/akallam04/goalsetter-plus",
+                  live: "https://goalsetter-plus.vercel.app",
                   accent: "rgba(59,130,246,0.07)",
                   dot: "bg-blue-400/55",
                 },
@@ -569,32 +570,10 @@ export default function Page() {
                   className="flex flex-col rounded-2xl border border-white/[0.08] p-5 backdrop-blur-xl"
                   style={{ background: proj.accent }}
                 >
-                  <div className="flex-1">
-                    <div className="mb-2 flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-semibold uppercase tracking-widest text-white/22">{proj.num}</span>
-                        <span className="text-base font-bold text-white/90">{proj.name}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        {"live" in proj && proj.live && (
-                          <a
-                            href={proj.live as string}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="shrink-0 rounded-lg border border-emerald-500/30 bg-emerald-500/[0.07] px-2.5 py-1 text-xs text-emerald-400/80 transition hover:border-emerald-400/50 hover:text-emerald-400"
-                          >
-                            Live ↗
-                          </a>
-                        )}
-                        <a
-                          href={proj.github}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="shrink-0 rounded-lg border border-white/[0.10] px-2.5 py-1 text-xs text-white/35 transition hover:border-white/20 hover:text-white/65"
-                        >
-                          GitHub →
-                        </a>
-                      </div>
+                  <div className="flex flex-1 flex-col">
+                    <div className="mb-2 flex items-center gap-2">
+                      <span className="text-xs font-semibold uppercase tracking-widest text-white/22">{proj.num}</span>
+                      <span className="text-base font-bold text-white/90">{proj.name}</span>
                     </div>
                     <p className="mt-1.5 text-sm leading-relaxed text-white/48">{proj.desc}</p>
                     <div className="mt-3 flex flex-wrap gap-1">
@@ -608,6 +587,26 @@ export default function Page() {
                         </li>
                       ))}
                     </ul>
+                    <div className="mt-4 flex items-center gap-2">
+                      {"live" in proj && proj.live && (
+                        <a
+                          href={proj.live as string}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="rounded-lg border border-emerald-500/30 bg-emerald-500/[0.07] px-3 py-1.5 text-xs font-medium text-emerald-400/80 transition hover:border-emerald-400/50 hover:bg-emerald-500/[0.13] hover:text-emerald-400"
+                        >
+                          Live ↗
+                        </a>
+                      )}
+                      <a
+                        href={proj.github}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-lg border border-white/[0.10] px-3 py-1.5 text-xs text-white/35 transition hover:border-white/20 hover:text-white/65"
+                      >
+                        GitHub →
+                      </a>
+                    </div>
                   </div>
                 </div>
               ))}
