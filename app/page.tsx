@@ -460,7 +460,7 @@ export default function Page() {
                 },
                 {
                   idx: "02",
-                  role: "Web Development Intern",
+                  role: "Full-Stack Web Development Intern",
                   company: "Prodigy InfoTech",
                   location: "Remote",
                   period: "Sep 2024 — Oct 2024",
