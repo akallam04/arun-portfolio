@@ -211,7 +211,7 @@ export default function Page() {
               <div className="flex flex-col justify-center gap-8">
                 <div className="group inline-flex w-fit cursor-default items-center gap-2.5 rounded-full border border-emerald-500/20 bg-emerald-500/[0.07] px-4 py-2 text-sm text-emerald-400 transition-all duration-300 hover:border-emerald-400/40 hover:bg-emerald-500/[0.13] hover:shadow-[0_0_20px_rgba(52,211,153,0.15)]">
                   <IconDot />
-                  Open to internships — SDE · SWE · Data · Full-Stack · AI
+                  Open to Summer 2026 Internships
                 </div>
 
                 <div>
