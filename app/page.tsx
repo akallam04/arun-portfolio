@@ -449,13 +449,12 @@ export default function Page() {
                   company: "Food Forest AI",
                   location: "Remote",
                   period: "Jun 2025 — Jul 2025",
-                  tags: ["Python", "Data Quality", "Excel / Sheets", "QA Automation"],
+                  tags: ["Python", "Pandas", "Data Quality", "QA Automation"],
                   accent: "rgba(59,130,246,0.07)",
                   dot: "bg-blue-400/60",
                   bullets: [
-                    "Cleaned and validated datasets for 500+ company profiles using Excel/Google Sheets and Python, ensuring accuracy across business, contact, and geographic fields.",
-                    "Extracted and standardized capabilities, certifications, and product data from websites, directories, and LinkedIn to deliver structured enrichment datasets.",
-                    "Automated Python QA checks to flag missing values, anomalies, and formatting issues — reducing manual review and producing ingestion-ready datasets.",
+                    "Cleaned and validated 500+ food & beverage company profiles powering Food Forest AI's B2B supply chain search engine, standardizing scraped capabilities, certifications, and product data into structured enrichment datasets.",
+                    "Built Python (Pandas) QA scripts to flag missing values, anomalies, and formatting errors across scraped supplier data, reducing manual review load and producing ingestion-ready datasets that improved search result quality for end users.",
                   ],
                 },
                 {
@@ -464,13 +463,12 @@ export default function Page() {
                   company: "Prodigy InfoTech",
                   location: "Remote",
                   period: "Sep 2024 — Oct 2024",
-                  tags: ["HTML / CSS / JS", "Responsive UI", "GitHub"],
+                  tags: ["MERN", "JWT Auth", "bcrypt", "MongoDB", "React", "Express"],
                   accent: "rgba(16,185,129,0.07)",
                   dot: "bg-emerald-400/60",
                   bullets: [
-                    "Built responsive web pages with interactive UI components across multiple mini-projects using HTML, CSS, and JavaScript.",
-                    "Completed structured development tasks on deadline; iterated based on feedback and used GitHub for version control.",
-                    "Gained hands-on front-end experience with component structuring and team-based code quality standards.",
+                    "Shipped a MERN authentication portal with JWT sessions, bcrypt hashing, rate-limited endpoints, and role-based access control on React routes and Express middleware, with admin self-protection against self-demotion and deletion.",
+                    "Built a full-stack Employee Management System with admin-only CRUD, server-side search/filter/sort, and a MongoDB aggregation pipeline dashboard surfacing headcount, average salary, and department breakdowns in real time.",
                   ],
                 },
               ].map((exp) => (
