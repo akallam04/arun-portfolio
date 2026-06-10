@@ -37,9 +37,60 @@ function LocalTime() {
           <span className="ping-soft absolute inline-flex h-full w-full rounded-full bg-emerald-400/60" />
           <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
         </span>
-        <span className="text-sm text-white/55">
-          Usually responds within a day
-        </span>
+        <span className="text-sm text-white/55">Replies within hours</span>
+      </div>
+    </SpotlightCard>
+  );
+}
+
+/** Stylized Arizona silhouette with a glowing marker on the Phoenix valley. */
+function ArizonaCard() {
+  return (
+    <SpotlightCard className="bg-white/[0.03] p-6">
+      <div className="flex items-center gap-5">
+        <svg
+          viewBox="0 0 100 122"
+          className="h-28 w-auto shrink-0"
+          role="img"
+          aria-label="Map of Arizona with a marker on Tempe"
+        >
+          <path
+            d="M16 6 H92 V116 H42 L26 102 L26 92 L20 86 L20 70 L14 64 L14 48 L10 42 L10 30 L16 24 Z"
+            fill="rgba(96,165,250,0.08)"
+            stroke="rgba(96,165,250,0.45)"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+          <circle
+            cx="48"
+            cy="64"
+            r="10"
+            fill="none"
+            stroke="rgba(52,211,153,0.35)"
+            strokeWidth="1"
+          />
+          <circle cx="48" cy="64" r="4" fill="#34d399">
+            <animate
+              attributeName="opacity"
+              values="1;0.45;1"
+              dur="2.2s"
+              repeatCount="indefinite"
+            />
+          </circle>
+        </svg>
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">
+            Based in
+          </div>
+          <div className="mt-1 text-xl font-bold text-white">
+            Tempe, Arizona
+          </div>
+          <div className="mt-0.5 text-sm text-white/45">{PROFILE.metro}</div>
+          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-blue-400/25 bg-blue-500/[0.08] px-2.5 py-1 text-[11px] text-blue-300">
+            <PinIcon size={11} />
+            Local to Phoenix-area teams
+          </div>
+        </div>
       </div>
     </SpotlightCard>
   );
@@ -59,7 +110,7 @@ export function Contact() {
           <div>
             <Reveal>
               <p className="mb-6 text-lg text-white/45 sm:mb-8 sm:text-xl">
-                Let&rsquo;s connect — I respond quickly.
+                Let&rsquo;s connect. I reply fast.
               </p>
             </Reveal>
 
@@ -115,16 +166,7 @@ export function Contact() {
               <LocalTime />
             </Reveal>
             <Reveal delay={200}>
-              <SpotlightCard className="bg-white/[0.03] p-6">
-                <div className="mb-3 text-3xl leading-none text-white/15">&ldquo;</div>
-                <p className="text-base leading-relaxed text-white/50">
-                  Building clean products that work reliably and look great
-                  doing it.
-                </p>
-                <div className="mt-4 text-sm font-semibold text-white/35">
-                  — {PROFILE.firstName}
-                </div>
-              </SpotlightCard>
+              <ArizonaCard />
             </Reveal>
           </div>
         </div>

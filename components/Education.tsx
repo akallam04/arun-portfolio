@@ -55,11 +55,11 @@ export function Education() {
       className="scroll-mt-20 py-20 sm:py-24 lg:flex lg:min-h-[calc(100svh-56px)] lg:items-center lg:py-12"
     >
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
-        <SectionHeader index="01" title="Education" />
+        <SectionHeader index="01" title="Education" compact />
 
         <div className="grid gap-4 sm:gap-5 lg:grid-cols-[1.6fr_1fr]">
           <Reveal>
-            <SpotlightCard className="h-full bg-white/[0.04] p-6 sm:p-8">
+            <SpotlightCard className="h-full bg-white/[0.04] p-6 sm:p-8 lg:p-7">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                 <div>
                   <div className="flex items-center gap-2 text-sm text-white/40">
@@ -71,20 +71,22 @@ export function Education() {
                   </div>
                 </div>
                 <div className="shrink-0 rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-xs text-white/45 sm:text-right">
-                  Aug 2023 — May 2027
+                  Aug 2023 - May 2027
                 </div>
               </div>
 
-              <div className="mt-6 border-t border-white/[0.06] pt-6 sm:mt-7">
+              <div className="mt-6 border-t border-white/[0.06] pt-6 sm:mt-7 lg:mt-5 lg:pt-5">
                 <div className="mb-4 flex items-center gap-3">
                   <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/55">
                     Relevant Coursework
                   </span>
                   <div className="h-px flex-1 bg-white/[0.08]" />
                 </div>
-                <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2 lg:gap-1.5">
                   {COURSEWORK.map((c) => (
-                    <Chip key={c}>{c}</Chip>
+                    <Chip key={c} compact>
+                      {c}
+                    </Chip>
                   ))}
                 </div>
               </div>

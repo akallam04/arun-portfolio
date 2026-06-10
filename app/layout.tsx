@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 const SITE = "https://arunkallam.vercel.app";
-const TITLE = "Arun Teja Reddy Kallam — CS @ ASU · Full-Stack & Data";
+const TITLE = "Arun Teja Reddy Kallam | CS @ ASU · AI, Full-Stack & Data";
 const DESCRIPTION =
-  "Computer Science student at Arizona State University (4.0 GPA) building full-stack apps, reliable APIs, and data-driven products. Open to Summer 2026 internships.";
+  "Computer Science student at Arizona State University in Tempe, AZ building AI-powered products, full-stack web apps, and data-driven systems. Open to Fall 2026 co-ops.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
@@ -24,9 +24,12 @@ export const metadata: Metadata = {
   keywords: [
     "Arun Teja Reddy Kallam",
     "ASU Computer Science",
+    "AI engineer",
+    "LLM engineering",
     "full-stack developer",
-    "data analyst",
-    "software engineering intern",
+    "software engineering co-op",
+    "Tempe Arizona developer",
+    "Phoenix software engineer",
     "React",
     "Next.js",
     "Python",
@@ -78,9 +81,10 @@ const personJsonLd = {
     "https://linkedin.com/in/akallam3",
   ],
   knowsAbout: [
-    "Full-Stack Web Development",
-    "Data Analytics",
     "AI and LLM Engineering",
+    "Full-Stack Web Development",
+    "Software Engineering",
+    "Data Analytics",
     "React",
     "Next.js",
     "Python",

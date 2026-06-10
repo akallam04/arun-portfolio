@@ -8,7 +8,13 @@ import {
 } from "@/lib/data";
 import { scrollToSection, useTypewriter } from "@/lib/hooks";
 import { CountUp, Reveal } from "./ui";
-import { FileIcon, GitHubIcon, LinkedInIcon, MailIcon } from "./icons";
+import {
+  FileIcon,
+  GitHubIcon,
+  LinkedInIcon,
+  MailIcon,
+  PinIcon,
+} from "./icons";
 
 function AvailabilityBadge() {
   return (
@@ -33,7 +39,7 @@ export function Hero() {
     >
       <div className="mx-auto w-full max-w-6xl px-5 pb-16 pt-10 sm:px-8 lg:py-16">
         <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14">
-          {/* Text block — first on mobile so the pitch is above the fold */}
+          {/* Text block first on mobile so the pitch is above the fold */}
           <div className="flex flex-col gap-6 sm:gap-7">
             <Reveal>
               <AvailabilityBadge />
@@ -143,9 +149,12 @@ export function Hero() {
                 <div className="text-[10px] text-white/45">B.S. Computer Science</div>
               </div>
 
-              <div className="float-slower absolute -left-3 bottom-8 rounded-xl border border-emerald-400/20 bg-[#0a0d14]/90 px-3.5 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl sm:-left-6">
-                <div className="text-sm font-bold text-emerald-300">4.0 GPA</div>
-                <div className="text-[10px] text-white/45">Dean&rsquo;s List</div>
+              <div className="float-slower absolute -left-3 bottom-8 rounded-xl border border-blue-400/25 bg-[#0a0d14]/90 px-3.5 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl sm:-left-6">
+                <div className="flex items-center gap-1.5 text-sm font-bold text-blue-300">
+                  <PinIcon size={13} />
+                  {PROFILE.location}
+                </div>
+                <div className="text-[10px] text-white/45">{PROFILE.metro}</div>
               </div>
             </div>
           </Reveal>

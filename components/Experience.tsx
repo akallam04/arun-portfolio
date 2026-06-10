@@ -15,7 +15,7 @@ export function Experience() {
       className="scroll-mt-20 py-20 sm:py-24 lg:flex lg:min-h-[calc(100svh-56px)] lg:items-center lg:py-12"
     >
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
-        <SectionHeader index="03" title="Experience" />
+        <SectionHeader index="03" title="Experience" compact />
 
         <div ref={ref} className="relative">
           {/* Timeline rail */}
@@ -27,7 +27,7 @@ export function Experience() {
             )}
           />
 
-          <div className="space-y-8 sm:space-y-10">
+          <div className="space-y-8 sm:space-y-10 lg:space-y-5">
             {EXPERIENCE.map((exp, i) => (
               <Reveal key={exp.company} delay={i * 150}>
                 <div className="relative pl-8 sm:pl-12">
@@ -47,7 +47,7 @@ export function Experience() {
                   </span>
 
                   <SpotlightCard
-                    className="p-5 sm:p-7"
+                    className="p-5 sm:p-7 lg:p-5"
                     style={{ background: `${exp.color}0d` }}
                   >
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
@@ -78,17 +78,19 @@ export function Experience() {
                       </div>
                     </div>
 
-                    <div className="mt-4 flex flex-wrap gap-1.5 sm:gap-2">
+                    <div className="mt-4 flex flex-wrap gap-1.5 sm:gap-2 lg:mt-3 lg:gap-1.5">
                       {exp.tags.map((t) => (
-                        <Chip key={t}>{t}</Chip>
+                        <Chip key={t} compact>
+                          {t}
+                        </Chip>
                       ))}
                     </div>
 
-                    <ul className="mt-5 space-y-3">
+                    <ul className="mt-5 space-y-3 lg:mt-3.5 lg:space-y-2">
                       {exp.bullets.map((b, j) => (
                         <li
                           key={j}
-                          className="flex gap-3 text-sm leading-relaxed text-white/70 sm:text-base"
+                          className="flex gap-3 text-sm leading-relaxed text-white/70 sm:text-base lg:text-[15px]"
                         >
                           <span
                             className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full sm:mt-[11px]"

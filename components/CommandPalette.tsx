@@ -45,7 +45,7 @@ const SECTION_ICONS: Record<string, React.ReactNode> = {
   contact: <MailIcon size={16} />,
 };
 
-/** Rendered only while open — state resets naturally on each mount. */
+/** Rendered only while open, so state resets naturally on each mount. */
 export function CommandPalette({ onClose }: { onClose: () => void }) {
   const [query, setQuery] = useState("");
   const [index, setIndex] = useState(0);

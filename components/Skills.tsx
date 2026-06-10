@@ -35,7 +35,7 @@ function SkillRadar({
   const polygon = valuePoints.map(([x, y]) => `${x},${y}`).join(" ");
 
   return (
-    <div ref={ref} className="mx-auto w-full max-w-[380px]">
+    <div ref={ref} className="mx-auto w-full max-w-[380px] lg:max-w-[330px]">
       <svg
         viewBox="0 0 380 300"
         className="w-full"
@@ -129,7 +129,7 @@ function SkillRadar({
         </g>
       </svg>
       <p className="mt-2 text-center text-[11px] text-white/30">
-        Tap or hover a category — self-assessed depth across six domains
+        Tap or hover a category to explore depth across six domains
       </p>
     </div>
   );
@@ -145,18 +145,18 @@ export function Skills() {
       className="scroll-mt-20 py-20 sm:py-24 lg:flex lg:min-h-[calc(100svh-56px)] lg:items-center lg:py-12"
     >
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
-        <SectionHeader index="02" title="Skills" />
+        <SectionHeader index="02" title="Skills" compact />
 
-        <div className="grid items-center gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-10">
+        <div className="grid items-center gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:gap-8">
           <Reveal className="order-first">
             <SkillRadar hovered={hovered} onHover={setHovered} />
           </Reveal>
 
-          <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
+          <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:gap-3">
             {SKILL_GROUPS.map((group, i) => (
               <Reveal key={group.label} delay={i * 70}>
                 <SpotlightCard
-                  className="h-full p-4 transition-colors duration-300 sm:p-5"
+                  className="h-full p-4 transition-colors duration-300 sm:p-5 lg:p-4"
                   style={{
                     background: `${group.color}10`,
                     borderColor:
@@ -167,13 +167,13 @@ export function Skills() {
                     onMouseEnter={() => setHovered(i)}
                     onMouseLeave={() => setHovered(null)}
                   >
-                    <div className="mb-3 flex items-center justify-between">
+                    <div className="mb-3 flex items-center justify-between lg:mb-2.5">
                       <div className="flex items-center gap-2">
                         <span
                           className="h-2 w-2 rounded-full"
                           style={{ background: group.color }}
                         />
-                        <span className="text-sm font-bold text-white/85 sm:text-base">
+                        <span className="text-sm font-bold text-white/85 sm:text-base lg:text-sm">
                           {group.label}
                         </span>
                       </div>
@@ -185,7 +185,7 @@ export function Skills() {
                       </span>
                     </div>
                     {/* Mini level bar */}
-                    <div className="mb-3 h-1 overflow-hidden rounded-full bg-white/[0.07]">
+                    <div className="mb-3 h-1 overflow-hidden rounded-full bg-white/[0.07] lg:mb-2.5">
                       <div
                         className="h-full rounded-full transition-all duration-700"
                         style={{
@@ -194,9 +194,11 @@ export function Skills() {
                         }}
                       />
                     </div>
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap gap-1.5 lg:gap-1">
                       {group.items.map((item) => (
-                        <Chip key={item}>{item}</Chip>
+                        <Chip key={item} compact>
+                          {item}
+                        </Chip>
                       ))}
                     </div>
                   </div>

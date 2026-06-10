@@ -31,7 +31,7 @@ export function PortfolioShell() {
   // A small hello for anyone who opens devtools.
   useEffect(() => {
     console.log(
-      "%c Hey, fellow dev 👋 %c\n\nThis site is hand-built with Next.js + Tailwind — no UI kits, no animation libs.\nSource: https://github.com/akallam04/arun-portfolio\nLet's talk: akallam04@gmail.com",
+      "%c Hey, fellow dev 👋 %c\n\nThis site is hand-built with Next.js + Tailwind. No UI kits, no animation libs.\nSource: https://github.com/akallam04/arun-portfolio\nLet's talk: akallam04@gmail.com",
       "background:#60a5fa;color:#05070c;font-weight:bold;padding:4px 8px;border-radius:4px",
       "color:#9ca3af"
     );

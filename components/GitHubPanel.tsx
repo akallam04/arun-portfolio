@@ -100,7 +100,7 @@ function useGitHubData(): GitHubData {
           } catch {}
         }
       } catch {
-        // Keep the static snapshot — the panel still renders honestly.
+        // Keep the static snapshot; the panel still renders honestly.
       }
     })();
 
@@ -190,7 +190,7 @@ function LanguageDonut({
   );
 }
 
-/** Live GitHub footprint — rendered at the bottom of the Projects section. */
+/** Live GitHub footprint, rendered at the bottom of the Projects section. */
 export function GitHubPanel() {
   const data = useGitHubData();
 

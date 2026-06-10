@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Arun Teja Reddy Kallam — CS @ ASU · Full-Stack & Data";
+export const alt = "Arun Teja Reddy Kallam | CS @ ASU · AI, Full-Stack & Data";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -39,7 +39,7 @@ export default function OpenGraphImage() {
             }}
           />
           <div style={{ fontSize: 26, color: "#6ee7b7" }}>
-            Open to Summer 2026 Internships
+            Open to Fall 2026 Co-ops · Tempe, AZ
           </div>
         </div>
 
@@ -65,11 +65,11 @@ export default function OpenGraphImage() {
             display: "flex",
           }}
         >
-          CS @ ASU · Full-stack apps, reliable APIs, data-driven products
+          CS @ ASU · AI-powered products, full-stack apps, data systems
         </div>
 
         <div style={{ display: "flex", gap: 14, marginTop: 44 }}>
-          {["React", "Next.js", "Python", "FastAPI", "SQL", "AI / LLM"].map(
+          {["AI / LLM", "React", "Next.js", "Python", "FastAPI", "SQL"].map(
             (t) => (
               <div
                 key={t}

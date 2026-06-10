@@ -8,9 +8,21 @@ export function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
-export function Chip({ children }: { children: React.ReactNode }) {
+export function Chip({
+  children,
+  compact = false,
+}: {
+  children: React.ReactNode;
+  /** Shrinks the chip on lg+ screens so dense sections fit one viewport; mobile unchanged. */
+  compact?: boolean;
+}) {
   return (
-    <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.06] px-2.5 py-1 text-xs text-white/65 sm:px-3 sm:text-sm">
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full border border-white/10 bg-white/[0.06] px-2.5 py-1 text-xs text-white/65 sm:px-3 sm:text-sm",
+        compact && "lg:px-2.5 lg:py-0.5 lg:text-xs"
+      )}
+    >
       {children}
     </span>
   );
@@ -75,17 +87,30 @@ export function Reveal({
 export function SectionHeader({
   index,
   title,
+  compact = false,
 }: {
   index: string;
   title: string;
+  /** Tightens the header on lg+ so the section content fits one viewport; mobile unchanged. */
+  compact?: boolean;
 }) {
   return (
     <Reveal>
-      <div className="mb-8 flex items-center gap-3 sm:mb-10 sm:gap-4">
+      <div
+        className={cn(
+          "mb-8 flex items-center gap-3 sm:mb-10 sm:gap-4",
+          compact && "lg:mb-6"
+        )}
+      >
         <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-white/25">
           {index}
         </span>
-        <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
+        <h2
+          className={cn(
+            "text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl",
+            compact && "lg:text-4xl"
+          )}
+        >
           {title}
         </h2>
         <div className="h-px flex-1 bg-gradient-to-r from-white/[0.12] to-transparent" />

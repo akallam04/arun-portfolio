@@ -7,39 +7,42 @@ export const PROFILE = {
   phone: "(480) 937-6420",
   phoneHref: "tel:4809376420",
   location: "Tempe, AZ",
+  metro: "Greater Phoenix area",
   timeZone: "America/Phoenix",
   github: "https://github.com/akallam04",
   githubUser: "akallam04",
   linkedin: "https://linkedin.com/in/akallam3",
   resume: "/resume.pdf",
   site: "https://arunkallam.vercel.app",
-  availability: "Open to Summer 2026 Internships",
+  availability: "Open to Fall 2026 Co-ops",
   tagline:
-    "CS student at ASU building full-stack apps, reliable APIs, and data-driven products.",
+    "CS student at ASU building AI-powered products, full-stack apps, and data-driven systems.",
 } as const;
 
 export const TYPED_ROLES = [
+  "AI-powered products",
   "full-stack web apps",
-  "data dashboards",
-  "AI-powered features",
   "reliable, tested APIs",
+  "data dashboards",
 ];
 
 export const CORE_STACK = [
+  "Python",
+  "TypeScript",
   "React",
   "Next.js",
   "Node.js",
-  "Python",
   "FastAPI",
-  "SQL",
+  "Claude API",
   "MongoDB",
+  "SQL",
 ];
 
 export const HERO_STATS = [
-  { value: 4.0, decimals: 1, suffix: "", label: "GPA at ASU" },
+  { value: 2, decimals: 0, suffix: "", label: "Internships" },
   { value: 4, decimals: 0, suffix: "", label: "Deployed apps" },
   { value: 94, decimals: 0, suffix: "K+", label: "Rows analyzed" },
-  { value: 500, decimals: 0, suffix: "+", label: "Datasets cleaned" },
+  { value: 500, decimals: 0, suffix: "+", label: "Profiles validated" },
 ];
 
 export type SectionKey =
@@ -60,48 +63,59 @@ export const SECTIONS: { key: SectionKey; label: string }[] = [
 ];
 
 export const COURSEWORK = [
+  "Intro to Artificial Intelligence",
   "Data Structures & Algorithms",
-  "Object-Oriented Programming",
   "Software Engineering",
+  "Distributed Software Development",
+  "Database Management",
+  "Mobile App Development",
   "Operating Systems",
+  "Object-Oriented Programming",
   "Principles of Programming Languages",
+  "Information Assurance",
   "Human-Computer Interaction",
   "Foundations of Data Visualization",
-  "Discrete Mathematics",
+  "Applied Linear Algebra",
   "Probability & Statistics",
-  "Computer Organization & Assembly",
 ];
 
 export const FOCUS_AREAS = [
+  {
+    label: "AI / LLM Engineering",
+    desc: "Claude & OpenAI APIs, prompt design, structured outputs",
+  },
   {
     label: "Full-Stack Development",
     desc: "Web apps end-to-end, APIs, and databases",
   },
   {
     label: "Data & Analytics",
-    desc: "Visualization, pipelines, and insight delivery",
-  },
-  {
-    label: "AI / LLM Engineering",
-    desc: "Prompt design, structured outputs, validation",
+    desc: "Pipelines, dashboards, and insight delivery",
   },
 ];
 
 export type SkillGroup = {
   label: string;
   axis: string;
-  level: number; // 0–100, drives the radar chart
+  level: number; // 0-100, drives the radar chart
   color: string;
   items: string[];
 };
 
 export const SKILL_GROUPS: SkillGroup[] = [
   {
-    label: "Languages",
-    axis: "Languages",
-    level: 90,
-    color: "#60a5fa",
-    items: ["JavaScript", "TypeScript", "Python", "SQL", "Java", "HTML", "CSS"],
+    label: "AI / LLM",
+    axis: "AI / LLM",
+    level: 85,
+    color: "#c084fc",
+    items: [
+      "Claude API",
+      "OpenAI API",
+      "Prompt Engineering",
+      "Structured Outputs",
+      "Pydantic",
+      "Few-shot Prompting",
+    ],
   },
   {
     label: "Web & Frameworks",
@@ -114,67 +128,48 @@ export const SKILL_GROUPS: SkillGroup[] = [
       "Node.js",
       "Express.js",
       "FastAPI",
-      "Streamlit",
-      "Plotly",
-      "SQLAlchemy",
       "Redux Toolkit",
+      "Tailwind CSS",
       "Recharts",
-      "REST APIs",
-      "JWT Auth",
+      "SQLAlchemy",
     ],
   },
   {
-    label: "AI / LLM",
-    axis: "AI / LLM",
-    level: 80,
-    color: "#c084fc",
-    items: [
-      "Claude API",
-      "OpenAI API",
-      "Prompt Engineering",
-      "LLM Output Validation",
-      "Pydantic",
-      "Few-shot Prompting",
-    ],
+    label: "Languages",
+    axis: "Languages",
+    level: 90,
+    color: "#60a5fa",
+    items: ["Python", "JavaScript", "TypeScript", "Java", "SQL", "HTML", "CSS"],
   },
   {
     label: "Data & Analytics",
     axis: "Data",
-    level: 86,
+    level: 84,
     color: "#fbbf24",
-    items: [
-      "Tableau",
-      "Power BI",
-      "Excel",
-      "Google Sheets",
-      "Pandas",
-      "NumPy",
-      "KPI Analysis",
-    ],
+    items: ["Pandas", "Plotly", "Streamlit", "KPI Analysis", "Data Quality & QA"],
   },
   {
     label: "Databases",
     axis: "Databases",
     level: 78,
     color: "#f87171",
-    items: ["MySQL", "MongoDB Atlas"],
+    items: ["MongoDB Atlas", "MySQL"],
   },
   {
-    label: "Tools & DevOps",
-    axis: "DevOps",
-    level: 74,
+    label: "Tools & Cloud",
+    axis: "Tools",
+    level: 75,
     color: "#2dd4bf",
     items: [
       "Git",
       "GitHub",
       "Docker",
+      "Postman",
       "Vercel",
       "Render",
-      "Streamlit Cloud",
       "Railway",
-      "Postman",
+      "Streamlit Cloud",
       "VS Code",
-      "IntelliJ",
     ],
   },
 ];
@@ -193,25 +188,25 @@ export const EXPERIENCE: Experience[] = [
   {
     role: "Junior Data Analyst",
     company: "Food Forest AI",
-    location: "Remote",
-    period: "Jun 2025 — Jul 2025",
+    location: "Philadelphia, PA",
+    period: "Jun 2025 - Jul 2025",
     tags: ["Python", "Pandas", "Data Quality", "QA Automation"],
     color: "#60a5fa",
     bullets: [
-      "Cleaned and validated 500+ food & beverage company profiles powering Food Forest AI's B2B supply chain search engine, standardizing scraped capabilities, certifications, and product data into structured enrichment datasets.",
-      "Built Python (Pandas) QA scripts to flag missing values, anomalies, and formatting errors across scraped supplier data, reducing manual review load and producing ingestion-ready datasets that improved search result quality for end users.",
+      "Built Python and Pandas QA scripts to flag missing values, anomalies, and formatting errors across 500+ scraped supplier profiles, reducing manual review load and producing ingestion-ready datasets that improved search result quality.",
+      "Standardized scraped capabilities, certifications, and product data into structured enrichment datasets powering Food Forest AI's B2B supply chain search engine.",
     ],
   },
   {
     role: "Full-Stack Web Development Intern",
     company: "Prodigy InfoTech",
-    location: "Remote",
-    period: "Sep 2024 — Oct 2024",
+    location: "Mumbai, India",
+    period: "Sep 2024 - Oct 2024",
     tags: ["MERN", "JWT Auth", "bcrypt", "MongoDB", "React", "Express"],
     color: "#34d399",
     bullets: [
-      "Shipped a MERN authentication portal with JWT sessions, bcrypt hashing, rate-limited endpoints, and role-based access control on React routes and Express middleware, with admin self-protection against self-demotion and deletion.",
-      "Built a full-stack Employee Management System with admin-only CRUD, server-side search/filter/sort, and a MongoDB aggregation pipeline dashboard surfacing headcount, average salary, and department breakdowns in real time.",
+      "Shipped a MERN authentication portal with JWT sessions, bcrypt password hashing, rate-limited endpoints, and role-based access control on React routes and Express middleware.",
+      "Built a full-stack Employee Management System with admin-only CRUD, server-side search/filter/sort, and a MongoDB aggregation pipeline dashboard surfacing real-time headcount, average salary, and department breakdowns.",
     ],
   },
 ];
@@ -232,23 +227,21 @@ export const PROJECTS: Project[] = [
   {
     name: "Goalsetter+",
     featured: true,
-    desc: "Production-deployed MERN goal-tracking app with AI-powered SMART goal suggestions, analytics dashboards, subtask tracking, and natural language due date parsing.",
+    desc: "Production-deployed MERN goal tracker with AI-powered SMART goal suggestions, analytics dashboards, sub-tasks, share links, and natural language due dates.",
     tags: [
       "React",
       "Node.js",
       "Express",
-      "MongoDB",
+      "MongoDB Atlas",
       "Redux Toolkit",
-      "JWT",
+      "Claude API",
       "Recharts",
-      "Anthropic API",
-      "Vercel",
-      "Render",
+      "JWT",
     ],
     bullets: [
-      "Claude Haiku integration generating 3 SMART goals from a description — one-click add to goals list",
-      "Recharts analytics dashboard: goal completion trends and category breakdowns with customizable periods",
-      "chrono-node NLP date parsing, subtask tracking, sharing, and rate-limited REST API deployed on Render",
+      "Integrated the Claude Haiku API to generate three SMART goal suggestions from plain-English input, with rate limiting and one-click add to the goals list",
+      "Full-stack goal tracker with JWT auth, sub-tasks, natural language date parsing, overdue detection, and revokable public share links",
+      "Recharts analytics dashboard with goals-by-category and completions-over-time charts, computed client-side from Redux state to eliminate redundant API round-trips",
     ],
     github: "https://github.com/akallam04/goalsetter-plus",
     live: "https://goalsetter-plus.vercel.app",
@@ -260,38 +253,38 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
-    name: "NBA Teams Dashboard",
-    desc: "Editorial-style data dashboard covering all 30 NBA franchises — conference standings, team pages, and franchise stats with motion-rich UI.",
-    tags: ["Next.js 16", "TypeScript", "Tailwind CSS", "Framer Motion"],
+    name: "LLM Multilingual Feedback API",
+    desc: "FastAPI service giving language learners structured feedback on their writing, validated end-to-end with Pydantic.",
+    tags: ["Python", "FastAPI", "OpenAI API", "Pydantic", "Docker"],
     bullets: [
-      "All 30 franchises with team identity theming and editorial layout",
-      "App Router architecture with typed data models end-to-end",
-      "Deployed on Vercel with motion-driven page transitions",
+      "Analyzes learner sentences and returns structured JSON: corrected sentence, error list, CEFR difficulty estimate, and a correctness flag",
+      "Selected GPT-4o-mini as a cost/latency tradeoff, with few-shot prompting for reliable output",
+      "Pydantic validation layer normalizing imperfect model outputs; 10+ unit, schema, and integration tests covering non-Latin scripts",
+    ],
+    github: "https://github.com/akallam04/intern-task-2026",
+    color: "#c084fc",
+  },
+  {
+    name: "NBA Teams Dashboard",
+    desc: "Editorial-style dashboard for all 30 NBA franchises: team pages, live search, and franchise stats with motion-rich UI.",
+    tags: ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS", "Framer Motion"],
+    bullets: [
+      "Next.js 16 App Router with async Server Components; self-hosted data layer (JSON snapshot + 30 PNG badges) after the public API became unreliable",
+      "Non-blocking live search with React 19 useDeferredValue, per-team accent colors, skeleton loading states, and route-level error boundaries",
+      "Flash-free dark/light theme toggle via a pre-paint inline script, plus an a11y pass: semantic landmarks, focus rings, ARIA live regions",
     ],
     github: "https://github.com/akallam04/nba-dashboard",
     live: "https://nba-teams-dashboard.vercel.app",
     color: "#f87171",
   },
   {
-    name: "LLM Multilingual Feedback API",
-    desc: "FastAPI service analyzing learner sentences and returning structured feedback — corrected sentence, error list, CEFR difficulty, and a correctness flag.",
-    tags: ["Python", "FastAPI", "OpenAI API", "Pydantic", "Docker"],
-    bullets: [
-      "Few-shot prompting with GPT-4o-mini for reliable structured JSON output",
-      "Pydantic post-processing layer normalizing LLM outputs",
-      "10+ unit, schema & integration tests covering non-Latin scripts",
-    ],
-    github: "https://github.com/akallam04/intern-task-2026",
-    color: "#c084fc",
-  },
-  {
     name: "Sales Insights Dashboard",
-    desc: "Interactive analytics dashboard over 94,073 AtliQ Hardware transactions — live on Streamlit Cloud, backed by a Railway-hosted MySQL database.",
-    tags: ["Python", "MySQL", "SQLAlchemy", "Streamlit", "Plotly"],
+    desc: "Interactive analytics dashboard over 94,073 AtliQ Hardware transactions, live on Streamlit Cloud and backed by a Railway-hosted MySQL database.",
+    tags: ["Python", "MySQL", "SQLAlchemy", "Streamlit", "Plotly", "Pandas"],
     bullets: [
-      "MySQL pipeline with a sales_cleaned view normalizing multi-currency data, joining 5 tables, resolving 7 data-quality issues",
-      "10 KPI queries using window functions (LAG, SUM OVER PARTITION BY); surfaced one customer driving ~33% of INR 51.77 Cr revenue",
-      "Year/market/zone filters with CSV fallback layer; deployed on Streamlit Cloud + Railway",
+      "MySQL pipeline with a sales_cleaned view normalizing multi-currency data, joining 5 dimension tables, and resolving 7 data-quality issues",
+      "10 KPI queries using window functions (LAG, SUM OVER PARTITION BY); surfaced one customer driving roughly 33% of INR 51.77 Cr revenue",
+      "Year/market/zone filters with a CSV fallback layer for production resilience; deployed on Streamlit Cloud + Railway",
     ],
     github: "https://github.com/akallam04/sales-insights-dashboard",
     live: "https://sales-insights-dashboard.streamlit.app",

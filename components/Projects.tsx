@@ -6,7 +6,7 @@ import { Chip, Reveal, SectionHeader, cn } from "./ui";
 import { ExternalIcon, GitHubIcon } from "./icons";
 import { GitHubPanel } from "./GitHubPanel";
 
-/** 3D tilt wrapper — desktop pointers only, capped at ~5deg. */
+/** 3D tilt wrapper for desktop pointers only, capped at ~5deg. */
 function TiltCard({
   className,
   style,
