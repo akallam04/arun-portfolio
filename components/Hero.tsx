@@ -37,16 +37,16 @@ export function Hero() {
       data-key="home"
       className="relative flex min-h-[calc(100svh-56px)] scroll-mt-14 items-center"
     >
-      <div className="mx-auto w-full max-w-6xl px-5 pb-16 pt-10 sm:px-8 lg:py-16">
-        <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14">
+      <div className="mx-auto w-full max-w-6xl px-5 pb-16 pt-10 sm:px-8 lg:pb-6 lg:pt-4">
+        <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-12">
           {/* Text block first on mobile so the pitch is above the fold */}
-          <div className="flex flex-col gap-6 sm:gap-7">
+          <div className="flex flex-col gap-6 sm:gap-7 lg:gap-4">
             <Reveal>
               <AvailabilityBadge />
             </Reveal>
 
             <Reveal delay={80}>
-              <h1 className="text-[clamp(38px,9vw,72px)] font-bold leading-[1.04] tracking-tight">
+              <h1 className="text-[clamp(38px,9vw,72px)] font-bold leading-[1.04] tracking-tight lg:text-[clamp(38px,4.6vw,66px)]">
                 <span className="block text-white">{PROFILE.shortName}</span>
                 <span className="gradient-name block">{PROFILE.lastName}</span>
               </h1>
@@ -131,7 +131,10 @@ export function Hero() {
           </div>
 
           {/* Photo with floating badges */}
-          <Reveal delay={200} className="mx-auto w-full max-w-xs sm:max-w-sm">
+          <Reveal
+            delay={200}
+            className="mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-[340px]"
+          >
             <div className="relative">
               <div className="absolute -inset-px rounded-[26px] bg-gradient-to-br from-blue-500/40 via-transparent to-purple-500/40" />
               <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/[0.08] shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
@@ -162,11 +165,11 @@ export function Hero() {
 
         {/* Stats strip */}
         <Reveal delay={120}>
-          <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.06] sm:mt-16 lg:grid-cols-4">
+          <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.06] sm:mt-16 lg:mt-6 lg:grid-cols-4">
             {HERO_STATS.map((s) => (
               <div
                 key={s.label}
-                className="flex flex-col gap-1 bg-[#070a11]/90 px-5 py-4 sm:px-6 sm:py-5"
+                className="flex flex-col gap-1 bg-[#070a11]/90 px-5 py-4 sm:px-6 sm:py-5 lg:py-4"
               >
                 <CountUp
                   value={s.value}
@@ -185,7 +188,7 @@ export function Hero() {
       <button
         onClick={() => scrollToSection("education")}
         aria-label="Scroll to education"
-        className="scroll-cue absolute bottom-20 left-1/2 hidden -translate-x-1/2 text-white/30 transition hover:text-white/70 lg:block"
+        className="scroll-cue absolute bottom-4 left-1/2 hidden -translate-x-1/2 text-white/30 transition hover:text-white/70 lg:block"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
           <path d="M12 4v16m0 0-6-6m6 6 6-6" />

@@ -196,7 +196,7 @@ export function GitHubPanel() {
 
   return (
     <Reveal>
-      <SpotlightCard className="mt-4 bg-white/[0.03] p-6 sm:mt-5 sm:p-8">
+      <SpotlightCard className="bg-white/[0.03] p-6 sm:p-8">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <GitHubIcon size={20} className="text-white/70" />

@@ -41,7 +41,7 @@ export const CORE_STACK = [
 ];
 
 export const HERO_STATS = [
-  { value: 2, decimals: 0, suffix: "", label: "Internships" },
+  { value: 3, decimals: 0, suffix: "", label: "Internships" },
   { value: 6, decimals: 0, suffix: "", label: "Projects shipped" },
   { value: 94, decimals: 0, suffix: "K+", label: "Rows analyzed" },
   { value: 500, decimals: 0, suffix: "+", label: "Profiles validated" },
@@ -193,6 +193,19 @@ export type Experience = {
 
 export const EXPERIENCE: Experience[] = [
   {
+    role: "Web Development Intern",
+    company: "BYLD Commerce",
+    location: "Lehi, UT",
+    period: "Jun 2026 - Aug 2026",
+    tags: ["HTML/CSS/JS", "Squarespace", "Shopify", "Python", "Web Design"],
+    color: "#c084fc",
+    bullets: [
+      "Redesigned and shipped the agency's marketing website end to end: a story-driven, animated single-page site in vanilla HTML/CSS/JS with a scroll-driven narrative and custom design system, engineered onto Squarespace through code injection for a fully custom design on a no-code platform.",
+      "Built a Python build pipeline that packages the hand-coded site into paste-ready Squarespace deployables and solved platform constraints (CSS specificity conflicts, overlay stacking contexts, script-driven navigation), cutting site updates to minutes.",
+      "Maintain client Shopify storefronts: theme and page updates, front-end fixes, and UX improvements across live ecommerce stores.",
+    ],
+  },
+  {
     role: "Junior Data Analyst",
     company: "Food Forest AI",
     location: "Philadelphia, PA",
@@ -220,17 +233,14 @@ export const EXPERIENCE: Experience[] = [
 
 export type ProjectDomain = "ai" | "fullstack" | "data";
 
-export const PROJECT_FILTERS: { key: ProjectDomain | "all"; label: string }[] =
-  [
-    { key: "all", label: "All" },
-    { key: "ai", label: "AI / LLM" },
-    { key: "fullstack", label: "Full-Stack" },
-    { key: "data", label: "Data" },
-  ];
+export const DOMAIN_LABELS: Record<ProjectDomain, string> = {
+  ai: "AI / LLM",
+  fullstack: "Full-Stack",
+  data: "Data",
+};
 
 export type Project = {
   name: string;
-  featured?: boolean;
   domains: ProjectDomain[];
   desc: string;
   tags: string[];
@@ -239,7 +249,7 @@ export type Project = {
   live?: string;
   liveLabel?: string;
   color: string;
-  metrics?: { value: string; label: string }[];
+  metrics: { value: string; label: string }[];
   /** Optional labeled bars, e.g. a benchmark comparison rendered on the card. */
   compare?: { label: string; value: number; highlight?: boolean }[];
   compareCaption?: string;
@@ -248,7 +258,6 @@ export type Project = {
 export const PROJECTS: Project[] = [
   {
     name: "Shopify AI Support Agent",
-    featured: true,
     domains: ["ai", "fullstack"],
     desc: "AI customer support agent for a Shopify store: RAG-grounded answers with citations, order lookups through a self-built MCP server, and refusal-first guardrails, all measured end to end by an eval harness.",
     tags: [
@@ -289,19 +298,50 @@ export const PROJECTS: Project[] = [
       "Transformers",
     ],
     bullets: [
-      "24x lower cost per request and 3x lower latency than the few-shot GPT-4o-mini baseline, with 99% of predictions within one CEFR level",
       "Deterministic pipeline: SHA-256-verified identical test sets, McNemar significance testing (p = 2.3e-33), and measured rather than estimated costs",
-      "Honest ablations: oversampling rare classes failed to fix edge-class F1, documented as a negative result; fine-tuned adapter published on Hugging Face",
+      "Honest ablations: oversampling rare classes failed to fix edge-class F1, documented as a negative result",
+      "Fine-tuned adapter published on Hugging Face with a full reproduction recipe",
     ],
     github: "https://github.com/akallam04/cefr-qlora-benchmark",
     live: "https://huggingface.co/akallam04/Llama-3-8B-cefr-qlora",
     liveLabel: "Model on HF",
     color: "#fbbf24",
+    metrics: [
+      { value: "24x", label: "lower cost per request" },
+      { value: "3x", label: "lower latency" },
+      { value: "99%", label: "within one CEFR level" },
+    ],
     compare: [
       { label: "Llama 3 8B QLoRA", value: 62.7, highlight: true },
       { label: "GPT-4o-mini few-shot", value: 40.8 },
     ],
     compareCaption: "Exact accuracy, same 1,460-sentence held-out test set",
+  },
+  {
+    name: "LLM Multilingual Feedback API",
+    domains: ["ai", "fullstack"],
+    desc: "FastAPI service with a built-in web app giving language learners structured feedback: minimal corrections, categorized errors explained in their native language, and a CEFR difficulty estimate.",
+    tags: [
+      "Python",
+      "FastAPI",
+      "OpenAI API",
+      "Claude API",
+      "Pydantic",
+      "Docker",
+      "GitHub Actions",
+    ],
+    bullets: [
+      "Pluggable LLM backends selected by environment variable: OpenAI, Anthropic, or a zero-config offline mode so the full system runs before any key is configured",
+      "Raw model output is never trusted: every response passes a normalization and validation layer before it reaches the client",
+      "Ships its own no-build web app: word-level correction diffs, categorized error cards with native-language explanations, shareable re-run links, and one-click examples",
+    ],
+    github: "https://github.com/akallam04/LLM-Multilingual-Feedback-API",
+    color: "#c084fc",
+    metrics: [
+      { value: "3", label: "pluggable LLM providers" },
+      { value: "7", label: "languages in the demo" },
+      { value: "55", label: "tests green in CI" },
+    ],
   },
   {
     name: "Goalsetter+",
@@ -325,19 +365,11 @@ export const PROJECTS: Project[] = [
     github: "https://github.com/akallam04/goalsetter-plus",
     live: "https://goalsetter-plus.vercel.app",
     color: "#60a5fa",
-  },
-  {
-    name: "LLM Multilingual Feedback API",
-    domains: ["ai", "fullstack"],
-    desc: "FastAPI service giving language learners structured feedback on their writing, validated end-to-end with Pydantic.",
-    tags: ["Python", "FastAPI", "OpenAI API", "Pydantic", "Docker"],
-    bullets: [
-      "Analyzes learner sentences and returns structured JSON: corrected sentence, error list, CEFR difficulty estimate, and a correctness flag",
-      "Selected GPT-4o-mini as a cost/latency tradeoff, with few-shot prompting for reliable output",
-      "Pydantic validation layer normalizing imperfect model outputs; 10+ unit, schema, and integration tests covering non-Latin scripts",
+    metrics: [
+      { value: "AI", label: "SMART goal generator" },
+      { value: "NLP", label: "natural language due dates" },
+      { value: "Live", label: "Vercel + Render" },
     ],
-    github: "https://github.com/akallam04/LLM-Multilingual-Feedback-API",
-    color: "#c084fc",
   },
   {
     name: "NBA Teams Dashboard",
@@ -352,6 +384,11 @@ export const PROJECTS: Project[] = [
     github: "https://github.com/akallam04/nba-dashboard",
     live: "https://nba-teams-dashboard.vercel.app",
     color: "#f87171",
+    metrics: [
+      { value: "30", label: "franchises, full team pages" },
+      { value: "React 19", label: "non-blocking live search" },
+      { value: "A11y", label: "landmarks, focus, ARIA" },
+    ],
   },
   {
     name: "Sales Insights Dashboard",
@@ -366,6 +403,11 @@ export const PROJECTS: Project[] = [
     github: "https://github.com/akallam04/sales-insights-dashboard",
     live: "https://sales-insights-dashboard.streamlit.app",
     color: "#34d399",
+    metrics: [
+      { value: "94K", label: "transactions modeled" },
+      { value: "10", label: "KPI queries, window functions" },
+      { value: "33%", label: "revenue risk surfaced" },
+    ],
   },
 ];
 

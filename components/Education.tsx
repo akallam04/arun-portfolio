@@ -40,7 +40,7 @@ function GpaRing() {
         </defs>
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-2xl font-bold text-white">4.0</span>
+        <span className="gradient-name text-2xl font-bold">4.0</span>
         <span className="text-[9px] uppercase tracking-wider text-white/40">GPA</span>
       </div>
     </div>

@@ -1,75 +1,20 @@
 "use client";
 
-import React, { useMemo, useRef, useState } from "react";
-import {
-  PROJECTS,
-  PROJECT_FILTERS,
-  type Project,
-  type ProjectDomain,
-} from "@/lib/data";
-import { Chip, Reveal, SectionHeader, cn } from "./ui";
+import React from "react";
+import { DOMAIN_LABELS, PROJECTS, type Project } from "@/lib/data";
+import { Chip, Reveal, SectionHeader, SpotlightCard, cn } from "./ui";
 import { ExternalIcon, GitHubIcon } from "./icons";
 import { GitHubPanel } from "./GitHubPanel";
 
-type FilterKey = ProjectDomain | "all";
-
-/** 3D tilt wrapper for desktop pointers only, capped at ~5deg. */
-function TiltCard({
-  className,
-  style,
-  children,
-}: {
-  className?: string;
-  style?: React.CSSProperties;
-  children: React.ReactNode;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = ref.current;
-    if (!el || !window.matchMedia("(hover: hover) and (pointer: fine)").matches)
-      return;
-    const r = el.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width - 0.5;
-    const py = (e.clientY - r.top) / r.height - 0.5;
-    el.style.transform = `perspective(900px) rotateY(${px * 5}deg) rotateX(${
-      -py * 5
-    }deg) translateY(-2px)`;
-    el.style.setProperty("--mx", `${e.clientX - r.left}px`);
-    el.style.setProperty("--my", `${e.clientY - r.top}px`);
-  };
-
-  const onLeave = () => {
-    const el = ref.current;
-    if (el) el.style.transform = "";
-  };
-
-  return (
-    <div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      className={cn(
-        "tilt-card spotlight-card relative overflow-hidden rounded-2xl border border-white/[0.08] backdrop-blur-xl",
-        className
-      )}
-      style={style}
-    >
-      <div className="spotlight-glow pointer-events-none absolute inset-0" />
-      <div className="relative flex h-full flex-col">{children}</div>
-    </div>
-  );
-}
-
 function ProjectLinks({ project }: { project: Project }) {
   return (
-    <div className="mt-auto flex items-center gap-2 pt-4">
+    <div className="mt-5 flex items-center gap-2">
       {project.live && (
         <a
           href={project.live}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/[0.08] px-3 py-1.5 text-xs font-medium text-emerald-300 transition hover:border-emerald-400/50 hover:bg-emerald-500/[0.15]"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/[0.08] px-3.5 py-2 text-xs font-medium text-emerald-300 transition hover:border-emerald-400/50 hover:bg-emerald-500/[0.15]"
         >
           <ExternalIcon size={12} />
           {project.liveLabel ?? "Live app"}
@@ -79,7 +24,7 @@ function ProjectLinks({ project }: { project: Project }) {
         href={project.github}
         target="_blank"
         rel="noreferrer"
-        className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.10] px-3 py-1.5 text-xs text-white/45 transition hover:border-white/25 hover:text-white/80"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.10] px-3.5 py-2 text-xs text-white/45 transition hover:border-white/25 hover:text-white/80"
       >
         <GitHubIcon size={12} />
         Code
@@ -92,7 +37,7 @@ function ProjectLinks({ project }: { project: Project }) {
 function CompareBars({ project }: { project: Project }) {
   if (!project.compare) return null;
   return (
-    <div className="mt-3 space-y-2 rounded-xl border border-white/[0.07] bg-[#070a11]/60 p-3">
+    <div className="space-y-2 rounded-xl border border-white/[0.07] bg-[#070a11]/70 p-3.5">
       {project.compare.map((row) => (
         <div key={row.label}>
           <div className="mb-1 flex items-baseline justify-between gap-2">
@@ -135,36 +80,67 @@ function CompareBars({ project }: { project: Project }) {
   );
 }
 
-function FeaturedProject({ project }: { project: Project }) {
+/**
+ * Full-width case-study placard. Every project gets the same treatment:
+ * big index, domain badges, story column, and a metrics aside that
+ * alternates sides on desktop.
+ */
+function Placard({ project, index }: { project: Project; index: number }) {
+  const flip = index % 2 === 1;
   return (
-    <TiltCard
-      className="p-6 sm:p-8"
-      style={{ background: `${project.color}0e` }}
+    <SpotlightCard
+      className="p-6 shadow-[0_-16px_48px_rgba(0,0,0,0.45)] sm:p-8"
+      style={{
+        background: `linear-gradient(150deg, ${project.color}16 0%, rgba(11,14,21,0) 55%), #0b0e15`,
+        borderColor: `${project.color}30`,
+      }}
     >
-      <div className="mb-3 flex flex-wrap items-center gap-3">
+      {/* Header row */}
+      <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2">
         <span
-          className="rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em]"
-          style={{
-            borderColor: `${project.color}55`,
-            color: project.color,
-            background: `${project.color}14`,
-          }}
+          className="font-mono text-2xl font-bold sm:text-3xl"
+          style={{ color: `${project.color}cc` }}
         >
-          Featured
+          {String(index + 1).padStart(2, "0")}
         </span>
         <h3 className="text-xl font-bold text-white sm:text-2xl">
           {project.name}
         </h3>
+        <div className="ml-auto flex flex-wrap gap-1.5">
+          {project.domains.map((d) => (
+            <span
+              key={d}
+              className="rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em]"
+              style={{
+                borderColor: `${project.color}40`,
+                color: `${project.color}dd`,
+                background: `${project.color}12`,
+              }}
+            >
+              {DOMAIN_LABELS[d]}
+            </span>
+          ))}
+        </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <div>
+      <div
+        className={cn(
+          "grid gap-6 lg:gap-10",
+          flip
+            ? "lg:grid-cols-[0.72fr_1.28fr]"
+            : "lg:grid-cols-[1.28fr_0.72fr]"
+        )}
+      >
+        {/* Story column */}
+        <div className={cn(flip && "lg:order-last")}>
           <p className="text-sm leading-relaxed text-white/55 sm:text-base">
             {project.desc}
           </p>
           <div className="mt-4 flex flex-wrap gap-1.5">
             {project.tags.map((t) => (
-              <Chip key={t}>{t}</Chip>
+              <Chip key={t} compact>
+                {t}
+              </Chip>
             ))}
           </div>
           <ul className="mt-4 space-y-2">
@@ -184,8 +160,10 @@ function FeaturedProject({ project }: { project: Project }) {
           <ProjectLinks project={project} />
         </div>
 
-        {project.metrics && (
-          <div className="grid content-center gap-3">
+        {/* Metrics aside */}
+        <div className="flex flex-col justify-center gap-3">
+          <CompareBars project={project} />
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-1">
             {project.metrics.map((m) => (
               <div
                 key={m.label}
@@ -201,79 +179,14 @@ function FeaturedProject({ project }: { project: Project }) {
               </div>
             ))}
           </div>
-        )}
+        </div>
       </div>
-    </TiltCard>
-  );
-}
-
-function ProjectCard({ project }: { project: Project }) {
-  return (
-    <TiltCard
-      className="h-full p-5 sm:p-6"
-      style={{ background: `${project.color}0c` }}
-    >
-      <div className="mb-2 flex items-center gap-2">
-        <span
-          className="h-2 w-2 shrink-0 rounded-full"
-          style={{ background: project.color }}
-        />
-        <h3 className="text-base font-bold text-white/90">{project.name}</h3>
-      </div>
-      <p className="text-sm leading-relaxed text-white/50">{project.desc}</p>
-      <CompareBars project={project} />
-      <div className="mt-3 flex flex-wrap gap-1">
-        {project.tags.map((t) => (
-          <Chip key={t}>{t}</Chip>
-        ))}
-      </div>
-      <ul className="mt-3 space-y-1.5">
-        {project.bullets.map((b, i) => (
-          <li
-            key={i}
-            className="flex gap-2.5 text-[13px] leading-relaxed text-white/45"
-          >
-            <span
-              className="mt-[8px] h-1 w-1 shrink-0 rounded-full"
-              style={{ background: `${project.color}aa` }}
-            />
-            {b}
-          </li>
-        ))}
-      </ul>
-      <ProjectLinks project={project} />
-    </TiltCard>
+    </SpotlightCard>
   );
 }
 
 export function Projects() {
-  const [filter, setFilter] = useState<FilterKey>("all");
-
-  const counts = useMemo(() => {
-    const c: Record<FilterKey, number> = {
-      all: PROJECTS.length,
-      ai: 0,
-      fullstack: 0,
-      data: 0,
-    };
-    for (const p of PROJECTS)
-      for (const d of p.domains) c[d] += 1;
-    return c;
-  }, []);
-
-  const visible = useMemo(
-    () =>
-      filter === "all"
-        ? PROJECTS
-        : PROJECTS.filter((p) => p.domains.includes(filter)),
-    [filter]
-  );
-
-  const featured = visible.find((p) => p.featured);
-  const rest = visible.filter((p) => !p.featured);
-  const liveCount = PROJECTS.filter(
-    (p) => p.live && !p.liveLabel
-  ).length;
+  const liveCount = PROJECTS.filter((p) => p.live && !p.liveLabel).length;
 
   return (
     <section
@@ -284,59 +197,33 @@ export function Projects() {
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <SectionHeader index="04" title="Projects" />
 
-        {/* Domain filter */}
         <Reveal>
-          <div className="mb-6 flex flex-wrap items-center gap-2 sm:mb-8">
-            {PROJECT_FILTERS.map((f) => {
-              const active = filter === f.key;
-              return (
-                <button
-                  key={f.key}
-                  onClick={() => setFilter(f.key)}
-                  aria-pressed={active}
-                  className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm transition-all",
-                    active
-                      ? "border-white bg-white font-semibold text-black"
-                      : "border-white/12 bg-white/[0.03] text-white/50 hover:border-white/30 hover:text-white/85"
-                  )}
-                >
-                  {f.label}
-                  <span
-                    className={cn(
-                      "font-mono text-[10px]",
-                      active ? "text-black/50" : "text-white/30"
-                    )}
-                  >
-                    {counts[f.key]}
-                  </span>
-                </button>
-              );
-            })}
-            <span className="ml-auto hidden text-xs text-white/30 sm:block">
-              {PROJECTS.length} projects · {liveCount} live demos · 1 published
-              model
-            </span>
-          </div>
+          <p className="mb-6 text-sm text-white/35 sm:mb-8">
+            {PROJECTS.length} case studies, every one shipped ·{" "}
+            {liveCount} live demos · 1 published model. Scroll: on desktop the
+            deck stacks as you go.
+          </p>
         </Reveal>
 
-        {/* Re-mounts on filter change so cards animate back in */}
-        <div key={filter} className="space-y-4 sm:space-y-5">
-          {featured && (
-            <Reveal>
-              <FeaturedProject project={featured} />
-            </Reveal>
-          )}
-          <div className="grid gap-4 sm:gap-5 lg:grid-cols-3">
-            {rest.map((p, i) => (
-              <Reveal key={p.name} delay={i * 80} className="h-full">
-                <ProjectCard project={p} />
+        {/* Sticky deck: each placard pins under the nav and the next one
+            slides over it (desktop only; plain list on mobile). */}
+        <div className="space-y-5 sm:space-y-6">
+          {PROJECTS.map((p, i) => (
+            <div
+              key={p.name}
+              className="lg:sticky"
+              style={{ top: `${76 + i * 12}px` }}
+            >
+              <Reveal>
+                <Placard project={p} index={i} />
               </Reveal>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
 
-        <GitHubPanel />
+        <div className="mt-8 sm:mt-10">
+          <GitHubPanel />
+        </div>
       </div>
     </section>
   );
