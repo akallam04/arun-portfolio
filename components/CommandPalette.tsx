@@ -114,7 +114,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
         id: `link-live-${p.name}`,
         group: "Links",
         label: `Open ${p.name}`,
-        hint: "Live app",
+        hint: p.liveLabel ?? "Live app",
         keywords: `project demo ${p.tags.join(" ")}`,
         icon: <ExternalIcon size={16} />,
         run: () => {

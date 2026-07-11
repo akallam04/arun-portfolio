@@ -65,11 +65,11 @@ export default function OpenGraphImage() {
             display: "flex",
           }}
         >
-          CS @ ASU · AI-powered products, full-stack apps, data systems
+          CS @ ASU · AI agents, fine-tuned LLMs, full-stack apps
         </div>
 
         <div style={{ display: "flex", gap: 14, marginTop: 44 }}>
-          {["AI / LLM", "React", "Next.js", "Python", "FastAPI", "SQL"].map(
+          {["AI / LLM", "LangGraph", "React", "Next.js", "Python", "FastAPI"].map(
             (t) => (
               <div
                 key={t}

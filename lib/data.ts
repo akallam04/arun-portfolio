@@ -16,11 +16,12 @@ export const PROFILE = {
   site: "https://arunkallam.vercel.app",
   availability: "Open to Fall 2026 Co-ops",
   tagline:
-    "CS student at ASU building AI-powered products, full-stack apps, and data-driven systems.",
+    "CS student at ASU building AI agents, fine-tuned LLMs, and full-stack products.",
 } as const;
 
 export const TYPED_ROLES = [
-  "AI-powered products",
+  "AI agents & LLM products",
+  "fine-tuned LLMs",
   "full-stack web apps",
   "reliable, tested APIs",
   "data dashboards",
@@ -34,13 +35,14 @@ export const CORE_STACK = [
   "Node.js",
   "FastAPI",
   "Claude API",
+  "LangGraph",
   "MongoDB",
   "SQL",
 ];
 
 export const HERO_STATS = [
   { value: 2, decimals: 0, suffix: "", label: "Internships" },
-  { value: 4, decimals: 0, suffix: "", label: "Deployed apps" },
+  { value: 6, decimals: 0, suffix: "", label: "Projects shipped" },
   { value: 94, decimals: 0, suffix: "K+", label: "Rows analyzed" },
   { value: 500, decimals: 0, suffix: "+", label: "Profiles validated" },
 ];
@@ -82,7 +84,7 @@ export const COURSEWORK = [
 export const FOCUS_AREAS = [
   {
     label: "AI / LLM Engineering",
-    desc: "Claude & OpenAI APIs, prompt design, structured outputs",
+    desc: "LangGraph agents, RAG, QLoRA fine-tuning, eval harnesses",
   },
   {
     label: "Full-Stack Development",
@@ -106,15 +108,19 @@ export const SKILL_GROUPS: SkillGroup[] = [
   {
     label: "AI / LLM",
     axis: "AI / LLM",
-    level: 85,
+    level: 90,
     color: "#c084fc",
     items: [
       "Claude API",
       "OpenAI API",
+      "LangGraph",
+      "MCP",
+      "RAG",
+      "QLoRA",
+      "Evals & Guardrails",
+      "Hugging Face",
       "Prompt Engineering",
       "Structured Outputs",
-      "Pydantic",
-      "Few-shot Prompting",
     ],
   },
   {
@@ -153,17 +159,18 @@ export const SKILL_GROUPS: SkillGroup[] = [
     axis: "Databases",
     level: 78,
     color: "#f87171",
-    items: ["MongoDB Atlas", "MySQL"],
+    items: ["MongoDB Atlas", "MySQL", "Chroma (Vector)"],
   },
   {
     label: "Tools & Cloud",
     axis: "Tools",
-    level: 75,
+    level: 76,
     color: "#2dd4bf",
     items: [
       "Git",
       "GitHub",
       "Docker",
+      "AWS Lambda",
       "Postman",
       "Vercel",
       "Render",
@@ -211,22 +218,94 @@ export const EXPERIENCE: Experience[] = [
   },
 ];
 
+export type ProjectDomain = "ai" | "fullstack" | "data";
+
+export const PROJECT_FILTERS: { key: ProjectDomain | "all"; label: string }[] =
+  [
+    { key: "all", label: "All" },
+    { key: "ai", label: "AI / LLM" },
+    { key: "fullstack", label: "Full-Stack" },
+    { key: "data", label: "Data" },
+  ];
+
 export type Project = {
   name: string;
   featured?: boolean;
+  domains: ProjectDomain[];
   desc: string;
   tags: string[];
   bullets: string[];
   github: string;
   live?: string;
+  liveLabel?: string;
   color: string;
   metrics?: { value: string; label: string }[];
+  /** Optional labeled bars, e.g. a benchmark comparison rendered on the card. */
+  compare?: { label: string; value: number; highlight?: boolean }[];
+  compareCaption?: string;
 };
 
 export const PROJECTS: Project[] = [
   {
-    name: "Goalsetter+",
+    name: "Shopify AI Support Agent",
     featured: true,
+    domains: ["ai", "fullstack"],
+    desc: "AI customer support agent for a Shopify store: RAG-grounded answers with citations, order lookups through a self-built MCP server, and refusal-first guardrails, all measured end to end by an eval harness.",
+    tags: [
+      "Python",
+      "LangGraph",
+      "MCP",
+      "Claude API",
+      "RAG",
+      "Chroma",
+      "FastAPI",
+      "AWS Lambda",
+      "Vercel",
+    ],
+    bullets: [
+      "LangGraph state machine with typed routing and a grounding-verification node that programmatically rejects any draft stating facts absent from tool results; hard prompt injections refused with zero model calls",
+      "Self-built MCP server wrapping the Shopify Admin API with read-only order, customer, and inventory tools, plus Chroma RAG over the catalog and policy docs with citations",
+      "53-case eval harness scoring intent, retrieval, tools, refusals, latency, and cost; iterated 96% to 100% pass and picked Claude Haiku over Sonnet at 2.4x lower cost with equal accuracy",
+    ],
+    github: "https://github.com/akallam04/shopify-support-agent",
+    live: "https://shopify-support-agent.vercel.app",
+    color: "#2dd4bf",
+    metrics: [
+      { value: "100%", label: "53-case eval pass" },
+      { value: "$0.18", label: "per 100 conversations" },
+      { value: "3.8s", label: "p95 latency" },
+    ],
+  },
+  {
+    name: "CEFR QLoRA Benchmark",
+    domains: ["ai", "data"],
+    desc: "Does a QLoRA fine-tuned Llama 3 8B beat the GPT-4o-mini call my Feedback API makes? Yes, and the benchmark proves it with reproducible, honest evals.",
+    tags: [
+      "Python",
+      "PyTorch",
+      "QLoRA / PEFT",
+      "Llama 3 8B",
+      "Hugging Face",
+      "Transformers",
+    ],
+    bullets: [
+      "24x lower cost per request and 3x lower latency than the few-shot GPT-4o-mini baseline, with 99% of predictions within one CEFR level",
+      "Deterministic pipeline: SHA-256-verified identical test sets, McNemar significance testing (p = 2.3e-33), and measured rather than estimated costs",
+      "Honest ablations: oversampling rare classes failed to fix edge-class F1, documented as a negative result; fine-tuned adapter published on Hugging Face",
+    ],
+    github: "https://github.com/akallam04/cefr-qlora-benchmark",
+    live: "https://huggingface.co/akallam04/Llama-3-8B-cefr-qlora",
+    liveLabel: "Model on HF",
+    color: "#fbbf24",
+    compare: [
+      { label: "Llama 3 8B QLoRA", value: 62.7, highlight: true },
+      { label: "GPT-4o-mini few-shot", value: 40.8 },
+    ],
+    compareCaption: "Exact accuracy, same 1,460-sentence held-out test set",
+  },
+  {
+    name: "Goalsetter+",
+    domains: ["ai", "fullstack"],
     desc: "Production-deployed MERN goal tracker with AI-powered SMART goal suggestions, analytics dashboards, sub-tasks, share links, and natural language due dates.",
     tags: [
       "React",
@@ -239,21 +318,17 @@ export const PROJECTS: Project[] = [
       "JWT",
     ],
     bullets: [
-      "Integrated the Claude Haiku API to generate three SMART goal suggestions from plain-English input, with rate limiting and one-click add to the goals list",
-      "Full-stack goal tracker with JWT auth, sub-tasks, natural language date parsing, overdue detection, and revokable public share links",
-      "Recharts analytics dashboard with goals-by-category and completions-over-time charts, computed client-side from Redux state to eliminate redundant API round-trips",
+      "Claude Haiku API generates three SMART goal suggestions from plain-English input, with rate limiting and one-click add",
+      "JWT auth, sub-tasks, natural language date parsing, overdue detection, and revokable public share links",
+      "Recharts analytics computed client-side from Redux state to eliminate redundant API round-trips",
     ],
     github: "https://github.com/akallam04/goalsetter-plus",
     live: "https://goalsetter-plus.vercel.app",
     color: "#60a5fa",
-    metrics: [
-      { value: "AI", label: "SMART goal generator" },
-      { value: "Full-stack", label: "MERN + Redux + JWT" },
-      { value: "Live", label: "Vercel + Render" },
-    ],
   },
   {
     name: "LLM Multilingual Feedback API",
+    domains: ["ai", "fullstack"],
     desc: "FastAPI service giving language learners structured feedback on their writing, validated end-to-end with Pydantic.",
     tags: ["Python", "FastAPI", "OpenAI API", "Pydantic", "Docker"],
     bullets: [
@@ -261,11 +336,12 @@ export const PROJECTS: Project[] = [
       "Selected GPT-4o-mini as a cost/latency tradeoff, with few-shot prompting for reliable output",
       "Pydantic validation layer normalizing imperfect model outputs; 10+ unit, schema, and integration tests covering non-Latin scripts",
     ],
-    github: "https://github.com/akallam04/intern-task-2026",
+    github: "https://github.com/akallam04/LLM-Multilingual-Feedback-API",
     color: "#c084fc",
   },
   {
     name: "NBA Teams Dashboard",
+    domains: ["fullstack"],
     desc: "Editorial-style dashboard for all 30 NBA franchises: team pages, live search, and franchise stats with motion-rich UI.",
     tags: ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS", "Framer Motion"],
     bullets: [
@@ -279,6 +355,7 @@ export const PROJECTS: Project[] = [
   },
   {
     name: "Sales Insights Dashboard",
+    domains: ["data"],
     desc: "Interactive analytics dashboard over 94,073 AtliQ Hardware transactions, live on Streamlit Cloud and backed by a Railway-hosted MySQL database.",
     tags: ["Python", "MySQL", "SQLAlchemy", "Streamlit", "Plotly", "Pandas"],
     bullets: [
@@ -293,17 +370,17 @@ export const PROJECTS: Project[] = [
 ];
 
 // Snapshot used when the GitHub API is unreachable or rate-limited.
-// Refreshed 2026-06: 8 public repos, 3 followers.
+// Refreshed 2026-07: 10 public repos, 4 followers.
 export const GITHUB_FALLBACK = {
-  repos: 8,
-  followers: 3,
+  repos: 10,
+  followers: 4,
   languages: [
+    { name: "Python", count: 4 },
     { name: "JavaScript", count: 3 },
-    { name: "Python", count: 2 },
     { name: "TypeScript", count: 2 },
   ],
-  latestRepo: "nba-dashboard",
-  latestUrl: "https://github.com/akallam04/nba-dashboard",
+  latestRepo: "shopify-support-agent",
+  latestUrl: "https://github.com/akallam04/shopify-support-agent",
 };
 
 export const LANGUAGE_COLORS: Record<string, string> = {

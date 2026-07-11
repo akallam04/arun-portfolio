@@ -1,10 +1,17 @@
 "use client";
 
-import React, { useRef } from "react";
-import { PROJECTS, type Project } from "@/lib/data";
+import React, { useMemo, useRef, useState } from "react";
+import {
+  PROJECTS,
+  PROJECT_FILTERS,
+  type Project,
+  type ProjectDomain,
+} from "@/lib/data";
 import { Chip, Reveal, SectionHeader, cn } from "./ui";
 import { ExternalIcon, GitHubIcon } from "./icons";
 import { GitHubPanel } from "./GitHubPanel";
+
+type FilterKey = ProjectDomain | "all";
 
 /** 3D tilt wrapper for desktop pointers only, capped at ~5deg. */
 function TiltCard({
@@ -65,7 +72,7 @@ function ProjectLinks({ project }: { project: Project }) {
           className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/[0.08] px-3 py-1.5 text-xs font-medium text-emerald-300 transition hover:border-emerald-400/50 hover:bg-emerald-500/[0.15]"
         >
           <ExternalIcon size={12} />
-          Live app
+          {project.liveLabel ?? "Live app"}
         </a>
       )}
       <a
@@ -77,6 +84,53 @@ function ProjectLinks({ project }: { project: Project }) {
         <GitHubIcon size={12} />
         Code
       </a>
+    </div>
+  );
+}
+
+/** Labeled comparison bars, e.g. the CEFR benchmark result. */
+function CompareBars({ project }: { project: Project }) {
+  if (!project.compare) return null;
+  return (
+    <div className="mt-3 space-y-2 rounded-xl border border-white/[0.07] bg-[#070a11]/60 p-3">
+      {project.compare.map((row) => (
+        <div key={row.label}>
+          <div className="mb-1 flex items-baseline justify-between gap-2">
+            <span
+              className={cn(
+                "text-[11px]",
+                row.highlight ? "font-semibold text-white/85" : "text-white/45"
+              )}
+            >
+              {row.label}
+            </span>
+            <span
+              className="font-mono text-[11px] font-semibold"
+              style={{
+                color: row.highlight ? project.color : "rgba(255,255,255,0.4)",
+              }}
+            >
+              {row.value}%
+            </span>
+          </div>
+          <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.07]">
+            <div
+              className="h-full rounded-full transition-all duration-700"
+              style={{
+                width: `${row.value}%`,
+                background: row.highlight
+                  ? `linear-gradient(90deg, ${project.color}66, ${project.color})`
+                  : "rgba(255,255,255,0.22)",
+              }}
+            />
+          </div>
+        </div>
+      ))}
+      {project.compareCaption && (
+        <p className="pt-0.5 text-[10px] leading-snug text-white/30">
+          {project.compareCaption}
+        </p>
+      )}
     </div>
   );
 }
@@ -167,6 +221,7 @@ function ProjectCard({ project }: { project: Project }) {
         <h3 className="text-base font-bold text-white/90">{project.name}</h3>
       </div>
       <p className="text-sm leading-relaxed text-white/50">{project.desc}</p>
+      <CompareBars project={project} />
       <div className="mt-3 flex flex-wrap gap-1">
         {project.tags.map((t) => (
           <Chip key={t}>{t}</Chip>
@@ -192,8 +247,33 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 export function Projects() {
-  const featured = PROJECTS.find((p) => p.featured);
-  const rest = PROJECTS.filter((p) => !p.featured);
+  const [filter, setFilter] = useState<FilterKey>("all");
+
+  const counts = useMemo(() => {
+    const c: Record<FilterKey, number> = {
+      all: PROJECTS.length,
+      ai: 0,
+      fullstack: 0,
+      data: 0,
+    };
+    for (const p of PROJECTS)
+      for (const d of p.domains) c[d] += 1;
+    return c;
+  }, []);
+
+  const visible = useMemo(
+    () =>
+      filter === "all"
+        ? PROJECTS
+        : PROJECTS.filter((p) => p.domains.includes(filter)),
+    [filter]
+  );
+
+  const featured = visible.find((p) => p.featured);
+  const rest = visible.filter((p) => !p.featured);
+  const liveCount = PROJECTS.filter(
+    (p) => p.live && !p.liveLabel
+  ).length;
 
   return (
     <section
@@ -204,7 +284,44 @@ export function Projects() {
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <SectionHeader index="04" title="Projects" />
 
-        <div className="space-y-4 sm:space-y-5">
+        {/* Domain filter */}
+        <Reveal>
+          <div className="mb-6 flex flex-wrap items-center gap-2 sm:mb-8">
+            {PROJECT_FILTERS.map((f) => {
+              const active = filter === f.key;
+              return (
+                <button
+                  key={f.key}
+                  onClick={() => setFilter(f.key)}
+                  aria-pressed={active}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm transition-all",
+                    active
+                      ? "border-white bg-white font-semibold text-black"
+                      : "border-white/12 bg-white/[0.03] text-white/50 hover:border-white/30 hover:text-white/85"
+                  )}
+                >
+                  {f.label}
+                  <span
+                    className={cn(
+                      "font-mono text-[10px]",
+                      active ? "text-black/50" : "text-white/30"
+                    )}
+                  >
+                    {counts[f.key]}
+                  </span>
+                </button>
+              );
+            })}
+            <span className="ml-auto hidden text-xs text-white/30 sm:block">
+              {PROJECTS.length} projects · {liveCount} live demos · 1 published
+              model
+            </span>
+          </div>
+        </Reveal>
+
+        {/* Re-mounts on filter change so cards animate back in */}
+        <div key={filter} className="space-y-4 sm:space-y-5">
           {featured && (
             <Reveal>
               <FeaturedProject project={featured} />
@@ -212,13 +329,14 @@ export function Projects() {
           )}
           <div className="grid gap-4 sm:gap-5 lg:grid-cols-3">
             {rest.map((p, i) => (
-              <Reveal key={p.name} delay={i * 100} className="h-full">
+              <Reveal key={p.name} delay={i * 80} className="h-full">
                 <ProjectCard project={p} />
               </Reveal>
             ))}
           </div>
-          <GitHubPanel />
         </div>
+
+        <GitHubPanel />
       </div>
     </section>
   );
