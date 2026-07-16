@@ -37,16 +37,16 @@ export function Hero() {
       data-key="home"
       className="relative flex min-h-[calc(100svh-56px)] scroll-mt-14 items-center"
     >
-      <div className="mx-auto w-full max-w-6xl px-5 pb-16 pt-10 sm:px-8 lg:pb-6 lg:pt-4">
+      <div className="mx-auto w-full max-w-6xl px-5 pb-16 pt-10 sm:px-8 lg:pb-8 lg:pt-6">
         <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-12">
           {/* Text block first on mobile so the pitch is above the fold */}
-          <div className="flex flex-col gap-6 sm:gap-7 lg:gap-4">
+          <div className="flex flex-col gap-6 sm:gap-7 lg:gap-5">
             <Reveal>
               <AvailabilityBadge />
             </Reveal>
 
             <Reveal delay={80}>
-              <h1 className="text-[clamp(38px,9vw,72px)] font-bold leading-[1.04] tracking-tight lg:text-[clamp(38px,4.6vw,66px)]">
+              <h1 className="text-[clamp(38px,9vw,72px)] font-bold leading-[1.04] tracking-tight lg:text-[clamp(38px,5vw,70px)]">
                 <span className="block text-white">{PROFILE.shortName}</span>
                 <span className="gradient-name block">{PROFILE.lastName}</span>
               </h1>
@@ -133,7 +133,7 @@ export function Hero() {
           {/* Photo with floating badges */}
           <Reveal
             delay={200}
-            className="mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-[340px]"
+            className="mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-[365px]"
           >
             <div className="relative">
               <div className="absolute -inset-px rounded-[26px] bg-gradient-to-br from-blue-500/40 via-transparent to-purple-500/40" />
@@ -165,7 +165,7 @@ export function Hero() {
 
         {/* Stats strip */}
         <Reveal delay={120}>
-          <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.06] sm:mt-16 lg:mt-6 lg:grid-cols-4">
+          <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.06] sm:mt-16 lg:mt-8 lg:grid-cols-4">
             {HERO_STATS.map((s) => (
               <div
                 key={s.label}
