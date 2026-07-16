@@ -366,7 +366,7 @@ export const PROJECTS: Project[] = [
       "Analytics dashboard hand-built in SVG from Redux state (13-week heatmap, streak tracking), plus a one-click demo account; deployed on Vercel and Render",
     ],
     github: "https://github.com/akallam04/goalsetter-plus",
-    live: "https://goalsetter-plus.vercel.app/share/demoboard",
+    live: "https://goalsetter-plus.vercel.app",
     color: "#60a5fa",
     metrics: [
       { value: "AI", label: "SMART goal generator" },

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { SECTIONS } from "@/lib/data";
+import { useEffect, useRef, useState } from "react";
+import { SECTIONS, type SectionKey } from "@/lib/data";
 import { scrollToSection, useActiveSection } from "@/lib/hooks";
 import { cn } from "./ui";
 import { SearchIcon } from "./icons";
@@ -9,6 +9,21 @@ import { SearchIcon } from "./icons";
 export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
   const active = useActiveSection();
   const progressRef = useRef<HTMLDivElement>(null);
+  const linkRefs = useRef<Partial<Record<SectionKey, HTMLButtonElement>>>({});
+  const [pill, setPill] = useState<{ left: number; width: number } | null>(
+    null
+  );
+
+  // Slide the highlight pill to whichever link is active.
+  useEffect(() => {
+    const measure = () => {
+      const el = linkRefs.current[active];
+      if (el) setPill({ left: el.offsetLeft, width: el.offsetWidth });
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [active]);
 
   // Scroll progress bar driven outside React state to avoid re-renders.
   useEffect(() => {
@@ -49,25 +64,42 @@ export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
           </span>
         </button>
 
-        {/* Desktop section links */}
-        <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Sections">
+        {/* Desktop section links with a sliding highlight */}
+        <nav
+          className="relative hidden items-center gap-0.5 lg:flex"
+          aria-label="Sections"
+        >
+          {pill && (
+            <span
+              aria-hidden="true"
+              className="absolute inset-y-0 z-0 rounded-lg bg-white/[0.10]"
+              style={{
+                left: pill.left,
+                width: pill.width,
+                transition:
+                  "left 350ms cubic-bezier(0.22,1,0.36,1), width 350ms cubic-bezier(0.22,1,0.36,1)",
+              }}
+            >
+              <span className="absolute -bottom-[1px] left-3 right-3 h-px bg-gradient-to-r from-blue-400/0 via-blue-400/80 to-blue-400/0" />
+            </span>
+          )}
           {SECTIONS.map((s) => {
             const isActive = active === s.key;
             return (
               <button
                 key={s.key}
+                ref={(el) => {
+                  if (el) linkRefs.current[s.key] = el;
+                }}
                 onClick={() => scrollToSection(s.key)}
                 className={cn(
-                  "relative rounded-lg px-3.5 py-1.5 text-sm transition-all",
+                  "relative z-10 rounded-lg px-3.5 py-1.5 text-sm transition-colors duration-300",
                   isActive
-                    ? "bg-white/[0.10] font-medium text-white"
-                    : "text-white/40 hover:bg-white/[0.05] hover:text-white/80"
+                    ? "font-medium text-white"
+                    : "text-white/40 hover:text-white/85"
                 )}
               >
                 {s.label}
-                {isActive && (
-                  <span className="absolute -bottom-[1px] left-3 right-3 h-px bg-gradient-to-r from-blue-400/0 via-blue-400/80 to-blue-400/0" />
-                )}
               </button>
             );
           })}
