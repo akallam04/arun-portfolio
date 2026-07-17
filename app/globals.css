@@ -23,6 +23,12 @@ body {
   border-radius: 6px;
 }
 
+/* The palette input sits flush against its clipped container edge, so the
+   global focus ring gets cut off; the dialog itself signals focus. */
+.palette-input:focus-visible {
+  outline: none;
+}
+
 /* Thin styled scrollbar (WebKit) */
 ::-webkit-scrollbar {
   width: 10px;

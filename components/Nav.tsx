@@ -57,10 +57,10 @@ export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
         <button
           onClick={() => scrollToSection("home")}
           aria-label="Back to top"
-          className="group flex items-center gap-2.5 text-sm font-bold tracking-widest text-white/60 transition hover:text-white"
+          className="group flex items-center gap-2.5 text-sm font-bold tracking-widest transition"
         >
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/15 bg-white/[0.06] text-[11px] transition group-hover:border-white/30">
-            AK
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/15 bg-white/[0.06] transition group-hover:border-white/35 group-hover:shadow-[0_0_14px_rgba(96,165,250,0.35)]">
+            <span className="gradient-name text-[11px] font-bold">AK</span>
           </span>
         </button>
 

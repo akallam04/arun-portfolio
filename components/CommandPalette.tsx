@@ -239,7 +239,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
               setIndex(0);
             }}
             placeholder="Jump to a section, open a link, copy contact info…"
-            className="h-12 w-full bg-transparent text-sm text-white outline-none placeholder:text-white/30"
+            className="palette-input h-12 w-full bg-transparent text-sm text-white outline-none placeholder:text-white/30"
             aria-label="Search commands"
           />
           <kbd className="shrink-0 rounded border border-white/15 bg-white/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-white/45">
