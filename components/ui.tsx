@@ -32,10 +32,13 @@ export function Chip({
 export function SpotlightCard({
   className,
   style,
+  blur = true,
   children,
 }: {
   className?: string;
   style?: React.CSSProperties;
+  /** Backdrop blur is costly on tall, frequently repainted cards; opt out there. */
+  blur?: boolean;
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -51,7 +54,8 @@ export function SpotlightCard({
       ref={ref}
       onMouseMove={onMouseMove}
       className={cn(
-        "spotlight-card relative overflow-hidden rounded-2xl border border-slate-900/[0.10] backdrop-blur-xl",
+        "spotlight-card relative overflow-hidden rounded-2xl border border-slate-900/[0.10]",
+        blur && "backdrop-blur-xl",
         className
       )}
       style={style}

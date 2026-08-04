@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { DOMAIN_LABELS, PROJECTS, type Project } from "@/lib/data";
 import { Chip, Reveal, SectionHeader, SpotlightCard, cn } from "./ui";
 import { ExternalIcon, GitHubIcon } from "./icons";
@@ -89,7 +89,8 @@ function Placard({ project, index }: { project: Project; index: number }) {
   const flip = index % 2 === 1;
   return (
     <SpotlightCard
-      className="p-6 shadow-[0_-14px_40px_rgba(30,80,150,0.16)] sm:p-8"
+      blur={false}
+      className="p-6 shadow-[0_14px_40px_rgba(30,80,150,0.10)] sm:p-8"
       style={{
         background: `linear-gradient(150deg, ${project.color}14 0%, rgba(255,255,255,0) 55%), rgba(250,253,255,0.9)`,
         borderColor: `${project.color}30`,
@@ -187,51 +188,39 @@ function Placard({ project, index }: { project: Project; index: number }) {
 
 export function Projects() {
   const liveCount = PROJECTS.filter((p) => p.live && !p.liveLabel).length;
-  const deckRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+  const listRef = useRef<HTMLDivElement>(null);
 
-  // Depth-of-field on the stacking deck: as the next placard slides over,
-  // the pinned one recedes (scale, fade, blur). Desktop pointers only.
+  // Track which placard owns the viewport so the index rail can follow.
+  // Observer-driven: no scroll handler, no per-frame layout reads.
   useEffect(() => {
-    if (!window.matchMedia("(min-width: 1024px)").matches) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const deck = deckRef.current;
-    if (!deck) return;
-    const wrappers = Array.from(
-      deck.querySelectorAll<HTMLElement>("[data-deck-card]")
+    const list = listRef.current;
+    if (!list) return;
+    const cards = Array.from(
+      list.querySelectorAll<HTMLElement>("[data-project-index]")
     );
-    const targets = wrappers.map((w) =>
-      w.querySelector<HTMLElement>(".deck-depth")
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            const idx = Number(
+              (e.target as HTMLElement).dataset.projectIndex ?? 0
+            );
+            setActive(idx);
+          }
+        }
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
     );
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const vh = window.innerHeight;
-      wrappers.forEach((w, i) => {
-        const next = wrappers[i + 1];
-        const t = targets[i];
-        if (!next || !t) return;
-        const pinNext = 76 + (i + 1) * 12;
-        const nTop = next.getBoundingClientRect().top;
-        const raw = 1 - (nTop - pinNext) / Math.max(vh - pinNext, 1);
-        const prog = Math.min(Math.max(raw, 0), 1);
-        t.style.transformOrigin = "center top";
-        t.style.transform = `scale(${(1 - prog * 0.06).toFixed(4)})`;
-        t.style.opacity = `${(1 - prog * 0.3).toFixed(3)}`;
-        t.style.filter = prog > 0.01 ? `blur(${(prog * 2).toFixed(2)}px)` : "";
-      });
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    update();
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
+    cards.forEach((c) => obs.observe(c));
+    return () => obs.disconnect();
   }, []);
+
+  const jumpTo = (i: number) => {
+    document
+      .getElementById(`project-${i}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <section
@@ -245,28 +234,62 @@ export function Projects() {
         <Reveal>
           <p className="mb-6 text-sm text-slate-400 sm:mb-8">
             {PROJECTS.length} case studies, every one shipped ·{" "}
-            {liveCount} live demos · 1 published model. Scroll: on desktop the
-            deck stacks as you go.
+            {liveCount} live demos · 1 published model.
           </p>
         </Reveal>
 
-        {/* Sticky deck: each placard pins under the nav and the next one
-            slides over it (desktop only; plain list on mobile). */}
-        <div ref={deckRef} className="space-y-5 sm:space-y-6">
-          {PROJECTS.map((p, i) => (
-            <div
-              key={p.name}
-              data-deck-card
-              className="lg:sticky"
-              style={{ top: `${76 + i * 12}px` }}
-            >
-              <Reveal>
-                <div className="deck-depth">
-                  <Placard project={p} index={i} />
-                </div>
-              </Reveal>
+        <div className="lg:grid lg:grid-cols-[56px_1fr] lg:gap-8">
+          {/* Index rail: sticky, tiny, and the only sticky thing here */}
+          <nav
+            aria-label="Project index"
+            className="hidden lg:block"
+          >
+            <div className="sticky top-24 flex flex-col gap-1">
+              {PROJECTS.map((p, i) => {
+                const on = active === i;
+                return (
+                  <button
+                    key={p.name}
+                    onClick={() => jumpTo(i)}
+                    aria-label={p.name}
+                    aria-current={on ? "true" : undefined}
+                    className="group flex items-center gap-2 py-1.5 text-left"
+                  >
+                    <span
+                      className="h-px transition-all duration-300"
+                      style={{
+                        width: on ? 20 : 10,
+                        background: on ? p.color : "rgba(15,42,67,0.25)",
+                      }}
+                    />
+                    <span
+                      className="font-mono text-[11px] font-semibold transition-colors duration-300"
+                      style={{
+                        color: on ? p.color : "rgba(15,42,67,0.35)",
+                      }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
-          ))}
+          </nav>
+
+          <div ref={listRef} className="space-y-5 sm:space-y-6">
+            {PROJECTS.map((p, i) => (
+              <div
+                key={p.name}
+                id={`project-${i}`}
+                data-project-index={i}
+                className="scroll-mt-24"
+              >
+                <Reveal>
+                  <Placard project={p} index={i} />
+                </Reveal>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="mt-8 sm:mt-10">
