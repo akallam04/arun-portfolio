@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { Background } from "./Background";
+import { CursorAura } from "./CursorAura";
+import { IntroOverlay } from "./IntroOverlay";
+import { Ticker } from "./Ticker";
 import { Nav } from "./Nav";
 import { MobileDock } from "./MobileDock";
 import { CommandPalette } from "./CommandPalette";
@@ -38,8 +41,10 @@ export function PortfolioShell() {
   }, []);
 
   return (
-    <div className="min-h-screen text-white">
+    <div className="min-h-screen text-slate-900">
       <Background />
+      <IntroOverlay />
+      <CursorAura />
       <Nav onOpenPalette={() => setPaletteOpen(true)} />
       {paletteOpen && (
         <CommandPalette onClose={() => setPaletteOpen(false)} />
@@ -47,6 +52,7 @@ export function PortfolioShell() {
 
       <main className="pt-14">
         <Hero />
+        <Ticker />
         <Education />
         <Skills />
         <Experience />

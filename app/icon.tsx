@@ -11,12 +11,12 @@ export default function Icon() {
           width: 32,
           height: 32,
           borderRadius: 8,
-          background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%)",
+          background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 60%, #06b6d4 100%)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           position: "relative",
-          border: "1px solid rgba(139,92,246,0.4)",
+          border: "1px solid rgba(255,255,255,0.55)",
         }}
       >
         <span

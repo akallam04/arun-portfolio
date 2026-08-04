@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { DOMAIN_LABELS, PROJECTS, type Project } from "@/lib/data";
 import { Chip, Reveal, SectionHeader, SpotlightCard, cn } from "./ui";
 import { ExternalIcon, GitHubIcon } from "./icons";
@@ -14,7 +14,7 @@ function ProjectLinks({ project }: { project: Project }) {
           href={project.live}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/[0.08] px-3.5 py-2 text-xs font-medium text-emerald-300 transition hover:border-emerald-400/50 hover:bg-emerald-500/[0.15]"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-600/30 bg-emerald-500/10 px-3.5 py-2 text-xs font-medium text-emerald-700 transition hover:border-emerald-600/50 hover:bg-emerald-500/15"
         >
           <ExternalIcon size={12} />
           {project.liveLabel ?? "Live app"}
@@ -24,7 +24,7 @@ function ProjectLinks({ project }: { project: Project }) {
         href={project.github}
         target="_blank"
         rel="noreferrer"
-        className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.10] px-3.5 py-2 text-xs text-white/45 transition hover:border-white/25 hover:text-white/80"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-900/[0.10] px-3.5 py-2 text-xs text-slate-500 transition hover:border-sky-500/50 hover:text-slate-800"
       >
         <GitHubIcon size={12} />
         Code
@@ -37,14 +37,14 @@ function ProjectLinks({ project }: { project: Project }) {
 function CompareBars({ project }: { project: Project }) {
   if (!project.compare) return null;
   return (
-    <div className="space-y-2 rounded-xl border border-white/[0.07] bg-[#070a11]/70 p-3.5">
+    <div className="space-y-2 rounded-xl border border-slate-900/[0.08] bg-white/70 p-3.5">
       {project.compare.map((row) => (
         <div key={row.label}>
           <div className="mb-1 flex items-baseline justify-between gap-2">
             <span
               className={cn(
                 "text-[11px]",
-                row.highlight ? "font-semibold text-white/85" : "text-white/45"
+                row.highlight ? "font-semibold text-slate-800" : "text-slate-500"
               )}
             >
               {row.label}
@@ -52,27 +52,27 @@ function CompareBars({ project }: { project: Project }) {
             <span
               className="font-mono text-[11px] font-semibold"
               style={{
-                color: row.highlight ? project.color : "rgba(255,255,255,0.4)",
+                color: row.highlight ? project.color : "rgba(71,85,105,0.8)",
               }}
             >
               {row.value}%
             </span>
           </div>
-          <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.07]">
+          <div className="h-1.5 overflow-hidden rounded-full bg-slate-900/[0.08]">
             <div
               className="h-full rounded-full transition-all duration-700"
               style={{
                 width: `${row.value}%`,
                 background: row.highlight
                   ? `linear-gradient(90deg, ${project.color}66, ${project.color})`
-                  : "rgba(255,255,255,0.22)",
+                  : "rgba(15,42,67,0.25)",
               }}
             />
           </div>
         </div>
       ))}
       {project.compareCaption && (
-        <p className="pt-0.5 text-[10px] leading-snug text-white/30">
+        <p className="pt-0.5 text-[10px] leading-snug text-slate-400">
           {project.compareCaption}
         </p>
       )}
@@ -89,9 +89,9 @@ function Placard({ project, index }: { project: Project; index: number }) {
   const flip = index % 2 === 1;
   return (
     <SpotlightCard
-      className="p-6 shadow-[0_-16px_48px_rgba(0,0,0,0.45)] sm:p-8"
+      className="p-6 shadow-[0_-14px_40px_rgba(30,80,150,0.16)] sm:p-8"
       style={{
-        background: `linear-gradient(150deg, ${project.color}16 0%, rgba(11,14,21,0) 55%), #0b0e15`,
+        background: `linear-gradient(150deg, ${project.color}14 0%, rgba(255,255,255,0) 55%), rgba(250,253,255,0.9)`,
         borderColor: `${project.color}30`,
       }}
     >
@@ -103,7 +103,7 @@ function Placard({ project, index }: { project: Project; index: number }) {
         >
           {String(index + 1).padStart(2, "0")}
         </span>
-        <h3 className="text-xl font-bold text-white sm:text-2xl">
+        <h3 className="text-xl font-bold text-slate-900 sm:text-2xl">
           {project.name}
         </h3>
         <div className="ml-auto flex flex-wrap gap-1.5">
@@ -133,7 +133,7 @@ function Placard({ project, index }: { project: Project; index: number }) {
       >
         {/* Story column */}
         <div className={cn(flip && "lg:order-last")}>
-          <p className="text-sm leading-relaxed text-white/55 sm:text-base">
+          <p className="text-sm leading-relaxed text-slate-600 sm:text-base">
             {project.desc}
           </p>
           <div className="mt-4 flex flex-wrap gap-1.5">
@@ -147,7 +147,7 @@ function Placard({ project, index }: { project: Project; index: number }) {
             {project.bullets.map((b, i) => (
               <li
                 key={i}
-                className="flex gap-3 text-sm leading-relaxed text-white/55"
+                className="flex gap-3 text-sm leading-relaxed text-slate-600"
               >
                 <span
                   className="mt-[8px] h-1 w-1 shrink-0 rounded-full"
@@ -167,7 +167,7 @@ function Placard({ project, index }: { project: Project; index: number }) {
             {project.metrics.map((m) => (
               <div
                 key={m.label}
-                className="rounded-xl border border-white/[0.08] bg-[#070a11]/70 px-4 py-3"
+                className="rounded-xl border border-slate-900/[0.10] bg-white/70 px-4 py-3"
               >
                 <div
                   className="text-lg font-bold"
@@ -175,7 +175,7 @@ function Placard({ project, index }: { project: Project; index: number }) {
                 >
                   {m.value}
                 </div>
-                <div className="text-xs text-white/40">{m.label}</div>
+                <div className="text-xs text-slate-500">{m.label}</div>
               </div>
             ))}
           </div>
@@ -187,6 +187,51 @@ function Placard({ project, index }: { project: Project; index: number }) {
 
 export function Projects() {
   const liveCount = PROJECTS.filter((p) => p.live && !p.liveLabel).length;
+  const deckRef = useRef<HTMLDivElement>(null);
+
+  // Depth-of-field on the stacking deck: as the next placard slides over,
+  // the pinned one recedes (scale, fade, blur). Desktop pointers only.
+  useEffect(() => {
+    if (!window.matchMedia("(min-width: 1024px)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const deck = deckRef.current;
+    if (!deck) return;
+    const wrappers = Array.from(
+      deck.querySelectorAll<HTMLElement>("[data-deck-card]")
+    );
+    const targets = wrappers.map((w) =>
+      w.querySelector<HTMLElement>(".deck-depth")
+    );
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const vh = window.innerHeight;
+      wrappers.forEach((w, i) => {
+        const next = wrappers[i + 1];
+        const t = targets[i];
+        if (!next || !t) return;
+        const pinNext = 76 + (i + 1) * 12;
+        const nTop = next.getBoundingClientRect().top;
+        const raw = 1 - (nTop - pinNext) / Math.max(vh - pinNext, 1);
+        const prog = Math.min(Math.max(raw, 0), 1);
+        t.style.transformOrigin = "center top";
+        t.style.transform = `scale(${(1 - prog * 0.06).toFixed(4)})`;
+        t.style.opacity = `${(1 - prog * 0.3).toFixed(3)}`;
+        t.style.filter = prog > 0.01 ? `blur(${(prog * 2).toFixed(2)}px)` : "";
+      });
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    update();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
 
   return (
     <section
@@ -198,7 +243,7 @@ export function Projects() {
         <SectionHeader index="04" title="Projects" />
 
         <Reveal>
-          <p className="mb-6 text-sm text-white/35 sm:mb-8">
+          <p className="mb-6 text-sm text-slate-400 sm:mb-8">
             {PROJECTS.length} case studies, every one shipped ·{" "}
             {liveCount} live demos · 1 published model. Scroll: on desktop the
             deck stacks as you go.
@@ -207,15 +252,18 @@ export function Projects() {
 
         {/* Sticky deck: each placard pins under the nav and the next one
             slides over it (desktop only; plain list on mobile). */}
-        <div className="space-y-5 sm:space-y-6">
+        <div ref={deckRef} className="space-y-5 sm:space-y-6">
           {PROJECTS.map((p, i) => (
             <div
               key={p.name}
+              data-deck-card
               className="lg:sticky"
               style={{ top: `${76 + i * 12}px` }}
             >
               <Reveal>
-                <Placard project={p} index={i} />
+                <div className="deck-depth">
+                  <Placard project={p} index={i} />
+                </div>
               </Reveal>
             </div>
           ))}

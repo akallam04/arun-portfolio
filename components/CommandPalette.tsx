@@ -143,7 +143,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
         keywords: "clipboard contact",
         icon:
           copiedId === "act-copy-email" ? (
-            <CheckIcon size={16} className="text-emerald-400" />
+            <CheckIcon size={16} className="text-emerald-600" />
           ) : (
             <CopyIcon size={16} />
           ),
@@ -157,7 +157,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
         keywords: "clipboard call contact",
         icon:
           copiedId === "act-copy-phone" ? (
-            <CheckIcon size={16} className="text-emerald-400" />
+            <CheckIcon size={16} className="text-emerald-600" />
           ) : (
             <CopyIcon size={16} />
           ),
@@ -223,14 +223,14 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
       <button
         aria-label="Close"
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 cursor-default bg-slate-900/25 backdrop-blur-sm"
       />
       <div
-        className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-white/[0.12] bg-[#0a0d14]/95 shadow-[0_32px_90px_rgba(0,0,0,0.8)] backdrop-blur-2xl"
+        className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-slate-900/[0.12] bg-white/85 shadow-[0_24px_70px_rgba(30,80,150,0.28)] backdrop-blur-2xl"
         onKeyDown={onKeyDown}
       >
-        <div className="flex items-center gap-3 border-b border-white/[0.07] px-4">
-          <SearchIcon size={16} className="shrink-0 text-white/35" />
+        <div className="flex items-center gap-3 border-b border-slate-900/[0.08] px-4">
+          <SearchIcon size={16} className="shrink-0 text-slate-400" />
           <input
             ref={inputRef}
             value={query}
@@ -239,17 +239,17 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
               setIndex(0);
             }}
             placeholder="Jump to a section, open a link, copy contact info…"
-            className="palette-input h-12 w-full bg-transparent text-sm text-white outline-none placeholder:text-white/30"
+            className="palette-input h-12 w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
             aria-label="Search commands"
           />
-          <kbd className="shrink-0 rounded border border-white/15 bg-white/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-white/45">
+          <kbd className="shrink-0 rounded border border-slate-400/40 bg-white/60 px-1.5 py-0.5 font-mono text-[10px] text-slate-500">
             esc
           </kbd>
         </div>
 
         <div ref={listRef} className="max-h-[46vh] overflow-y-auto p-2">
           {filtered.length === 0 && (
-            <div className="px-3 py-8 text-center text-sm text-white/35">
+            <div className="px-3 py-8 text-center text-sm text-slate-400">
               No matches for “{query}”
             </div>
           )}
@@ -259,7 +259,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
             return (
               <React.Fragment key={c.id}>
                 {showGroup && (
-                  <div className="px-3 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/25 first:pt-1">
+                  <div className="px-3 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 first:pt-1">
                     {c.group}
                   </div>
                 )}
@@ -269,15 +269,15 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
                   onMouseMove={() => setIndex(i)}
                   className={cn(
                     "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors",
-                    i === index ? "bg-white/[0.09]" : "bg-transparent"
+                    i === index ? "bg-sky-600/10" : "bg-transparent"
                   )}
                 >
                   <span
                     className={cn(
                       "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border",
                       i === index
-                        ? "border-white/20 bg-white/[0.08] text-white"
-                        : "border-white/10 bg-white/[0.04] text-white/45"
+                        ? "border-sky-500/40 bg-sky-500/10 text-sky-700"
+                        : "border-slate-400/30 bg-white/60 text-slate-500"
                     )}
                   >
                     {c.icon}
@@ -285,13 +285,13 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
                   <span
                     className={cn(
                       "flex-1 truncate text-sm",
-                      i === index ? "text-white" : "text-white/65"
+                      i === index ? "text-slate-900" : "text-slate-600"
                     )}
                   >
                     {c.label}
                   </span>
                   {c.hint && (
-                    <span className="hidden max-w-[40%] truncate text-xs text-white/30 sm:block">
+                    <span className="hidden max-w-[40%] truncate text-xs text-slate-400 sm:block">
                       {c.hint}
                     </span>
                   )}
@@ -301,13 +301,13 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
           })}
         </div>
 
-        <div className="flex items-center gap-4 border-t border-white/[0.07] px-4 py-2.5 text-[11px] text-white/30">
+        <div className="flex items-center gap-4 border-t border-slate-900/[0.08] px-4 py-2.5 text-[11px] text-slate-400">
           <span className="flex items-center gap-1.5">
-            <kbd className="rounded border border-white/12 bg-white/[0.05] px-1 py-0.5 font-mono text-[9px]">↑↓</kbd>
+            <kbd className="rounded border border-slate-400/40 bg-white/60 px-1 py-0.5 font-mono text-[9px]">↑↓</kbd>
             navigate
           </span>
           <span className="flex items-center gap-1.5">
-            <kbd className="rounded border border-white/12 bg-white/[0.05] px-1 py-0.5 font-mono text-[9px]">↵</kbd>
+            <kbd className="rounded border border-slate-400/40 bg-white/60 px-1 py-0.5 font-mono text-[9px]">↵</kbd>
             select
           </span>
         </div>

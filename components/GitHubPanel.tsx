@@ -141,7 +141,7 @@ function LanguageDonut({
             cy="60"
             r={r}
             fill="none"
-            stroke="rgba(255,255,255,0.05)"
+            stroke="rgba(15,42,67,0.08)"
             strokeWidth="11"
           />
           {segments.map((s) => (
@@ -163,8 +163,8 @@ function LanguageDonut({
           ))}
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <GitHubIcon size={20} className="text-white/60" />
-          <span className="mt-1 text-[9px] uppercase tracking-wider text-white/35">
+          <GitHubIcon size={20} className="text-slate-600" />
+          <span className="mt-1 text-[9px] uppercase tracking-wider text-slate-400">
             languages
           </span>
         </div>
@@ -177,10 +177,10 @@ function LanguageDonut({
               className="h-2.5 w-2.5 shrink-0 rounded-sm"
               style={{ background: s.color }}
             />
-            <span className="flex-1 truncate text-sm text-white/65">
+            <span className="flex-1 truncate text-sm text-slate-600">
               {s.name}
             </span>
-            <span className="font-mono text-xs text-white/40">
+            <span className="font-mono text-xs text-slate-500">
               {Math.round(s.frac * 100)}%
             </span>
           </div>
@@ -196,22 +196,22 @@ export function GitHubPanel() {
 
   return (
     <Reveal>
-      <SpotlightCard className="bg-white/[0.03] p-6 sm:p-8">
+      <SpotlightCard className="bg-white/55 p-6 sm:p-8">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <GitHubIcon size={20} className="text-white/70" />
-            <h3 className="text-lg font-bold text-white sm:text-xl">
+            <GitHubIcon size={20} className="text-slate-700" />
+            <h3 className="text-lg font-bold text-slate-900 sm:text-xl">
               GitHub, live
             </h3>
             <span
               className={
                 data.live
-                  ? "flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/[0.08] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-300"
-                  : "rounded-full border border-white/15 bg-white/[0.05] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white/40"
+                  ? "flex items-center gap-1.5 rounded-full border border-emerald-600/30 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-700"
+                  : "rounded-full border border-slate-400/40 bg-white/60 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500"
               }
             >
               {data.live && (
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
               )}
               {data.live ? "Live API" : "Snapshot"}
             </span>
@@ -220,7 +220,7 @@ export function GitHubPanel() {
             href={PROFILE.github}
             target="_blank"
             rel="noreferrer"
-            className="text-sm text-white/40 transition hover:text-white/80"
+            className="text-sm text-slate-500 transition hover:text-slate-800"
           >
             @{PROFILE.githubUser} →
           </a>
@@ -228,42 +228,42 @@ export function GitHubPanel() {
 
         <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:gap-10">
           <div className="grid grid-cols-2 content-center gap-3">
-            <div className="rounded-xl border border-white/[0.08] bg-[#070a11]/70 px-4 py-3.5">
-              <div className="flex items-center gap-2 text-white/40">
+            <div className="rounded-xl border border-slate-900/[0.10] bg-white/70 px-4 py-3.5">
+              <div className="flex items-center gap-2 text-slate-500">
                 <RepoIcon size={14} />
                 <span className="text-xs">Public repos</span>
               </div>
               <CountUp
                 value={data.repos}
-                className="mt-1 block text-2xl font-bold text-white"
+                className="mt-1 block text-2xl font-bold text-slate-900"
               />
             </div>
-            <div className="rounded-xl border border-white/[0.08] bg-[#070a11]/70 px-4 py-3.5">
-              <div className="flex items-center gap-2 text-white/40">
+            <div className="rounded-xl border border-slate-900/[0.10] bg-white/70 px-4 py-3.5">
+              <div className="flex items-center gap-2 text-slate-500">
                 <UsersIcon size={14} />
                 <span className="text-xs">Followers</span>
               </div>
               <CountUp
                 value={data.followers}
-                className="mt-1 block text-2xl font-bold text-white"
+                className="mt-1 block text-2xl font-bold text-slate-900"
               />
             </div>
             <a
               href={data.latestUrl}
               target="_blank"
               rel="noreferrer"
-              className="col-span-2 rounded-xl border border-white/[0.08] bg-[#070a11]/70 px-4 py-3.5 transition hover:border-white/20"
+              className="col-span-2 rounded-xl border border-slate-900/[0.10] bg-white/70 px-4 py-3.5 transition hover:border-sky-500/40"
             >
-              <div className="flex items-center gap-2 text-white/40">
+              <div className="flex items-center gap-2 text-slate-500">
                 <CommitIcon size={14} />
                 <span className="text-xs">Latest push</span>
               </div>
               <div className="mt-1 flex flex-wrap items-baseline gap-x-2">
-                <span className="font-mono text-sm font-semibold text-white">
+                <span className="font-mono text-sm font-semibold text-slate-900">
                   {data.latestRepo}
                 </span>
                 {data.latestAgo && (
-                  <span className="text-xs text-white/35">{data.latestAgo}</span>
+                  <span className="text-xs text-slate-400">{data.latestAgo}</span>
                 )}
               </div>
             </a>

@@ -95,6 +95,47 @@ export function useCountUp(target: number, start: boolean, duration = 1200) {
   return value;
 }
 
+const SCRAMBLE_CHARS = "ΛΞΦ01<>/#&+*";
+
+/** Resolves scrambled glyphs into `text`, left to right, once `active`. */
+export function useScramble(text: string, active: boolean) {
+  const [out, setOut] = useState(text);
+  const reduced = usePrefersReducedMotion();
+
+  useEffect(() => {
+    if (!active || reduced) {
+      setOut(text);
+      return;
+    }
+    let frame = 0;
+    const totalFrames = Math.max(12, text.length * 2.2);
+    const id = window.setInterval(() => {
+      frame++;
+      const locked = Math.floor((frame / totalFrames) * text.length);
+      if (locked >= text.length) {
+        setOut(text);
+        window.clearInterval(id);
+        return;
+      }
+      setOut(
+        text
+          .split("")
+          .map((c, i) =>
+            i < locked || c === " "
+              ? c
+              : SCRAMBLE_CHARS[
+                  Math.floor(Math.random() * SCRAMBLE_CHARS.length)
+                ]
+          )
+          .join("")
+      );
+    }, 28);
+    return () => window.clearInterval(id);
+  }, [text, active, reduced]);
+
+  return out;
+}
+
 /** Types, holds, deletes, and cycles through `words`. */
 export function useTypewriter(
   words: string[],

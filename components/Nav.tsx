@@ -34,7 +34,7 @@ export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
         const max =
           document.documentElement.scrollHeight - window.innerHeight;
         const p = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
-        el.style.transform = `scaleX(${p})`;
+        el.style.width = `${(p * 100).toFixed(2)}%`;
       }
       raf = 0;
     };
@@ -52,14 +52,14 @@ export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
   }, []);
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/[0.06] bg-[#05070c]/65 backdrop-blur-2xl">
+    <header className="fixed left-0 right-0 top-0 z-50 border-b border-slate-900/[0.07] bg-white/65 backdrop-blur-2xl">
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-5 sm:px-8">
         <button
           onClick={() => scrollToSection("home")}
           aria-label="Back to top"
           className="group flex items-center gap-2.5 text-sm font-bold tracking-widest transition"
         >
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/15 bg-white/[0.06] transition group-hover:border-white/35 group-hover:shadow-[0_0_14px_rgba(96,165,250,0.35)]">
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-400/40 bg-white/60 transition group-hover:border-sky-500/60 group-hover:shadow-[0_0_14px_rgba(96,165,250,0.35)]">
             <span className="gradient-name text-[11px] font-bold">AK</span>
           </span>
         </button>
@@ -72,7 +72,7 @@ export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
           {pill && (
             <span
               aria-hidden="true"
-              className="absolute inset-y-0 z-0 rounded-lg bg-white/[0.10]"
+              className="absolute inset-y-0 z-0 rounded-lg bg-sky-600/10"
               style={{
                 left: pill.left,
                 width: pill.width,
@@ -80,7 +80,7 @@ export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
                   "left 350ms cubic-bezier(0.22,1,0.36,1), width 350ms cubic-bezier(0.22,1,0.36,1)",
               }}
             >
-              <span className="absolute -bottom-[1px] left-3 right-3 h-px bg-gradient-to-r from-blue-400/0 via-blue-400/80 to-blue-400/0" />
+              <span className="absolute -bottom-[1px] left-3 right-3 h-px bg-gradient-to-r from-sky-500/0 via-sky-500/80 to-sky-500/0" />
             </span>
           )}
           {SECTIONS.map((s) => {
@@ -95,8 +95,8 @@ export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
                 className={cn(
                   "relative z-10 rounded-lg px-3.5 py-1.5 text-sm transition-colors duration-300",
                   isActive
-                    ? "font-medium text-white"
-                    : "text-white/40 hover:text-white/85"
+                    ? "font-medium text-slate-900"
+                    : "text-slate-500 hover:text-slate-800"
                 )}
               >
                 {s.label}
@@ -109,24 +109,26 @@ export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
           <button
             onClick={onOpenPalette}
             aria-label="Open command palette"
-            className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-2.5 py-1.5 text-xs text-white/45 transition hover:border-white/20 hover:bg-white/[0.08] hover:text-white/80"
+            className="flex items-center gap-2 rounded-lg border border-slate-400/30 bg-white/60 px-2.5 py-1.5 text-xs text-slate-500 transition hover:border-sky-500/40 hover:bg-slate-900/[0.05] hover:text-slate-800"
           >
             <SearchIcon size={14} />
             <span className="hidden sm:inline">Search</span>
-            <kbd className="hidden rounded border border-white/15 bg-white/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-white/50 sm:inline">
+            <kbd className="hidden rounded border border-slate-400/40 bg-white/60 px-1.5 py-0.5 font-mono text-[10px] text-slate-500 sm:inline">
               ⌘K
             </kbd>
           </button>
         </div>
       </div>
 
-      {/* Scroll progress */}
-      <div className="absolute bottom-0 left-0 right-0 h-[2px] overflow-hidden">
+      {/* Scroll progress with a comet head */}
+      <div className="absolute bottom-0 left-0 right-0 h-[2px]">
         <div
           ref={progressRef}
-          className="h-full w-full origin-left bg-gradient-to-r from-blue-400 via-emerald-400 to-purple-400"
-          style={{ transform: "scaleX(0)" }}
-        />
+          className="relative h-full bg-gradient-to-r from-sky-500 via-blue-500 to-cyan-500"
+          style={{ width: "0%" }}
+        >
+          <span className="absolute -right-1 -top-[3px] h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_10px_2px_rgba(34,211,238,0.65)]" />
+        </div>
       </div>
     </header>
   );

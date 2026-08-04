@@ -19,10 +19,10 @@ export function Experience() {
 
         <div ref={ref} className="relative">
           {/* Timeline rail */}
-          <div className="absolute bottom-4 left-[7px] top-1 w-px bg-white/[0.07] sm:left-[9px]" />
+          <div className="absolute bottom-4 left-[7px] top-1 w-px bg-slate-900/[0.08] sm:left-[9px]" />
           <div
             className={cn(
-              "timeline-line absolute bottom-4 left-[7px] top-1 w-px bg-gradient-to-b from-blue-400 via-emerald-400 to-purple-400/60 sm:left-[9px]",
+              "timeline-line absolute bottom-4 left-[7px] top-1 w-px bg-gradient-to-b from-sky-500 via-emerald-500 to-violet-500/60 sm:left-[9px]",
               inView && "drawn"
             )}
           />
@@ -36,7 +36,7 @@ export function Experience() {
                     className="absolute left-0 top-1.5 flex h-[15px] w-[15px] items-center justify-center rounded-full border-2 sm:h-[19px] sm:w-[19px]"
                     style={{
                       borderColor: exp.color,
-                      background: "#05070c",
+                      background: "#eef5fd",
                       boxShadow: `0 0 14px ${exp.color}55`,
                     }}
                   >
@@ -52,10 +52,10 @@ export function Experience() {
                   >
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                       <div>
-                        <div className="text-lg font-bold text-white sm:text-xl">
+                        <div className="text-lg font-bold text-slate-900 sm:text-xl">
                           {exp.role}
                         </div>
-                        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/45">
+                        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-500">
                           <span className="flex items-center gap-1.5">
                             <BriefcaseIcon size={13} />
                             {exp.company}
@@ -90,7 +90,7 @@ export function Experience() {
                       {exp.bullets.map((b, j) => (
                         <li
                           key={j}
-                          className="flex gap-3 text-sm leading-relaxed text-white/70 sm:text-base lg:text-[15px]"
+                          className="flex gap-3 text-sm leading-relaxed text-slate-700 sm:text-base lg:text-[15px]"
                         >
                           <span
                             className="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full sm:mt-[11px]"

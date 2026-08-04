@@ -21,23 +21,23 @@ function LocalTime() {
   }, []);
 
   return (
-    <SpotlightCard className="bg-white/[0.03] p-6">
-      <div className="flex items-center gap-2 text-white/40">
+    <SpotlightCard className="bg-white/55 p-6">
+      <div className="flex items-center gap-2 text-slate-500">
         <PinIcon size={14} />
         <span className="text-xs font-semibold uppercase tracking-[0.18em]">
           {PROFILE.location}
         </span>
       </div>
-      <div className="mt-3 font-mono text-3xl font-bold tabular-nums text-white">
+      <div className="mt-3 font-mono text-3xl font-bold tabular-nums text-slate-900">
         {now ?? "--:--:--"}
       </div>
-      <div className="mt-1 text-xs text-white/35">my local time (MST)</div>
-      <div className="mt-5 flex items-center gap-2 border-t border-white/[0.06] pt-4">
+      <div className="mt-1 text-xs text-slate-400">my local time (MST)</div>
+      <div className="mt-5 flex items-center gap-2 border-t border-slate-900/[0.07] pt-4">
         <span className="relative inline-flex h-2 w-2">
-          <span className="ping-soft absolute inline-flex h-full w-full rounded-full bg-emerald-400/60" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+          <span className="ping-soft absolute inline-flex h-full w-full rounded-full bg-emerald-500/60" />
+          <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
         </span>
-        <span className="text-sm text-white/55">Replies within hours</span>
+        <span className="text-sm text-slate-600">Replies within hours</span>
       </div>
     </SpotlightCard>
   );
@@ -46,7 +46,7 @@ function LocalTime() {
 /** Stylized Arizona silhouette with a glowing marker on the Phoenix valley. */
 function ArizonaCard() {
   return (
-    <SpotlightCard className="bg-white/[0.03] p-6">
+    <SpotlightCard className="bg-white/55 p-6">
       <div className="flex items-center gap-5">
         <svg
           viewBox="0 0 100 122"
@@ -56,8 +56,8 @@ function ArizonaCard() {
         >
           <path
             d="M16 6 H92 V116 H42 L26 102 L26 92 L20 86 L20 70 L14 64 L14 48 L10 42 L10 30 L16 24 Z"
-            fill="rgba(96,165,250,0.08)"
-            stroke="rgba(96,165,250,0.45)"
+            fill="rgba(2,132,199,0.10)"
+            stroke="rgba(2,132,199,0.50)"
             strokeWidth="1.5"
             strokeLinejoin="round"
           />
@@ -66,10 +66,10 @@ function ArizonaCard() {
             cy="64"
             r="10"
             fill="none"
-            stroke="rgba(52,211,153,0.35)"
+            stroke="rgba(5,150,105,0.40)"
             strokeWidth="1"
           />
-          <circle cx="48" cy="64" r="4" fill="#34d399">
+          <circle cx="48" cy="64" r="4" fill="#059669">
             <animate
               attributeName="opacity"
               values="1;0.45;1"
@@ -79,14 +79,14 @@ function ArizonaCard() {
           </circle>
         </svg>
         <div>
-          <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/30">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
             Based in
           </div>
-          <div className="mt-1 text-xl font-bold text-white">
+          <div className="mt-1 text-xl font-bold text-slate-900">
             Tempe, Arizona
           </div>
-          <div className="mt-0.5 text-sm text-white/45">{PROFILE.metro}</div>
-          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-blue-400/25 bg-blue-500/[0.08] px-2.5 py-1 text-[11px] text-blue-300">
+          <div className="mt-0.5 text-sm text-slate-500">{PROFILE.metro}</div>
+          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-sky-600/30 bg-sky-500/10 px-2.5 py-1 text-[11px] text-sky-700">
             <PinIcon size={11} />
             Local to Phoenix-area teams
           </div>
@@ -109,7 +109,7 @@ export function Contact() {
         <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-12">
           <div>
             <Reveal>
-              <p className="mb-6 text-lg text-white/45 sm:mb-8 sm:text-xl">
+              <p className="mb-6 text-lg text-slate-500 sm:mb-8 sm:text-xl">
                 Let&rsquo;s connect. I reply fast.
               </p>
             </Reveal>
@@ -117,16 +117,16 @@ export function Contact() {
             <div>
               {CONTACT_ITEMS.map((item, i) => (
                 <Reveal key={item.label} delay={i * 80}>
-                  <div className="flex items-center justify-between gap-3 border-b border-white/[0.06] py-4 sm:py-5">
+                  <div className="flex items-center justify-between gap-3 border-b border-slate-900/[0.07] py-4 sm:py-5">
                     <div className="min-w-0">
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/30">
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
                         {item.label}
                       </div>
                       <a
                         href={item.href}
                         target={item.href.startsWith("http") ? "_blank" : undefined}
                         rel={item.href.startsWith("http") ? "noreferrer" : undefined}
-                        className="mt-1 block truncate text-base font-semibold text-white/75 transition hover:text-white sm:text-2xl"
+                        className="mt-1 block truncate text-base font-semibold text-slate-700 transition hover:text-slate-900 sm:text-2xl"
                       >
                         {item.value}
                       </a>
@@ -143,7 +143,7 @@ export function Contact() {
               <div className="mt-7 flex flex-wrap gap-3 sm:mt-8">
                 <a
                   href={`mailto:${PROFILE.email}`}
-                  className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90 active:scale-[0.97] sm:px-7"
+                  className="inline-flex items-center gap-2 rounded-xl bg-sky-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-sky-500 active:scale-[0.97] sm:px-7"
                 >
                   <MailIcon size={15} />
                   Send email
@@ -152,7 +152,7 @@ export function Contact() {
                   href={PROFILE.resume}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/12 bg-white/[0.05] px-6 py-3 text-sm text-white/70 transition hover:bg-white/10 hover:text-white sm:px-7"
+                  className="inline-flex items-center gap-2 rounded-xl border border-slate-400/40 bg-white/60 px-6 py-3 text-sm text-slate-700 transition hover:bg-slate-900/[0.06] hover:text-slate-900 sm:px-7"
                 >
                   <FileIcon size={15} />
                   Download resume

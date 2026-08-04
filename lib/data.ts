@@ -109,7 +109,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
     label: "AI / LLM",
     axis: "AI / LLM",
     level: 90,
-    color: "#c084fc",
+    color: "#7c3aed",
     items: [
       "LangGraph",
       "MCP",
@@ -126,7 +126,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
     label: "Web & Frameworks",
     axis: "Web & APIs",
     level: 88,
-    color: "#34d399",
+    color: "#059669",
     items: [
       "React",
       "Next.js",
@@ -141,7 +141,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
     label: "Languages",
     axis: "Languages",
     level: 90,
-    color: "#60a5fa",
+    color: "#2563eb",
     items: [
       "Python",
       "JavaScript",
@@ -157,21 +157,21 @@ export const SKILL_GROUPS: SkillGroup[] = [
     label: "Data & Analytics",
     axis: "Data",
     level: 84,
-    color: "#fbbf24",
+    color: "#d97706",
     items: ["Pandas", "NumPy", "scikit-learn", "Tableau", "Power BI"],
   },
   {
     label: "Databases",
     axis: "Databases",
     level: 78,
-    color: "#f87171",
+    color: "#dc2626",
     items: ["MongoDB Atlas", "MySQL", "ChromaDB (Vector)"],
   },
   {
     label: "Tools & Cloud",
     axis: "Tools",
     level: 76,
-    color: "#2dd4bf",
+    color: "#0d9488",
     items: [
       "AWS Lambda",
       "API Gateway",
@@ -200,9 +200,9 @@ export const EXPERIENCE: Experience[] = [
     role: "Web Development Intern",
     company: "BYLD Commerce",
     location: "Lehi, UT",
-    period: "Jun 2026 - Present",
+    period: "Jun 2026 - Aug 2026",
     tags: ["JavaScript", "Squarespace", "Shopify", "Python", "Web Design"],
-    color: "#c084fc",
+    color: "#7c3aed",
     bullets: [
       "Redesigned and shipped the agency's marketing website end to end: a mobile-first, story-driven single-page site in vanilla JavaScript, injected into Squarespace to achieve a fully custom design on a no-code platform.",
       "Built a Python build pipeline that cut site updates from full manual rebuilds to minutes.",
@@ -215,7 +215,7 @@ export const EXPERIENCE: Experience[] = [
     location: "Philadelphia, PA",
     period: "Jun 2025 - Jul 2025",
     tags: ["Python", "Pandas", "Data Quality", "QA Automation"],
-    color: "#60a5fa",
+    color: "#2563eb",
     bullets: [
       "Cleaned and validated 500+ food & beverage company profiles, turning raw scraped data into structured enrichment datasets feeding the production B2B search engine.",
       "Automated data quality checks in Python (Pandas) to flag missing values, anomalies, and formatting errors, cutting manual review load and keeping the ingestion pipeline supplied with production-ready data.",
@@ -227,7 +227,7 @@ export const EXPERIENCE: Experience[] = [
     location: "Mumbai, India",
     period: "Sep 2024 - Oct 2024",
     tags: ["MERN", "JWT Auth", "bcrypt", "MongoDB", "React", "Express"],
-    color: "#34d399",
+    color: "#059669",
     bullets: [
       "Shipped a MERN authentication portal with JWT sessions, bcrypt password hashing, rate-limited endpoints, and role-based access control on React routes and Express middleware.",
       "Built a full-stack Employee Management System with admin-only CRUD, server-side search/filter/sort, and a MongoDB aggregation pipeline dashboard surfacing real-time headcount, average salary, and department breakdowns.",
@@ -282,7 +282,7 @@ export const PROJECTS: Project[] = [
     ],
     github: "https://github.com/akallam04/shopify-support-agent",
     live: "https://shopify-support-agent.vercel.app",
-    color: "#2dd4bf",
+    color: "#0d9488",
     metrics: [
       { value: "100%", label: "53-case eval pass" },
       { value: "$0.18", label: "per 100 conversations" },
@@ -309,7 +309,7 @@ export const PROJECTS: Project[] = [
     github: "https://github.com/akallam04/cefr-qlora-benchmark",
     live: "https://huggingface.co/akallam04/Llama-3-8B-cefr-qlora",
     liveLabel: "Model on HF",
-    color: "#fbbf24",
+    color: "#d97706",
     metrics: [
       { value: "24x", label: "lower cost per request" },
       { value: "3x", label: "lower latency" },
@@ -341,7 +341,7 @@ export const PROJECTS: Project[] = [
     ],
     github: "https://github.com/akallam04/goalsetter-plus",
     live: "https://goalsetter-plus.vercel.app",
-    color: "#60a5fa",
+    color: "#2563eb",
     metrics: [
       { value: "AI", label: "SMART goal generator" },
       { value: "13-wk", label: "SVG heatmap + streaks" },
@@ -367,7 +367,7 @@ export const PROJECTS: Project[] = [
       "Ships its own no-build web app: word-level correction diffs, categorized error cards with native-language explanations, shareable re-run links, and one-click examples",
     ],
     github: "https://github.com/akallam04/LLM-Multilingual-Feedback-API",
-    color: "#c084fc",
+    color: "#7c3aed",
     metrics: [
       { value: "3", label: "pluggable LLM providers" },
       { value: "7", label: "languages in the demo" },
@@ -386,7 +386,7 @@ export const PROJECTS: Project[] = [
     ],
     github: "https://github.com/akallam04/nba-dashboard",
     live: "https://nba-teams-dashboard.vercel.app",
-    color: "#f87171",
+    color: "#dc2626",
     metrics: [
       { value: "30", label: "franchises, full team pages" },
       { value: "React 19", label: "non-blocking live search" },
@@ -405,7 +405,7 @@ export const PROJECTS: Project[] = [
     ],
     github: "https://github.com/akallam04/sales-insights-dashboard",
     live: "https://sales-insights-dashboard.streamlit.app",
-    color: "#34d399",
+    color: "#059669",
     metrics: [
       { value: "94K", label: "transactions modeled" },
       { value: "10", label: "KPI queries, window functions" },

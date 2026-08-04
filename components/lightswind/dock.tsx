@@ -92,11 +92,11 @@ export default function Dock({
         onTouchEnd={() => setPointerX(null)}
         onTouchCancel={() => setPointerX(null)}
         style={{ touchAction: "none" }}
-        className="relative flex items-end gap-1 rounded-2xl border border-white/[0.10] bg-[#0a0d14]/85 p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.6)] backdrop-blur-2xl"
+        className="relative flex items-end gap-1 rounded-2xl border border-slate-900/[0.10] bg-white/70 p-1.5 shadow-[0_12px_36px_rgba(30,80,150,0.18)] backdrop-blur-2xl"
       >
         {nearest !== null && (
           <div
-            className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-lg border border-white/[0.12] bg-[#0a0d14]/95 px-2.5 py-1 text-[11px] font-medium text-white/85 shadow-[0_8px_24px_rgba(0,0,0,0.5)]"
+            className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-lg border border-slate-900/[0.12] bg-white/85 px-2.5 py-1 text-[11px] font-medium text-slate-800 shadow-[0_8px_20px_rgba(30,80,150,0.18)]"
             style={{
               left: centerOf(nearest),
               transform: "translateX(-50%)",
@@ -118,8 +118,8 @@ export default function Dock({
               className={cn(
                 "relative flex items-center justify-center rounded-xl",
                 item.active
-                  ? "bg-white/[0.12] text-white"
-                  : "text-white/40 active:bg-white/[0.06]"
+                  ? "bg-sky-600/15 text-sky-700"
+                  : "text-slate-500 active:bg-slate-900/[0.06]"
               )}
               style={{
                 width: s,
@@ -139,7 +139,7 @@ export default function Dock({
               </span>
               <span
                 className={cn(
-                  "absolute bottom-1 h-1 w-1 rounded-full bg-emerald-400 transition-opacity",
+                  "absolute bottom-1 h-1 w-1 rounded-full bg-emerald-500 transition-opacity",
                   item.active ? "opacity-100" : "opacity-0"
                 )}
               />

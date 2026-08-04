@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { useCountUp, useInView } from "@/lib/hooks";
+import { useCountUp, useInView, useScramble } from "@/lib/hooks";
 import { CheckIcon, CopyIcon } from "./icons";
 
 export function cn(...classes: Array<string | false | null | undefined>) {
@@ -19,7 +19,7 @@ export function Chip({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full border border-white/10 bg-white/[0.06] px-2.5 py-1 text-xs text-white/65 sm:px-3 sm:text-sm",
+        "inline-flex items-center rounded-full border border-slate-400/30 bg-white/60 px-2.5 py-1 text-xs text-slate-600 sm:px-3 sm:text-sm",
         compact && "lg:px-2.5 lg:py-0.5 lg:text-xs"
       )}
     >
@@ -51,12 +51,13 @@ export function SpotlightCard({
       ref={ref}
       onMouseMove={onMouseMove}
       className={cn(
-        "spotlight-card relative overflow-hidden rounded-2xl border border-white/[0.08] backdrop-blur-xl",
+        "spotlight-card relative overflow-hidden rounded-2xl border border-slate-900/[0.10] backdrop-blur-xl",
         className
       )}
       style={style}
     >
       <div className="spotlight-glow pointer-events-none absolute inset-0" />
+      <div className="glass-glare pointer-events-none absolute inset-0" />
       <div className="relative">{children}</div>
     </div>
   );
@@ -94,6 +95,8 @@ export function SectionHeader({
   /** Tightens the header on lg+ so the section content fits one viewport; mobile unchanged. */
   compact?: boolean;
 }) {
+  const { ref, inView } = useInView<HTMLHeadingElement>(0.6);
+  const scrambled = useScramble(title, inView);
   return (
     <Reveal>
       <div
@@ -102,18 +105,20 @@ export function SectionHeader({
           compact && "lg:mb-6"
         )}
       >
-        <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-white/25">
+        <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
           {index}
         </span>
         <h2
+          ref={ref}
+          aria-label={title}
           className={cn(
-            "text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl",
+            "text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl",
             compact && "lg:text-4xl"
           )}
         >
-          {title}
+          {scrambled}
         </h2>
-        <div className="h-px flex-1 bg-gradient-to-r from-white/[0.12] to-transparent" />
+        <div className="h-px flex-1 bg-gradient-to-r from-slate-900/[0.15] to-transparent" />
       </div>
     </Reveal>
   );
@@ -158,12 +163,12 @@ export function CopyButton({
         } catch {}
       }}
       aria-label={`${label} ${value}`}
-      className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-white/45 transition hover:bg-white/[0.09] hover:text-white/80"
+      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-400/30 bg-white/60 px-3 py-1.5 text-xs text-slate-500 transition hover:bg-slate-900/[0.05] hover:text-slate-800"
     >
       {copied ? (
         <>
-          <CheckIcon size={13} className="text-emerald-400" />
-          <span className="text-emerald-400">Copied</span>
+          <CheckIcon size={13} className="text-emerald-600" />
+          <span className="text-emerald-600">Copied</span>
         </>
       ) : (
         <>

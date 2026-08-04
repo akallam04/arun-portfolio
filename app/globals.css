@@ -1,24 +1,24 @@
 @import "tailwindcss";
 
-/* ===== Base ===== */
+/* ===== Base: glassy sky-blue & cloud-white theme ===== */
 html {
   scroll-behavior: smooth;
-  background: #05070c;
+  background: #e9f2fb;
 }
 
 body {
   overflow-x: hidden;
-  color: rgba(255, 255, 255, 0.92);
+  color: #14304a;
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
 ::selection {
-  background: rgba(96, 165, 250, 0.32);
-  color: #fff;
+  background: rgba(2, 132, 199, 0.22);
+  color: #0c2a44;
 }
 
 :focus-visible {
-  outline: 2px solid rgba(96, 165, 250, 0.7);
+  outline: 2px solid rgba(2, 132, 199, 0.65);
   outline-offset: 2px;
   border-radius: 6px;
 }
@@ -34,24 +34,24 @@ body {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #05070c;
+  background: #e9f2fb;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(20, 48, 74, 0.18);
   border-radius: 8px;
-  border: 2px solid #05070c;
+  border: 2px solid #e9f2fb;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(20, 48, 74, 0.32);
 }
 
-/* ===== Animated aurora background ===== */
+/* ===== Drifting sky: soft blue glows and cloud-white blobs ===== */
 .aurora-blob {
   position: absolute;
   border-radius: 9999px;
-  filter: blur(90px);
+  filter: blur(80px);
   will-change: transform;
-  opacity: 0.55;
+  opacity: 0.75;
 }
 
 @keyframes drift-a {
@@ -102,7 +102,7 @@ body {
 .dot-grid {
   background-image: radial-gradient(
     circle,
-    rgba(255, 255, 255, 0.055) 1px,
+    rgba(21, 74, 128, 0.12) 1px,
     transparent 1px
   );
   background-size: 28px 28px;
@@ -118,14 +118,14 @@ body {
   );
 }
 
-/* Film grain */
+/* Subtle paper grain */
 .grain::after {
   content: "";
   position: absolute;
   inset: 0;
-  opacity: 0.05;
+  opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
+  mix-blend-mode: multiply;
   pointer-events: none;
 }
 
@@ -143,7 +143,7 @@ body {
   transform: translateY(0) scale(1);
 }
 
-/* ===== Spotlight cards ===== */
+/* ===== Spotlight cards: cool sky sheen under the pointer ===== */
 .spotlight-card {
   --mx: 50%;
   --my: 50%;
@@ -153,7 +153,7 @@ body {
   transition: opacity 0.35s ease;
   background: radial-gradient(
     320px circle at var(--mx) var(--my),
-    rgba(255, 255, 255, 0.07),
+    rgba(2, 132, 199, 0.1),
     transparent 65%
   );
 }
@@ -163,7 +163,7 @@ body {
   }
 }
 
-/* ===== Animated gradient name ===== */
+/* ===== Animated gradient name (sky) ===== */
 @keyframes gradient-pan {
   0% {
     background-position: 0% 50%;
@@ -178,10 +178,10 @@ body {
 .gradient-name {
   background: linear-gradient(
     100deg,
-    #60a5fa 0%,
-    #34d399 30%,
-    #c084fc 60%,
-    #60a5fa 100%
+    #0ea5e9 0%,
+    #2563eb 30%,
+    #06b6d4 60%,
+    #0ea5e9 100%
   );
   background-size: 220% 220%;
   -webkit-background-clip: text;
@@ -207,7 +207,7 @@ body {
   height: 1.15em;
   margin-left: 2px;
   vertical-align: -0.18em;
-  background: #34d399;
+  background: #0284c7;
   animation: caret-blink 1.1s steps(1) infinite;
 }
 
@@ -280,7 +280,72 @@ body {
   transition: transform 0.25s ease;
 }
 
-/* ===== Marquee for core stack on mobile? (kept subtle, both sizes) ===== */
+/* ===== Tech ticker ===== */
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.ticker-track {
+  animation: ticker 30s linear infinite;
+}
+
+/* ===== Hero name letter cascade ===== */
+@keyframes letter-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+.letter-rise {
+  display: inline-block;
+  opacity: 0;
+  animation: letter-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ===== Intro mark bloom ===== */
+@keyframes intro-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.intro-mark {
+  animation: intro-pop 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.intro-word {
+  animation: letter-rise 0.5s 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ===== Dynamic glass glare (follows the pointer on cards) ===== */
+.glass-glare {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    420px circle at var(--mx) var(--my),
+    rgba(255, 255, 255, 0.55),
+    transparent 60%
+  );
+}
+@media (hover: hover) and (pointer: fine) {
+  .spotlight-card:hover .glass-glare {
+    opacity: 1;
+  }
+}
+
 @keyframes ping-soft {
   0% {
     transform: scale(1);
@@ -309,8 +374,15 @@ body {
   .scroll-cue,
   .gradient-name,
   .caret,
-  .ping-soft {
+  .ping-soft,
+  .ticker-track,
+  .intro-mark,
+  .intro-word {
     animation: none !important;
+  }
+  .letter-rise {
+    animation: none !important;
+    opacity: 1;
   }
   .reveal {
     opacity: 1;

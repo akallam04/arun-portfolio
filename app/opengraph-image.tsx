@@ -15,10 +15,10 @@ export default function OpenGraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          backgroundColor: "#05070c",
+          backgroundColor: "#e9f2fb",
           backgroundImage:
-            "radial-gradient(at 8% 8%, rgba(59,130,246,0.35), transparent 60%), radial-gradient(at 95% 5%, rgba(16,185,129,0.22), transparent 55%), radial-gradient(at 60% 110%, rgba(168,85,247,0.30), transparent 60%)",
-          color: "white",
+            "radial-gradient(at 8% 8%, rgba(56,150,235,0.30), transparent 60%), radial-gradient(at 95% 5%, rgba(255,255,255,0.9), transparent 55%), radial-gradient(at 60% 110%, rgba(103,200,240,0.35), transparent 60%)",
+          color: "#0f2a43",
           fontFamily: "sans-serif",
         }}
       >
@@ -35,10 +35,10 @@ export default function OpenGraphImage() {
               width: 12,
               height: 12,
               borderRadius: 999,
-              background: "#34d399",
+              background: "#059669",
             }}
           />
-          <div style={{ fontSize: 26, color: "#6ee7b7" }}>
+          <div style={{ fontSize: 26, color: "#047857" }}>
             Open to Fall 2026 Co-ops · Tempe, AZ
           </div>
         </div>
@@ -54,14 +54,14 @@ export default function OpenGraphImage() {
           }}
         >
           <span>Arun Teja Reddy</span>
-          <span style={{ color: "#60a5fa" }}>Kallam</span>
+          <span style={{ color: "#0284c7" }}>Kallam</span>
         </div>
 
         <div
           style={{
             marginTop: 30,
             fontSize: 32,
-            color: "rgba(255,255,255,0.72)",
+            color: "rgba(15,42,67,0.72)",
             display: "flex",
           }}
         >
@@ -77,10 +77,10 @@ export default function OpenGraphImage() {
                   display: "flex",
                   padding: "10px 22px",
                   borderRadius: 12,
-                  border: "1px solid rgba(255,255,255,0.18)",
-                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(15,42,67,0.18)",
+                  background: "rgba(255,255,255,0.65)",
                   fontSize: 24,
-                  color: "rgba(255,255,255,0.85)",
+                  color: "rgba(15,42,67,0.85)",
                 }}
               >
                 {t}
@@ -93,7 +93,7 @@ export default function OpenGraphImage() {
           style={{
             marginTop: 48,
             fontSize: 24,
-            color: "rgba(255,255,255,0.45)",
+            color: "rgba(15,42,67,0.45)",
             display: "flex",
           }}
         >

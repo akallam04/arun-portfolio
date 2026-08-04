@@ -11,11 +11,11 @@ export default function AppleIcon() {
           width: 180,
           height: 180,
           borderRadius: 40,
-          background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%)",
+          background: "linear-gradient(135deg, #0ea5e9 0%, #2563eb 60%, #06b6d4 100%)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          border: "3px solid rgba(139,92,246,0.5)",
+          border: "3px solid rgba(255,255,255,0.55)",
         }}
       >
         <span

@@ -49,7 +49,7 @@ function SkillRadar({
             points={SKILL_GROUPS.map((_, i) => point(i, MAX_R * f).join(","))
               .join(" ")}
             fill="none"
-            stroke="rgba(255,255,255,0.07)"
+            stroke="rgba(15,42,67,0.10)"
             strokeWidth="1"
           />
         ))}
@@ -67,7 +67,7 @@ function SkillRadar({
                 x2={ax}
                 y2={ay}
                 stroke={
-                  isHot ? "rgba(255,255,255,0.28)" : "rgba(255,255,255,0.09)"
+                  isHot ? "rgba(15,42,67,0.35)" : "rgba(15,42,67,0.12)"
                 }
                 strokeWidth="1"
               />
@@ -77,7 +77,7 @@ function SkillRadar({
                 textAnchor={anchorFor(i)}
                 fontSize="11"
                 fontWeight={isHot ? 700 : 500}
-                fill={isHot ? g.color : "rgba(255,255,255,0.45)"}
+                fill={isHot ? g.color : "rgba(51,65,85,0.75)"}
                 style={{ transition: "fill 0.2s", cursor: "default" }}
                 onMouseEnter={() => onHover(i)}
                 onMouseLeave={() => onHover(null)}
@@ -92,8 +92,8 @@ function SkillRadar({
         <g className={cn("radar-shape", inView && "drawn")}>
           <polygon
             points={polygon}
-            fill="rgba(96,165,250,0.14)"
-            stroke="rgba(96,165,250,0.75)"
+            fill="rgba(37,99,235,0.13)"
+            stroke="rgba(37,99,235,0.65)"
             strokeWidth="1.5"
           />
           {valuePoints.map(([x, y], i) => {
@@ -105,7 +105,7 @@ function SkillRadar({
                   cy={y}
                   r={isHot ? 6.5 : 4}
                   fill={SKILL_GROUPS[i].color}
-                  stroke="#05070c"
+                  stroke="#eef5fd"
                   strokeWidth="2"
                   style={{ transition: "r 0.2s" }}
                   onMouseEnter={() => onHover(i)}
@@ -118,7 +118,7 @@ function SkillRadar({
                     textAnchor="middle"
                     fontSize="11"
                     fontWeight={700}
-                    fill="#fff"
+                    fill="#0f172a"
                   >
                     {SKILL_GROUPS[i].level}
                   </text>
@@ -128,7 +128,7 @@ function SkillRadar({
           })}
         </g>
       </svg>
-      <p className="mt-2 text-center text-[11px] text-white/30">
+      <p className="mt-2 text-center text-[11px] text-slate-400">
         Tap or hover a category to explore depth across six domains
       </p>
     </div>
@@ -173,7 +173,7 @@ export function Skills() {
                           className="h-2 w-2 rounded-full"
                           style={{ background: group.color }}
                         />
-                        <span className="text-sm font-bold text-white/85 sm:text-base lg:text-sm">
+                        <span className="text-sm font-bold text-slate-800 sm:text-base lg:text-sm">
                           {group.label}
                         </span>
                       </div>
@@ -185,7 +185,7 @@ export function Skills() {
                       </span>
                     </div>
                     {/* Mini level bar */}
-                    <div className="mb-3 h-1 overflow-hidden rounded-full bg-white/[0.07] lg:mb-2.5">
+                    <div className="mb-3 h-1 overflow-hidden rounded-full bg-slate-900/[0.08] lg:mb-2.5">
                       <div
                         className="h-full rounded-full transition-all duration-700"
                         style={{
