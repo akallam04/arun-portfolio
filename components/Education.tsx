@@ -1,8 +1,8 @@
 "use client";
 
-import { COURSEWORK, FOCUS_AREAS } from "@/lib/data";
+import { COURSEWORK_TRACKS, DEGREE, FOCUS_AREAS } from "@/lib/data";
 import { useInView } from "@/lib/hooks";
-import { Chip, Reveal, SectionHeader, SpotlightCard } from "./ui";
+import { Reveal, SectionHeader, SpotlightCard } from "./ui";
 import { CapIcon } from "./icons";
 
 function GpaRing() {
@@ -10,16 +10,9 @@ function GpaRing() {
   const r = 40;
   const C = 2 * Math.PI * r;
   return (
-    <div ref={ref} className="relative h-28 w-28">
+    <div ref={ref} className="relative h-24 w-24 shrink-0">
       <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
-        <circle
-          cx="50"
-          cy="50"
-          r={r}
-          fill="none"
-          stroke="rgba(15,42,67,0.10)"
-          strokeWidth="7"
-        />
+        <circle cx="50" cy="50" r={r} fill="none" stroke="rgba(15,42,67,0.10)" strokeWidth="7" />
         <circle
           cx="50"
           cy="50"
@@ -47,6 +40,46 @@ function GpaRing() {
   );
 }
 
+/** Eight terms of the degree, filled as they are completed. */
+function DegreeProgress() {
+  const { ref, inView } = useInView<HTMLDivElement>(0.4);
+  return (
+    <div ref={ref}>
+      <div className="mb-2 flex items-baseline justify-between">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+          Degree progress
+        </span>
+        <span className="font-mono text-[11px] text-slate-500">
+          {DEGREE.termsDone} / {DEGREE.terms.length} terms
+        </span>
+      </div>
+      <div className="flex gap-1">
+        {DEGREE.terms.map((t, i) => {
+          const done = i < DEGREE.termsDone;
+          return (
+            <div key={t} className="flex-1">
+              <div
+                className="h-1.5 rounded-full"
+                style={{
+                  background: done
+                    ? "linear-gradient(90deg,#0ea5e9,#2563eb)"
+                    : "rgba(15,42,67,0.10)",
+                  transform: inView ? "scaleX(1)" : "scaleX(0)",
+                  transformOrigin: "left",
+                  transition: `transform 0.5s cubic-bezier(0.22,1,0.36,1) ${i * 70}ms`,
+                }}
+              />
+              <div className="mt-1.5 hidden text-center font-mono text-[8px] text-slate-400 sm:block">
+                {t}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function Education() {
   return (
     <section
@@ -57,36 +90,59 @@ export function Education() {
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <SectionHeader index="01" title="Education" compact />
 
-        <div className="grid gap-4 sm:gap-5 lg:grid-cols-[1.6fr_1fr]">
+        <div className="grid gap-4 sm:gap-5 lg:grid-cols-[1.55fr_1fr]">
           <Reveal>
-            <SpotlightCard className="h-full bg-white/60 p-6 sm:p-8 lg:p-7">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+            <SpotlightCard className="h-full bg-white/55 p-6 sm:p-8 lg:p-7">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <div className="flex items-center gap-2 text-sm text-slate-500">
                     <CapIcon size={15} />
-                    Arizona State University · Tempe, AZ
+                    {DEGREE.school} · {DEGREE.place}
                   </div>
                   <div className="mt-2 text-2xl font-bold text-slate-900 sm:text-3xl">
-                    B.S. in Computer Science
+                    {DEGREE.title}
+                  </div>
+                  <div className="mt-1 font-mono text-xs text-slate-500">
+                    {DEGREE.start} to {DEGREE.end}
                   </div>
                 </div>
-                <div className="shrink-0 rounded-lg border border-slate-900/[0.10] bg-white/60 px-3 py-1.5 text-xs text-slate-500 sm:text-right">
-                  Aug 2023 - May 2027
-                </div>
+                <GpaRing />
               </div>
 
-              <div className="mt-6 border-t border-slate-900/[0.07] pt-6 sm:mt-7 lg:mt-5 lg:pt-5">
-                <div className="mb-4 flex items-center gap-3">
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">
-                    Relevant Coursework
-                  </span>
-                  <div className="h-px flex-1 bg-slate-900/[0.10]" />
+              <div className="mt-6 border-t border-slate-900/[0.08] pt-5">
+                <DegreeProgress />
+              </div>
+
+              <div className="mt-6 border-t border-slate-900/[0.08] pt-5">
+                <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Coursework, by what it feeds
                 </div>
-                <div className="flex flex-wrap gap-1.5 sm:gap-2 lg:gap-1.5">
-                  {COURSEWORK.map((c) => (
-                    <Chip key={c} compact>
-                      {c}
-                    </Chip>
+                <div className="space-y-3.5">
+                  {COURSEWORK_TRACKS.map((track) => (
+                    <div key={track.label} className="flex gap-3">
+                      <div
+                        className="mt-1 w-0.5 shrink-0 rounded-full"
+                        style={{ background: track.color, opacity: 0.55 }}
+                      />
+                      <div className="min-w-0">
+                        <div
+                          className="mb-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em]"
+                          style={{ color: track.color }}
+                        >
+                          {track.label}
+                        </div>
+                        <div className="flex flex-wrap gap-x-3 gap-y-1">
+                          {track.courses.map((c) => (
+                            <span
+                              key={c}
+                              className="text-[13px] text-slate-600"
+                            >
+                              {c}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -95,41 +151,38 @@ export function Education() {
 
           <div className="flex flex-col gap-4">
             <Reveal delay={120}>
-              <SpotlightCard className="bg-white/60 p-5 sm:p-6">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <div className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-                      Academic Standing
-                    </div>
-                    <div className="space-y-2.5">
-                      <div className="flex items-center gap-2">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                        <span className="text-sm font-semibold text-slate-800">
-                          Dean&rsquo;s List
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="h-1.5 w-1.5 rounded-full bg-sky-600" />
-                        <span className="text-sm text-slate-600">
-                          Graduating May 2027
-                        </span>
-                      </div>
-                    </div>
+              <SpotlightCard className="bg-white/55 p-5 sm:p-6">
+                <div className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Standing
+                </div>
+                <div className="space-y-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    <span className="text-sm font-semibold text-slate-800">
+                      Dean&rsquo;s List
+                    </span>
                   </div>
-                  <GpaRing />
+                  <div className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-sky-600" />
+                    <span className="text-sm text-slate-600">
+                      Graduating {DEGREE.end}
+                    </span>
+                  </div>
                 </div>
               </SpotlightCard>
             </Reveal>
 
             <Reveal delay={200} className="flex-1">
-              <SpotlightCard className="h-full bg-white/60 p-5 sm:p-6">
-                <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-                  Focus Areas
+              <SpotlightCard className="h-full bg-white/55 p-5 sm:p-6">
+                <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Where it points
                 </div>
                 <div className="space-y-3.5">
-                  {FOCUS_AREAS.map((area) => (
+                  {FOCUS_AREAS.map((area, i) => (
                     <div key={area.label} className="flex gap-3">
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
+                      <span className="mt-0.5 font-mono text-[10px] text-slate-400">
+                        0{i + 1}
+                      </span>
                       <div>
                         <div className="text-sm font-semibold text-slate-800">
                           {area.label}

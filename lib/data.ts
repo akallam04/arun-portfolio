@@ -64,22 +64,65 @@ export const SECTIONS: { key: SectionKey; label: string }[] = [
   { key: "contact", label: "Contact" },
 ];
 
-export const COURSEWORK = [
-  "Intro to Artificial Intelligence",
-  "Data Structures & Algorithms",
-  "Software Engineering",
-  "Foundations of Machine Learning",
-  "Database Management",
-  "Mobile App Development",
-  "Operating Systems",
-  "Object-Oriented Programming",
-  "Principles of Programming Languages",
-  "Information Assurance",
-  "Human-Computer Interaction",
-  "Foundations of Data Visualization",
-  "Applied Linear Algebra",
-  "Probability & Statistics",
+export type CourseTrack = { label: string; color: string; courses: string[] };
+
+/** Coursework grouped by the track it feeds, not one undifferentiated blob. */
+export const COURSEWORK_TRACKS: CourseTrack[] = [
+  {
+    label: "AI, ML & Data",
+    color: "#7c3aed",
+    courses: [
+      "Intro to Artificial Intelligence",
+      "Foundations of Machine Learning",
+      "Foundations of Data Visualization",
+      "Probability & Statistics",
+      "Applied Linear Algebra",
+    ],
+  },
+  {
+    label: "Systems & Security",
+    color: "#0d9488",
+    courses: [
+      "Operating Systems",
+      "Database Management",
+      "Information Assurance",
+      "Principles of Programming Languages",
+    ],
+  },
+  {
+    label: "Software & Product",
+    color: "#059669",
+    courses: [
+      "Data Structures & Algorithms",
+      "Software Engineering",
+      "Object-Oriented Programming",
+      "Mobile App Development",
+      "Human-Computer Interaction",
+    ],
+  },
 ];
+
+export const DEGREE = {
+  school: "Arizona State University",
+  place: "Tempe, AZ",
+  title: "B.S. in Computer Science",
+  start: "Aug 2023",
+  end: "May 2027",
+  /** Fall 2023 through Spring 2027. */
+  terms: [
+    "Fall 23",
+    "Spr 24",
+    "Fall 24",
+    "Spr 25",
+    "Fall 25",
+    "Spr 26",
+    "Fall 26",
+    "Spr 27",
+  ],
+  /** Terms finished as of the last content update (Aug 2026). */
+  termsDone: 6,
+};
+
 
 export const FOCUS_AREAS = [
   {
@@ -190,6 +233,10 @@ export type Experience = {
   company: string;
   location: string;
   period: string;
+  /** YYYY-MM, used to place the role on the career axis. */
+  start: string;
+  end: string;
+  kind: string;
   tags: string[];
   color: string;
   bullets: string[];
@@ -201,6 +248,9 @@ export const EXPERIENCE: Experience[] = [
     company: "BYLD Commerce",
     location: "Lehi, UT",
     period: "Jun 2026 - Aug 2026",
+    start: "2026-06",
+    end: "2026-08",
+    kind: "Web development",
     tags: ["JavaScript", "Squarespace", "Shopify", "Python", "Web Design"],
     color: "#7c3aed",
     bullets: [
@@ -214,6 +264,9 @@ export const EXPERIENCE: Experience[] = [
     company: "Food Forest AI",
     location: "Philadelphia, PA",
     period: "Jun 2025 - Jul 2025",
+    start: "2025-06",
+    end: "2025-07",
+    kind: "Data",
     tags: ["Python", "Pandas", "Data Quality", "QA Automation"],
     color: "#2563eb",
     bullets: [
@@ -226,6 +279,9 @@ export const EXPERIENCE: Experience[] = [
     company: "Prodigy InfoTech",
     location: "Mumbai, India",
     period: "Sep 2024 - Oct 2024",
+    start: "2024-09",
+    end: "2024-10",
+    kind: "Full-stack",
     tags: ["MERN", "JWT Auth", "bcrypt", "MongoDB", "React", "Express"],
     color: "#059669",
     bullets: [

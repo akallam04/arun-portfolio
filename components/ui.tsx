@@ -33,12 +33,14 @@ export function SpotlightCard({
   className,
   style,
   blur = true,
+  onMouseEnter,
   children,
 }: {
   className?: string;
   style?: React.CSSProperties;
   /** Backdrop blur is costly on tall, frequently repainted cards; opt out there. */
   blur?: boolean;
+  onMouseEnter?: () => void;
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -53,6 +55,7 @@ export function SpotlightCard({
     <div
       ref={ref}
       onMouseMove={onMouseMove}
+      onMouseEnter={onMouseEnter}
       className={cn(
         "spotlight-card relative overflow-hidden rounded-2xl border border-slate-900/[0.10]",
         blur && "backdrop-blur-xl",
