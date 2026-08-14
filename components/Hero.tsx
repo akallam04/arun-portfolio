@@ -10,7 +10,6 @@ import React, { useRef } from "react";
 import { scrollToSection, useTypewriter } from "@/lib/hooks";
 import { CountUp, Reveal } from "./ui";
 import { Magnetic } from "./Magnetic";
-import { ParticleSky } from "./ParticleSky";
 import {
   FileIcon,
   GitHubIcon,
@@ -61,7 +60,6 @@ export function Hero() {
       data-key="home"
       className="relative flex min-h-[calc(100svh-56px)] scroll-mt-14 items-center"
     >
-      <ParticleSky />
       <div className="relative z-10 mx-auto w-full max-w-6xl px-5 pb-16 pt-10 sm:px-8 lg:pb-8 lg:pt-6">
         <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-12">
           {/* Text block first on mobile so the pitch is above the fold */}

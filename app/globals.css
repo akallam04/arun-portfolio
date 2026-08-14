@@ -402,3 +402,28 @@ body {
     transition: none;
   }
 }
+
+/* Horizontal deck scroller: keep the swipe, drop the bar */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ===== Skills radar sweep ===== */
+@keyframes radar-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.radar-sweep {
+  animation: radar-sweep 6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .radar-sweep {
+    animation: none;
+    opacity: 0.35;
+  }
+}

@@ -186,10 +186,100 @@ function Placard({ project, index }: { project: Project; index: number }) {
   );
 }
 
+/**
+ * Mobile card: the same case study at a glance. Six tall placards made the
+ * phone page enormous, so on mobile they become a swipeable deck instead.
+ */
+function SwipeCard({ project, index }: { project: Project; index: number }) {
+  return (
+    <SpotlightCard
+      blur={false}
+      className="flex h-full flex-col p-5"
+      style={{
+        background: `linear-gradient(150deg, ${project.color}14 0%, rgba(255,255,255,0) 55%), rgba(250,253,255,0.92)`,
+        borderColor: `${project.color}30`,
+      }}
+    >
+      <div className="mb-2.5 flex items-center gap-2.5">
+        <span
+          className="font-mono text-lg font-bold"
+          style={{ color: `${project.color}cc` }}
+        >
+          {String(index + 1).padStart(2, "0")}
+        </span>
+        <h3 className="text-base font-bold leading-tight text-slate-900">
+          {project.name}
+        </h3>
+      </div>
+
+      <div className="mb-3 flex flex-wrap gap-1.5">
+        {project.domains.map((d) => (
+          <span
+            key={d}
+            className="rounded-full border px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.1em]"
+            style={{
+              borderColor: `${project.color}40`,
+              color: `${project.color}dd`,
+              background: `${project.color}12`,
+            }}
+          >
+            {DOMAIN_LABELS[d]}
+          </span>
+        ))}
+      </div>
+
+      <p className="text-[13px] leading-relaxed text-slate-600">
+        {project.desc}
+      </p>
+
+      <div className="mt-3 grid grid-cols-3 gap-2">
+        {project.metrics.map((m) => (
+          <div
+            key={m.label}
+            className="rounded-lg border border-slate-900/[0.07] bg-white/70 px-2 py-1.5"
+          >
+            <div
+              className="text-sm font-bold leading-tight"
+              style={{ color: project.color }}
+            >
+              {m.value}
+            </div>
+            <div className="mt-0.5 text-[9px] leading-tight text-slate-500">
+              {m.label}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-3 flex flex-wrap gap-1">
+        {project.tags.slice(0, 5).map((t) => (
+          <span
+            key={t}
+            className="rounded-full border border-slate-400/30 bg-white/60 px-2 py-0.5 text-[10px] text-slate-600"
+          >
+            {t}
+          </span>
+        ))}
+        {project.tags.length > 5 && (
+          <span className="px-1 py-0.5 text-[10px] text-slate-400">
+            +{project.tags.length - 5}
+          </span>
+        )}
+      </div>
+
+      <div className="mt-auto pt-4">
+        <ProjectLinks project={project} />
+      </div>
+    </SpotlightCard>
+  );
+}
+
 export function Projects() {
   const liveCount = PROJECTS.filter((p) => p.live && !p.liveLabel).length;
   const [active, setActive] = useState(0);
+  const [card, setCard] = useState(0);
   const listRef = useRef<HTMLDivElement>(null);
+  const deckRef = useRef<HTMLDivElement>(null);
 
   // Track which placard owns the viewport so the index rail can follow.
   // Observer-driven: no scroll handler, no per-frame layout reads.
@@ -213,6 +303,26 @@ export function Projects() {
       { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
     );
     cards.forEach((c) => obs.observe(c));
+    return () => obs.disconnect();
+  }, []);
+
+  // Which card the phone deck is showing, for the position dots.
+  useEffect(() => {
+    const deck = deckRef.current;
+    if (!deck) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            setCard(Number((e.target as HTMLElement).dataset.card ?? 0));
+          }
+        }
+      },
+      { root: deck, threshold: 0.6 }
+    );
+    Array.from(deck.querySelectorAll<HTMLElement>("[data-card]")).forEach((c) =>
+      obs.observe(c)
+    );
     return () => obs.disconnect();
   }, []);
 
@@ -276,7 +386,7 @@ export function Projects() {
             </div>
           </nav>
 
-          <div ref={listRef} className="space-y-5 sm:space-y-6">
+          <div ref={listRef} className="hidden space-y-5 sm:space-y-6 lg:block">
             {PROJECTS.map((p, i) => (
               <div
                 key={p.name}
@@ -290,6 +400,50 @@ export function Projects() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Phone: swipe deck. Same six case studies, one screen tall. */}
+        <div className="lg:hidden">
+          <div
+            ref={deckRef}
+            className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2"
+          >
+            {PROJECTS.map((p, i) => (
+              <div
+                key={p.name}
+                data-card={i}
+                className="w-[84vw] max-w-sm shrink-0 snap-center"
+              >
+                <SwipeCard project={p} index={i} />
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4 flex items-center justify-center gap-2">
+            {PROJECTS.map((p, i) => (
+              <button
+                key={p.name}
+                aria-label={`Show ${p.name}`}
+                onClick={() =>
+                  deckRef.current
+                    ?.querySelector<HTMLElement>(`[data-card="${i}"]`)
+                    ?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "nearest",
+                      inline: "center",
+                    })
+                }
+                className="h-1.5 rounded-full transition-all duration-300"
+                style={{
+                  width: card === i ? 22 : 6,
+                  background: card === i ? p.color : "rgba(15,42,67,0.2)",
+                }}
+              />
+            ))}
+          </div>
+          <p className="mt-3 text-center text-[11px] text-slate-400">
+            swipe through {PROJECTS.length} case studies
+          </p>
         </div>
 
         <div className="mt-8 sm:mt-10">

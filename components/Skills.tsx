@@ -88,6 +88,34 @@ function SkillRadar({
           );
         })}
 
+        {/* Radar sweep: rotates like a real scope */}
+        <g
+          className="radar-sweep"
+          style={{ transformOrigin: `${CX}px ${CY}px` }}
+        >
+          <defs>
+            <linearGradient id="sweep-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgba(2,132,199,0)" />
+              <stop offset="100%" stopColor="rgba(2,132,199,0.45)" />
+            </linearGradient>
+          </defs>
+          <path
+            d={`M ${CX} ${CY} L ${CX + MAX_R} ${CY} A ${MAX_R} ${MAX_R} 0 0 0 ${
+              CX + MAX_R * Math.cos(-0.55)
+            } ${CY + MAX_R * Math.sin(-0.55)} Z`}
+            fill="url(#sweep-grad)"
+            opacity="0.5"
+          />
+          <line
+            x1={CX}
+            y1={CY}
+            x2={CX + MAX_R}
+            y2={CY}
+            stroke="rgba(2,132,199,0.5)"
+            strokeWidth="1"
+          />
+        </g>
+
         {/* Value shape */}
         <g className={cn("radar-shape", inView && "drawn")}>
           <polygon
