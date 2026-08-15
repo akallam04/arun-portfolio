@@ -80,6 +80,53 @@ function DegreeProgress() {
   );
 }
 
+/** How the 14 courses actually split across the three tracks. */
+function CourseMix() {
+  const { ref, inView } = useInView<HTMLDivElement>(0.4);
+  const total = COURSEWORK_TRACKS.reduce((n, t) => n + t.courses.length, 0);
+  return (
+    <div ref={ref} className="mt-auto pt-6">
+      <div className="mb-2 flex items-baseline justify-between">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+          Coursework mix
+        </span>
+        <span className="font-mono text-[11px] text-slate-400">
+          {total} courses
+        </span>
+      </div>
+      <div className="flex h-2 overflow-hidden rounded-full bg-slate-900/[0.06]">
+        {COURSEWORK_TRACKS.map((t, i) => (
+          <div
+            key={t.label}
+            style={{
+              width: `${(t.courses.length / total) * 100}%`,
+              background: t.color,
+              opacity: 0.85,
+              transform: inView ? "scaleX(1)" : "scaleX(0)",
+              transformOrigin: "left",
+              transition: `transform 0.7s cubic-bezier(0.22,1,0.36,1) ${i * 120}ms`,
+            }}
+          />
+        ))}
+      </div>
+      <div className="mt-2.5 space-y-1">
+        {COURSEWORK_TRACKS.map((t) => (
+          <div key={t.label} className="flex items-center gap-2">
+            <span
+              className="h-1.5 w-1.5 shrink-0 rounded-full"
+              style={{ background: t.color }}
+            />
+            <span className="text-[11px] text-slate-500">{t.label}</span>
+            <span className="ml-auto font-mono text-[10px] text-slate-400">
+              {t.courses.length}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function Education() {
   return (
     <section
@@ -173,11 +220,14 @@ export function Education() {
             </Reveal>
 
             <Reveal delay={200} className="flex-1">
-              <SpotlightCard className="flex h-full flex-col bg-white/55 p-5 sm:p-6">
+              <SpotlightCard
+                className="h-full bg-white/55 p-5 sm:p-6"
+                contentClassName="flex h-full flex-col"
+              >
                 <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
                   Where it points
                 </div>
-                <div className="flex flex-1 flex-col justify-between gap-3.5">
+                <div className="flex flex-col gap-3.5">
                   {FOCUS_AREAS.map((area, i) => (
                     <div key={area.label} className="flex gap-3">
                       <span className="mt-0.5 font-mono text-[10px] text-slate-400">
@@ -194,6 +244,8 @@ export function Education() {
                     </div>
                   ))}
                 </div>
+
+                <CourseMix />
               </SpotlightCard>
             </Reveal>
           </div>

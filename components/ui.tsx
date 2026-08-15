@@ -34,6 +34,7 @@ export function SpotlightCard({
   style,
   blur = true,
   onMouseEnter,
+  contentClassName,
   children,
 }: {
   className?: string;
@@ -41,6 +42,8 @@ export function SpotlightCard({
   /** Backdrop blur is costly on tall, frequently repainted cards; opt out there. */
   blur?: boolean;
   onMouseEnter?: () => void;
+  /** The inner wrapper; pass flex utilities when content must fill the card. */
+  contentClassName?: string;
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -65,7 +68,7 @@ export function SpotlightCard({
     >
       <div className="spotlight-glow pointer-events-none absolute inset-0" />
       <div className="glass-glare pointer-events-none absolute inset-0" />
-      <div className="relative">{children}</div>
+      <div className={cn("relative", contentClassName)}>{children}</div>
     </div>
   );
 }

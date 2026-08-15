@@ -309,25 +309,42 @@ body {
   animation: letter-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-/* ===== Intro mark bloom ===== */
-@keyframes intro-pop {
+/* ===== Intro: the agent graph assembling ===== */
+@keyframes intro-edge {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes intro-node {
   0% {
     opacity: 0;
-    transform: scale(0.6);
+    transform: scale(0);
   }
   60% {
-    transform: scale(1.06);
+    transform: scale(1.35);
   }
   100% {
     opacity: 1;
     transform: scale(1);
   }
 }
-.intro-mark {
-  animation: intro-pop 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+.intro-node {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: intro-node 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.intro-packet {
+  opacity: 0;
+  animation: intro-fade 0.2s 0.95s linear forwards;
+}
+@keyframes intro-fade {
+  to {
+    opacity: 1;
+  }
 }
 .intro-word {
-  animation: letter-rise 0.5s 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: letter-rise 0.5s 1.15s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* ===== Dynamic glass glare (follows the pointer on cards) ===== */
@@ -376,11 +393,12 @@ body {
   .caret,
   .ping-soft,
   .ticker-track,
-  .intro-mark,
   .intro-word {
     animation: none !important;
   }
-  .letter-rise {
+  .letter-rise,
+  .intro-node,
+  .intro-packet {
     animation: none !important;
     opacity: 1;
   }
