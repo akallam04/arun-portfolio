@@ -190,7 +190,15 @@ export function Hero() {
                 transformStyle: "preserve-3d",
               }}
             >
-              <div className="absolute -inset-px rounded-[26px] bg-gradient-to-br from-sky-400/60 via-transparent to-blue-500/40" />
+              <div className="absolute -inset-[2px] overflow-hidden rounded-[26px]">
+                <div
+                  className="conic-spin absolute left-1/2 top-1/2 h-[190%] w-[190%]"
+                  style={{
+                    background:
+                      "conic-gradient(from 0deg, rgba(14,165,233,0), rgba(14,165,233,0.95), rgba(34,211,238,0.8), rgba(37,99,235,0.95), rgba(14,165,233,0))",
+                  }}
+                />
+              </div>
               <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/80 shadow-[0_24px_60px_rgba(30,80,150,0.25)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img

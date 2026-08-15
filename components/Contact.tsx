@@ -5,40 +5,58 @@ import { CONTACT_ITEMS, PROFILE } from "@/lib/data";
 import { CopyButton, Reveal, SectionHeader, SpotlightCard } from "./ui";
 import { FileIcon, MailIcon, PinIcon } from "./icons";
 
-function LocalTime() {
+function AvailabilitySpec() {
   const [now, setNow] = useState<string | null>(null);
   useEffect(() => {
     const fmt = new Intl.DateTimeFormat("en-US", {
       hour: "numeric",
       minute: "2-digit",
-      second: "2-digit",
       timeZone: PROFILE.timeZone,
     });
     const tick = () => setNow(fmt.format(new Date()));
     tick();
-    const t = window.setInterval(tick, 1000);
+    const t = window.setInterval(tick, 30000);
     return () => window.clearInterval(t);
   }, []);
 
-  return (
-    <SpotlightCard className="bg-white/55 p-6">
-      <div className="flex items-center gap-2 text-slate-500">
-        <PinIcon size={14} />
-        <span className="text-xs font-semibold uppercase tracking-[0.18em]">
-          {PROFILE.location}
-        </span>
-      </div>
-      <div className="mt-3 font-mono text-3xl font-bold tabular-nums text-slate-900">
-        {now ?? "--:--:--"}
-      </div>
-      <div className="mt-1 text-xs text-slate-400">my local time (MST)</div>
-      <div className="mt-5 flex items-center gap-2 border-t border-slate-900/[0.07] pt-4">
-        <span className="relative inline-flex h-2 w-2">
+  const rows: [string, React.ReactNode][] = [
+    ["seeking", "Fall 2026 co-op / internship"],
+    ["focus", "AI & agent engineering, full-stack"],
+    ["based", `${PROFILE.location} (${PROFILE.metro})`],
+    ["remote", "Open, US time zones"],
+    [
+      "local time",
+      <span key="t" className="font-mono tabular-nums">
+        {now ?? "--:--"} MST
+      </span>,
+    ],
+    [
+      "reply",
+      <span key="r" className="inline-flex items-center gap-1.5">
+        <span className="relative inline-flex h-1.5 w-1.5">
           <span className="ping-soft absolute inline-flex h-full w-full rounded-full bg-emerald-500/60" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
         </span>
-        <span className="text-sm text-slate-600">Replies within hours</span>
+        within hours
+      </span>,
+    ],
+  ];
+
+  return (
+    <SpotlightCard className="bg-white/55 p-5 sm:p-6">
+      <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+        Availability
       </div>
+      <dl className="divide-y divide-slate-900/[0.06]">
+        {rows.map(([k, v]) => (
+          <div key={k} className="flex items-baseline gap-4 py-2 first:pt-0 last:pb-0">
+            <dt className="w-24 shrink-0 font-mono text-[10px] uppercase tracking-[0.1em] text-slate-400">
+              {k}
+            </dt>
+            <dd className="text-sm text-slate-700">{v}</dd>
+          </div>
+        ))}
+      </dl>
     </SpotlightCard>
   );
 }
@@ -163,7 +181,7 @@ export function Contact() {
 
           <div className="flex flex-col gap-4">
             <Reveal delay={120}>
-              <LocalTime />
+              <AvailabilitySpec />
             </Reveal>
             <Reveal delay={200}>
               <ArizonaCard />

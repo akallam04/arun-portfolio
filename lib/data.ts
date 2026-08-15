@@ -145,6 +145,8 @@ export type SkillGroup = {
   level: number; // 0-100, drives the radar chart
   color: string;
   items: string[];
+  /** Shipped work that backs the claim, so skills are evidence not adjectives. */
+  proof: string[];
 };
 
 export const SKILL_GROUPS: SkillGroup[] = [
@@ -164,6 +166,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
       "PyTorch",
       "Hugging Face",
     ],
+    proof: ["AI Support Agent", "CEFR QLoRA Benchmark"],
   },
   {
     label: "Web & Frameworks",
@@ -179,6 +182,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
       "Redux Toolkit",
       "Streamlit",
     ],
+    proof: ["Goalsetter+", "NBA Teams Dashboard"],
   },
   {
     label: "Languages",
@@ -195,6 +199,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
       "HTML",
       "CSS",
     ],
+    proof: ["all six case studies"],
   },
   {
     label: "Data & Analytics",
@@ -202,6 +207,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
     level: 84,
     color: "#d97706",
     items: ["Pandas", "NumPy", "scikit-learn", "Tableau", "Power BI"],
+    proof: ["Sales Insights Dashboard", "Food Forest AI"],
   },
   {
     label: "Databases",
@@ -209,6 +215,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
     level: 78,
     color: "#dc2626",
     items: ["MongoDB Atlas", "MySQL", "ChromaDB (Vector)"],
+    proof: ["AI Support Agent", "Sales Insights Dashboard"],
   },
   {
     label: "Tools & Cloud",
@@ -225,6 +232,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
       "pytest",
       "Shopify",
     ],
+    proof: ["AI Support Agent on AWS", "4 live deploys"],
   },
 ];
 

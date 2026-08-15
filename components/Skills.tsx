@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { SKILL_GROUPS } from "@/lib/data";
 import { useInView } from "@/lib/hooks";
-import { Chip, Reveal, SectionHeader, SpotlightCard, cn } from "./ui";
+import { Reveal, SectionHeader, cn } from "./ui";
 
 const CX = 190;
 const CY = 150;
@@ -180,40 +180,39 @@ export function Skills() {
             <SkillRadar hovered={hovered} onHover={setHovered} />
           </Reveal>
 
-          <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:gap-3">
-            {SKILL_GROUPS.map((group, i) => (
-              <Reveal key={group.label} delay={i * 70}>
-                <SpotlightCard
-                  className="h-full p-4 transition-colors duration-300 sm:p-5 lg:p-4"
-                  style={{
-                    background: `${group.color}10`,
-                    borderColor:
-                      hovered === i ? `${group.color}66` : undefined,
-                  }}
-                >
+          <div className="divide-y divide-slate-900/[0.07] border-y border-slate-900/[0.07]">
+            {SKILL_GROUPS.map((group, i) => {
+              const on = hovered === i;
+              return (
+                <Reveal key={group.label} delay={i * 60}>
                   <div
                     onMouseEnter={() => setHovered(i)}
                     onMouseLeave={() => setHovered(null)}
+                    className="group py-3.5 transition-colors duration-300 lg:py-3"
+                    style={{
+                      background: on ? `${group.color}0c` : "transparent",
+                    }}
                   >
-                    <div className="mb-3 flex items-center justify-between lg:mb-2.5">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="h-2 w-2 rounded-full"
-                          style={{ background: group.color }}
-                        />
-                        <span className="text-sm font-bold text-slate-800 sm:text-base lg:text-sm">
-                          {group.label}
-                        </span>
-                      </div>
+                    <div className="flex items-baseline gap-3">
                       <span
-                        className="font-mono text-[11px] font-semibold"
+                        className="h-2 w-2 shrink-0 rounded-full transition-transform duration-300"
+                        style={{
+                          background: group.color,
+                          transform: on ? "scale(1.4)" : "scale(1)",
+                        }}
+                      />
+                      <span className="text-sm font-bold text-slate-800">
+                        {group.label}
+                      </span>
+                      <span
+                        className="ml-auto font-mono text-[11px] font-semibold"
                         style={{ color: `${group.color}cc` }}
                       >
                         {group.level}
                       </span>
                     </div>
-                    {/* Mini level bar */}
-                    <div className="mb-3 h-1 overflow-hidden rounded-full bg-slate-900/[0.08] lg:mb-2.5">
+
+                    <div className="mt-2 ml-5 h-[3px] overflow-hidden rounded-full bg-slate-900/[0.07]">
                       <div
                         className="h-full rounded-full transition-all duration-700"
                         style={{
@@ -222,17 +221,28 @@ export function Skills() {
                         }}
                       />
                     </div>
-                    <div className="flex flex-wrap gap-1.5 lg:gap-1">
+
+                    <div className="ml-5 mt-2 flex flex-wrap gap-x-2.5 gap-y-1">
                       {group.items.map((item) => (
-                        <Chip key={item} compact>
+                        <span
+                          key={item}
+                          className="text-[12px] text-slate-600 lg:text-[11px]"
+                        >
                           {item}
-                        </Chip>
+                        </span>
                       ))}
                     </div>
+
+                    <div className="ml-5 mt-1.5 font-mono text-[10px] text-slate-400">
+                      proven in{" "}
+                      <span style={{ color: `${group.color}dd` }}>
+                        {group.proof.join(", ")}
+                      </span>
+                    </div>
                   </div>
-                </SpotlightCard>
-              </Reveal>
-            ))}
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </div>

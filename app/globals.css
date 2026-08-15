@@ -427,3 +427,22 @@ body {
     opacity: 0.35;
   }
 }
+
+/* ===== Rotating gradient ring behind the hero photo ===== */
+@keyframes conic-spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+.conic-spin {
+  transform: translate(-50%, -50%);
+  animation: conic-spin 9s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .conic-spin {
+    animation: none;
+  }
+}

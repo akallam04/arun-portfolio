@@ -40,14 +40,14 @@ const WIDE: Record<string, [number, number]> = {
   out: [0.85, 0.38],
 };
 const NARROW: Record<string, [number, number]> = {
-  in: [0.5, 0.05],
-  san: [0.5, 0.18],
-  route: [0.5, 0.33],
-  rag: [0.24, 0.5],
-  tool: [0.62, 0.5],
-  ref: [0.85, 0.28],
-  ver: [0.43, 0.68],
-  out: [0.43, 0.88],
+  in: [0.5, 0.07],
+  san: [0.5, 0.26],
+  ref: [0.82, 0.36],
+  route: [0.5, 0.45],
+  rag: [0.2, 0.63],
+  tool: [0.8, 0.63],
+  ver: [0.5, 0.81],
+  out: [0.5, 0.96],
 };
 
 const ORDER = ["in", "san", "route", "rag", "tool", "ref", "ver", "out"];
@@ -190,10 +190,18 @@ export function AgentGraph() {
         ctx.lineWidth = 1;
         ctx.stroke();
 
-        ctx.font = `${hovered ? 700 : 600} 11px ui-monospace, SFMono-Regular, Menlo, monospace`;
-        ctx.textAlign = "center";
+        const narrow = w < 700;
+        ctx.font = `${hovered ? 700 : 600} ${narrow ? 10 : 11}px ui-monospace, SFMono-Regular, Menlo, monospace`;
         ctx.fillStyle = `rgba(15,42,67,${hovered ? 0.9 : 0.58 + n.pulse * 0.3})`;
-        ctx.fillText(n.label, n.x, n.y + 19);
+        if (narrow) {
+          // keep labels inside the canvas: flip side near the edges
+          const left = n.x > w * 0.7;
+          ctx.textAlign = left ? "right" : "left";
+          ctx.fillText(n.label, n.x + (left ? -11 : 11), n.y + 3.5);
+        } else {
+          ctx.textAlign = "center";
+          ctx.fillText(n.label, n.x, n.y + 19);
+        }
         n.pulse = Math.max(0, n.pulse - dt * 1.6);
       }
 
@@ -345,29 +353,32 @@ export function AgentGraph() {
             </span>
             Live topology
           </span>
-          <span className="text-xs text-slate-500">
+          <span className="hidden text-xs text-slate-500 sm:inline">
             my Shopify support agent, as it actually runs: requests are
             sanitized, routed by intent, answered from RAG or MCP tools, then
             grounding-checked before they may reply
           </span>
+          <span className="text-xs text-slate-500 sm:hidden">
+            my Shopify agent, as it actually runs
+          </span>
         </div>
-        <div className="relative h-[190px] w-full sm:h-[210px] lg:h-[230px]">
+        <div className="relative h-[330px] w-full sm:h-[240px] lg:h-[230px]">
           <canvas
             ref={ref}
             aria-hidden="true"
             className="absolute inset-0 h-full w-full"
           />
         </div>
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-1 font-mono text-[10px] text-slate-400">
+        <div className="mt-1 flex flex-col gap-1 font-mono text-[10px] text-slate-400 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5">
           <span className="flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-sky-500" /> request
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-red-600" /> prompt
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-600" /> prompt
             injection refused before any model call
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-600" /> ungrounded
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-600" /> ungrounded
             draft sent back to re-route
           </span>
         </div>

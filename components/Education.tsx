@@ -173,11 +173,11 @@ export function Education() {
             </Reveal>
 
             <Reveal delay={200} className="flex-1">
-              <SpotlightCard className="h-full bg-white/55 p-5 sm:p-6">
+              <SpotlightCard className="flex h-full flex-col bg-white/55 p-5 sm:p-6">
                 <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
                   Where it points
                 </div>
-                <div className="space-y-3.5">
+                <div className="flex flex-1 flex-col justify-between gap-3.5">
                   {FOCUS_AREAS.map((area, i) => (
                     <div key={area.label} className="flex gap-3">
                       <span className="mt-0.5 font-mono text-[10px] text-slate-400">
