@@ -6,7 +6,9 @@ import {
   PROFILE,
   TYPED_ROLES,
 } from "@/lib/data";
+import Image from "next/image";
 import React, { useRef } from "react";
+import profilePhoto from "@/public/arun-profile.jpeg";
 import {
   usePrefersReducedMotion,
   useShortcutLabel,
@@ -24,7 +26,7 @@ import {
 
 function AvailabilityBadge() {
   return (
-    <div className="inline-flex w-fit items-center gap-2.5 rounded-full border border-emerald-600/30 bg-emerald-500/10 px-4 py-2 text-xs text-emerald-700 sm:text-sm">
+    <div className="inline-flex w-fit items-center gap-2.5 rounded-full border border-emerald-600/30 bg-emerald-500/10 px-4 py-2 text-xs text-emerald-800 sm:text-sm">
       <span className="relative inline-flex h-2 w-2">
         <span className="ping-soft absolute inline-flex h-full w-full rounded-full bg-emerald-500/60" />
         <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
@@ -117,7 +119,7 @@ export function Hero() {
 
             <Reveal delay={240}>
               <div>
-                <div className="mb-2.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                <div className="mb-2.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
                   Core Stack
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -177,9 +179,9 @@ export function Hero() {
             </Reveal>
 
             <Reveal delay={400}>
-              <p className="hidden items-center gap-2 text-xs text-slate-400 lg:flex">
+              <p className="hidden items-center gap-2 text-xs text-muted lg:flex">
                 Press
-                <kbd className="rounded border border-slate-400/40 bg-white/60 px-1.5 py-0.5 font-mono text-[10px] text-slate-500">
+                <kbd className="rounded border border-slate-400/40 bg-white/60 px-1.5 py-0.5 font-mono text-[10px] text-muted">
                   {shortcut}
                 </kbd>
                 to navigate anywhere
@@ -212,14 +214,14 @@ export function Hero() {
                 />
               </div>
               <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/80 shadow-[0_24px_60px_rgba(30,80,150,0.25)]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/arun-profile.jpeg"
+                {/* LCP-adjacent: preloaded, AVIF/WebP, sized to the frame
+                    (320px phone, 384px tablet, 365px desktop). */}
+                <Image
+                  src={profilePhoto}
                   alt={PROFILE.name}
-                  width={1200}
-                  height={1600}
+                  preload
                   fetchPriority="high"
-                  decoding="async"
+                  sizes="(min-width: 1024px) 365px, (min-width: 640px) 384px, min(320px, calc(100vw - 40px))"
                   className="h-full w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-sky-950/20 via-transparent to-transparent" />
@@ -234,7 +236,7 @@ export function Hero() {
               >
               <div className="float-slow rounded-xl border border-slate-900/[0.12] bg-white/80 px-3.5 py-2 shadow-[0_10px_28px_rgba(30,80,150,0.18)] backdrop-blur-xl">
                 <div className="text-sm font-bold text-slate-900">ASU &rsquo;27</div>
-                <div className="text-[10px] text-slate-500">B.S. Computer Science</div>
+                <div className="text-[10px] text-muted">B.S. Computer Science</div>
               </div>
               </div>
 
@@ -250,7 +252,7 @@ export function Hero() {
                   <PinIcon size={13} />
                   {PROFILE.location}
                 </div>
-                <div className="text-[10px] text-slate-500">{PROFILE.metro}</div>
+                <div className="text-[10px] text-muted">{PROFILE.metro}</div>
               </div>
               </div>
             </div>
@@ -271,7 +273,7 @@ export function Hero() {
                   suffix={s.suffix}
                   className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"
                 />
-                <span className="text-xs text-slate-500">{s.label}</span>
+                <span className="text-xs text-muted">{s.label}</span>
               </div>
             ))}
           </div>
@@ -282,7 +284,7 @@ export function Hero() {
       <a
         href="#education"
         aria-label="Scroll to education"
-        className="scroll-cue absolute bottom-4 left-1/2 hidden -translate-x-1/2 text-slate-400 transition hover:text-slate-700 lg:block"
+        className="scroll-cue absolute bottom-4 left-1/2 hidden -translate-x-1/2 text-muted transition hover:text-slate-700 lg:block"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
           <path d="M12 4v16m0 0-6-6m6 6 6-6" />

@@ -24,7 +24,7 @@ function ProjectLinks({ project }: { project: Project }) {
         href={project.github}
         target="_blank"
         rel="noreferrer"
-        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-900/[0.10] px-3.5 py-2 text-xs text-slate-500 transition hover:border-sky-500/50 hover:text-slate-800"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-900/[0.10] px-3.5 py-2 text-xs text-muted transition hover:border-sky-500/50 hover:text-slate-800"
       >
         <GitHubIcon size={12} />
         Code
@@ -44,7 +44,7 @@ function CompareBars({ project }: { project: Project }) {
             <span
               className={cn(
                 "text-[11px]",
-                row.highlight ? "font-semibold text-slate-800" : "text-slate-500"
+                row.highlight ? "font-semibold text-slate-800" : "text-muted"
               )}
             >
               {row.label}
@@ -72,7 +72,7 @@ function CompareBars({ project }: { project: Project }) {
         </div>
       ))}
       {project.compareCaption && (
-        <p className="pt-0.5 text-[10px] leading-snug text-slate-400">
+        <p className="pt-0.5 text-[10px] leading-snug text-muted">
           {project.compareCaption}
         </p>
       )}
@@ -176,7 +176,7 @@ function Placard({ project, index }: { project: Project; index: number }) {
                 >
                   {m.value}
                 </div>
-                <div className="text-xs text-slate-500">{m.label}</div>
+                <div className="text-xs text-muted">{m.label}</div>
               </div>
             ))}
           </div>
@@ -244,7 +244,7 @@ function SwipeCard({ project, index }: { project: Project; index: number }) {
             >
               {m.value}
             </div>
-            <div className="mt-0.5 text-[9px] leading-tight text-slate-500">
+            <div className="mt-0.5 text-[9px] leading-tight text-muted">
               {m.label}
             </div>
           </div>
@@ -261,7 +261,7 @@ function SwipeCard({ project, index }: { project: Project; index: number }) {
           </span>
         ))}
         {project.tags.length > 5 && (
-          <span className="px-1 py-0.5 text-[10px] text-slate-400">
+          <span className="px-1 py-0.5 text-[10px] text-muted">
             +{project.tags.length - 5}
           </span>
         )}
@@ -336,7 +336,7 @@ export function Projects() {
         <SectionHeader index="04" title="Projects" />
 
         <Reveal>
-          <p className="mb-6 text-sm text-slate-400 sm:mb-8">
+          <p className="mb-6 text-sm text-muted sm:mb-8">
             {PROJECTS.length} case studies, every one shipped ·{" "}
             {liveCount} live demos · 1 published model.
           </p>
@@ -413,7 +413,8 @@ export function Projects() {
             ))}
           </div>
 
-          <div className="mt-4 flex items-center justify-center gap-2">
+          {/* 18px gaps put dot centres 24px apart, the WCAG 2.5.8 target spacing. */}
+          <div className="mt-4 flex items-center justify-center gap-[18px]">
             {PROJECTS.map((p, i) => (
               <button
                 key={p.name}
@@ -427,9 +428,9 @@ export function Projects() {
                       inline: "center",
                     })
                 }
-                // The invisible ::before grows the tap target to ~46px tall
-                // and fills half of each gap; the visible dot is unchanged.
-                className="relative h-1.5 rounded-full transition-[width,background-color] duration-300 before:absolute before:-inset-x-1 before:-inset-y-5 before:content-['']"
+                // The invisible ::before grows the tap target to 46px tall and
+                // fills half of each gap; the visible dot is unchanged.
+                className="relative h-1.5 rounded-full transition-[width,background-color] duration-300 before:absolute before:-inset-x-[9px] before:-inset-y-5 before:content-['']"
                 style={{
                   width: card === i ? 22 : 6,
                   background: card === i ? p.color : "rgba(15,42,67,0.2)",
@@ -437,7 +438,7 @@ export function Projects() {
               />
             ))}
           </div>
-          <p className="mt-3 text-center text-[11px] text-slate-400">
+          <p className="mt-3 text-center text-[11px] text-muted">
             swipe through {PROJECTS.length} case studies
           </p>
         </div>

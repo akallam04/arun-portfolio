@@ -272,7 +272,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
         onKeyDown={onKeyDown}
       >
         <div className="flex items-center gap-3 border-b border-slate-900/[0.08] px-4">
-          <SearchIcon size={16} className="shrink-0 text-slate-400" />
+          <SearchIcon size={16} className="shrink-0 text-muted" />
           <input
             ref={inputRef}
             role="combobox"
@@ -293,7 +293,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
             className="palette-input h-12 w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
             aria-label="Search commands"
           />
-          <kbd className="shrink-0 rounded border border-slate-400/40 bg-white/60 px-1.5 py-0.5 font-mono text-[10px] text-slate-500">
+          <kbd className="shrink-0 rounded border border-slate-400/40 bg-white/60 px-1.5 py-0.5 font-mono text-[10px] text-muted">
             esc
           </kbd>
         </div>
@@ -306,7 +306,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
           className="max-h-[46vh] overflow-y-auto overscroll-contain p-2"
         >
           {filtered.length === 0 && (
-            <div className="px-3 py-8 text-center text-sm text-slate-400">
+            <div className="px-3 py-8 text-center text-sm text-muted">
               No matches for “{query}”
             </div>
           )}
@@ -319,7 +319,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
               <div
                 id={`palette-group-${gi}`}
                 className={cn(
-                  "px-3 pb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400",
+                  "px-3 pb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted",
                   gi === 0 ? "pt-1" : "pt-3"
                 )}
               >
@@ -345,7 +345,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
                       "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border",
                       i === index
                         ? "border-sky-500/40 bg-sky-500/10 text-sky-700"
-                        : "border-slate-400/30 bg-white/60 text-slate-500"
+                        : "border-slate-400/30 bg-white/60 text-muted"
                     )}
                   >
                     {c.icon}
@@ -359,7 +359,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
                     {c.label}
                   </span>
                   {c.hint && (
-                    <span className="hidden max-w-[40%] truncate text-xs text-slate-400 sm:block">
+                    <span className="hidden max-w-[40%] truncate text-xs text-muted sm:block">
                       {c.hint}
                     </span>
                   )}
@@ -374,7 +374,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
           {copiedId ? "Copied to clipboard" : ""}
         </div>
 
-        <div className="flex items-center gap-4 border-t border-slate-900/[0.08] px-4 py-2.5 text-[11px] text-slate-400">
+        <div className="flex items-center gap-4 border-t border-slate-900/[0.08] px-4 py-2.5 text-[11px] text-muted">
           <span className="flex items-center gap-1.5">
             <kbd className="rounded border border-slate-400/40 bg-white/60 px-1 py-0.5 font-mono text-[9px]">↑↓</kbd>
             navigate

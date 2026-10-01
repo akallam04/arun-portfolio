@@ -51,13 +51,13 @@ function AvailabilitySpec() {
 
   return (
     <SpotlightCard className="bg-white/55 p-5 sm:p-6">
-      <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+      <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
         Availability
       </div>
       <dl className="divide-y divide-slate-900/[0.06]">
         {rows.map(([k, v]) => (
           <div key={k} className="flex items-baseline gap-4 py-2 first:pt-0 last:pb-0">
-            <dt className="w-24 shrink-0 font-mono text-[10px] uppercase tracking-[0.1em] text-slate-400">
+            <dt className="w-24 shrink-0 font-mono text-[10px] uppercase tracking-[0.1em] text-muted">
               {k}
             </dt>
             <dd className="text-sm text-slate-700">{v}</dd>
@@ -107,13 +107,13 @@ function ArizonaCard() {
           </circle>
         </svg>
         <div>
-          <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
             Based in
           </div>
           <div className="mt-1 text-xl font-bold text-slate-900">
             Tempe, Arizona
           </div>
-          <div className="mt-0.5 text-sm text-slate-500">{PROFILE.metro}</div>
+          <div className="mt-0.5 text-sm text-muted">{PROFILE.metro}</div>
           <div className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-sky-600/30 bg-sky-500/10 px-2.5 py-1 text-[11px] text-sky-700">
             <PinIcon size={11} />
             Local to Phoenix-area teams
@@ -137,7 +137,7 @@ export function Contact() {
         <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-12">
           <div>
             <Reveal>
-              <p className="mb-6 text-lg text-slate-500 sm:mb-8 sm:text-xl">
+              <p className="mb-6 text-lg text-muted sm:mb-8 sm:text-xl">
                 Let&rsquo;s connect. I reply fast.
               </p>
             </Reveal>
@@ -147,7 +147,7 @@ export function Contact() {
                 <Reveal key={item.label} delay={i * 80}>
                   <div className="flex items-center justify-between gap-3 border-b border-slate-900/[0.07] py-4 sm:py-5">
                     <div className="min-w-0">
-                      <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+                      <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">
                         {item.label}
                       </div>
                       <a

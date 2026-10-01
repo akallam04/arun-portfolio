@@ -157,7 +157,7 @@ function SkillRadar({
           })}
         </g>
       </svg>
-      <p className="mt-2 text-center text-[11px] text-slate-400">
+      <p className="mt-2 text-center text-[11px] text-muted">
         Tap or hover a category to explore depth across six domains
       </p>
     </div>
@@ -241,7 +241,7 @@ export function Skills() {
                       ))}
                     </div>
 
-                    <div className="ml-5 mt-1.5 font-mono text-[10px] text-slate-400">
+                    <div className="ml-5 mt-1.5 font-mono text-[10px] text-muted">
                       proven in{" "}
                       <span style={{ color: `${group.color}dd` }}>
                         {group.proof.join(", ")}

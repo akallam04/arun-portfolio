@@ -109,7 +109,7 @@ export function SectionHeader({
           compact && "lg:mb-6"
         )}
       >
-        <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+        <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-muted">
           {index}
         </span>
         <h2
@@ -168,7 +168,7 @@ export function CopyButton({
           } catch {}
         }}
         aria-label={`${label} ${value}`}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-400/30 bg-white/60 px-3 py-1.5 text-xs text-slate-500 transition hover:bg-slate-900/[0.05] hover:text-slate-800"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-400/30 bg-white/60 px-3 py-1.5 text-xs text-muted transition hover:bg-slate-900/[0.05] hover:text-slate-800"
       >
         {copied ? (
           <>

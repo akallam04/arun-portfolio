@@ -76,7 +76,9 @@ export default function Dock({
   };
 
   return (
-    <div
+    // A landmark, so screen-reader users can jump to it like the desktop nav.
+    <nav
+      aria-label="Sections"
       className={cn(
         "fixed left-0 right-0 z-50 flex justify-center px-4",
         position === "bottom" &&
@@ -122,7 +124,7 @@ export default function Dock({
                 "relative flex items-center justify-center rounded-xl",
                 item.active
                   ? "bg-sky-600/15 text-sky-700"
-                  : "text-slate-500 active:bg-slate-900/[0.06]"
+                  : "text-muted active:bg-slate-900/[0.06]"
               )}
               style={{
                 width: s,
@@ -150,6 +152,6 @@ export default function Dock({
           );
         })}
       </div>
-    </div>
+    </nav>
   );
 }

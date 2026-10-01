@@ -35,13 +35,15 @@ function relativeAgo(iso: string): string {
   return RELATIVE.format(-Math.floor(days / 365), "year");
 }
 
-function useGitHubData(): GitHubData {
+/** Live stats, fetched only once `enabled` (the panel is about to show). */
+function useGitHubData(enabled: boolean): GitHubData {
   const [data, setData] = useState<GitHubData>({
     ...GITHUB_FALLBACK,
     live: false,
   });
 
   useEffect(() => {
+    if (!enabled) return;
     let cancelled = false;
 
     (async () => {
@@ -109,7 +111,7 @@ function useGitHubData(): GitHubData {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [enabled]);
 
   return data;
 }
@@ -166,7 +168,7 @@ function LanguageDonut({
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <GitHubIcon size={20} className="text-slate-600" />
-          <span className="mt-1 text-[9px] uppercase tracking-wider text-slate-400">
+          <span className="mt-1 text-[9px] uppercase tracking-wider text-muted">
             languages
           </span>
         </div>
@@ -182,7 +184,7 @@ function LanguageDonut({
             <span className="flex-1 truncate text-sm text-slate-600">
               {s.name}
             </span>
-            <span className="font-mono text-xs text-slate-500">
+            <span className="font-mono text-xs text-muted">
               {Math.round(s.frac * 100)}%
             </span>
           </div>
@@ -194,86 +196,91 @@ function LanguageDonut({
 
 /** Live GitHub footprint, rendered at the bottom of the Projects section. */
 export function GitHubPanel() {
-  const data = useGitHubData();
+  // Keep api.github.com off the critical path: start the request about a
+  // screen before the panel arrives; the static snapshot renders meanwhile.
+  const { ref, inView: near } = useInView<HTMLDivElement>(0, "800px 0px");
+  const data = useGitHubData(near);
 
   return (
-    <Reveal>
-      <SpotlightCard className="bg-white/55 p-6 sm:p-8">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <GitHubIcon size={20} className="text-slate-700" />
-            <h3 className="text-lg font-bold text-slate-900 sm:text-xl">
-              GitHub, live
-            </h3>
-            <span
-              className={
-                data.live
-                  ? "flex items-center gap-1.5 rounded-full border border-emerald-600/30 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-700"
-                  : "rounded-full border border-slate-400/40 bg-white/60 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500"
-              }
-            >
-              {data.live && (
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              )}
-              {data.live ? "Live API" : "Snapshot"}
-            </span>
-          </div>
-          <a
-            href={PROFILE.github}
-            target="_blank"
-            rel="noreferrer"
-            className="text-sm text-slate-500 transition hover:text-slate-800"
-          >
-            @{PROFILE.githubUser} <span aria-hidden="true">→</span>
-          </a>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:gap-10">
-          <div className="grid grid-cols-2 content-center gap-3">
-            <div className="rounded-xl border border-slate-900/[0.10] bg-white/70 px-4 py-3.5">
-              <div className="flex items-center gap-2 text-slate-500">
-                <RepoIcon size={14} />
-                <span className="text-xs">Public repos</span>
-              </div>
-              <CountUp
-                value={data.repos}
-                className="mt-1 block text-2xl font-bold text-slate-900"
-              />
-            </div>
-            <div className="rounded-xl border border-slate-900/[0.10] bg-white/70 px-4 py-3.5">
-              <div className="flex items-center gap-2 text-slate-500">
-                <UsersIcon size={14} />
-                <span className="text-xs">Followers</span>
-              </div>
-              <CountUp
-                value={data.followers}
-                className="mt-1 block text-2xl font-bold text-slate-900"
-              />
+    <div ref={ref}>
+      <Reveal>
+        <SpotlightCard className="bg-white/55 p-6 sm:p-8">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <GitHubIcon size={20} className="text-slate-700" />
+              <h3 className="text-lg font-bold text-slate-900 sm:text-xl">
+                GitHub, live
+              </h3>
+              <span
+                className={
+                  data.live
+                    ? "flex items-center gap-1.5 rounded-full border border-emerald-600/30 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-700"
+                    : "rounded-full border border-slate-400/40 bg-white/60 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted"
+                }
+              >
+                {data.live && (
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                )}
+                {data.live ? "Live API" : "Snapshot"}
+              </span>
             </div>
             <a
-              href={data.latestUrl}
+              href={PROFILE.github}
               target="_blank"
               rel="noreferrer"
-              className="col-span-2 rounded-xl border border-slate-900/[0.10] bg-white/70 px-4 py-3.5 transition hover:border-sky-500/40"
+              className="text-sm text-muted transition hover:text-slate-800"
             >
-              <div className="flex items-center gap-2 text-slate-500">
-                <CommitIcon size={14} />
-                <span className="text-xs">Latest push</span>
-              </div>
-              <div className="mt-1 flex flex-wrap items-baseline gap-x-2">
-                <span className="font-mono text-sm font-semibold text-slate-900">
-                  {data.latestRepo}
-                </span>
-                {data.latestAgo && (
-                  <span className="text-xs text-slate-400">{data.latestAgo}</span>
-                )}
-              </div>
+              @{PROFILE.githubUser} <span aria-hidden="true">→</span>
             </a>
           </div>
 
-          <LanguageDonut languages={data.languages} />
-        </div>
-      </SpotlightCard>
-    </Reveal>
+          <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:gap-10">
+            <div className="grid grid-cols-2 content-center gap-3">
+              <div className="rounded-xl border border-slate-900/[0.10] bg-white/70 px-4 py-3.5">
+                <div className="flex items-center gap-2 text-muted">
+                  <RepoIcon size={14} />
+                  <span className="text-xs">Public repos</span>
+                </div>
+                <CountUp
+                  value={data.repos}
+                  className="mt-1 block text-2xl font-bold text-slate-900"
+                />
+              </div>
+              <div className="rounded-xl border border-slate-900/[0.10] bg-white/70 px-4 py-3.5">
+                <div className="flex items-center gap-2 text-muted">
+                  <UsersIcon size={14} />
+                  <span className="text-xs">Followers</span>
+                </div>
+                <CountUp
+                  value={data.followers}
+                  className="mt-1 block text-2xl font-bold text-slate-900"
+                />
+              </div>
+              <a
+                href={data.latestUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="col-span-2 rounded-xl border border-slate-900/[0.10] bg-white/70 px-4 py-3.5 transition hover:border-sky-500/40"
+              >
+                <div className="flex items-center gap-2 text-muted">
+                  <CommitIcon size={14} />
+                  <span className="text-xs">Latest push</span>
+                </div>
+                <div className="mt-1 flex flex-wrap items-baseline gap-x-2">
+                  <span className="font-mono text-sm font-semibold text-slate-900">
+                    {data.latestRepo}
+                  </span>
+                  {data.latestAgo && (
+                    <span className="text-xs text-muted">{data.latestAgo}</span>
+                  )}
+                </div>
+              </a>
+            </div>
+
+            <LanguageDonut languages={data.languages} />
+          </div>
+        </SpotlightCard>
+      </Reveal>
+    </div>
   );
 }

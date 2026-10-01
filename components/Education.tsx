@@ -45,7 +45,7 @@ function GpaRing() {
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="gradient-name text-2xl font-bold">4.0</span>
-        <span className="text-[9px] uppercase tracking-wider text-slate-500">GPA</span>
+        <span className="text-[9px] uppercase tracking-wider text-muted">GPA</span>
       </div>
     </div>
   );
@@ -57,10 +57,10 @@ function DegreeProgress() {
   return (
     <div ref={ref}>
       <div className="mb-2 flex items-baseline justify-between">
-        <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
           Degree progress
         </span>
-        <span className="font-mono text-[11px] text-slate-500">
+        <span className="font-mono text-[11px] text-muted">
           {DEGREE.termsDone} / {DEGREE.terms.length} terms
         </span>
       </div>
@@ -82,7 +82,7 @@ function DegreeProgress() {
                     : `transform 0.5s cubic-bezier(0.22,1,0.36,1) ${i * 70}ms`,
                 }}
               />
-              <div className="mt-1.5 hidden text-center font-mono text-[8px] text-slate-400 sm:block">
+              <div className="mt-1.5 hidden text-center font-mono text-[8px] text-muted sm:block">
                 {t}
               </div>
             </div>
@@ -100,10 +100,10 @@ function CourseMix() {
   return (
     <div ref={ref} className="mt-auto pt-6">
       <div className="mb-2 flex items-baseline justify-between">
-        <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
           Coursework mix
         </span>
-        <span className="font-mono text-[11px] text-slate-400">
+        <span className="font-mono text-[11px] text-muted">
           {total} courses
         </span>
       </div>
@@ -131,8 +131,8 @@ function CourseMix() {
               className="h-1.5 w-1.5 shrink-0 rounded-full"
               style={{ background: t.color }}
             />
-            <span className="text-[11px] text-slate-500">{t.label}</span>
-            <span className="ml-auto font-mono text-[10px] text-slate-400">
+            <span className="text-[11px] text-muted">{t.label}</span>
+            <span className="ml-auto font-mono text-[10px] text-muted">
               {t.courses.length}
             </span>
           </div>
@@ -157,14 +157,14 @@ export function Education() {
             <SpotlightCard className="h-full bg-white/55 p-6 sm:p-8 lg:p-7">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <div className="flex items-center gap-2 text-sm text-slate-500">
+                  <div className="flex items-center gap-2 text-sm text-muted">
                     <CapIcon size={15} />
                     {DEGREE.school} · {DEGREE.place}
                   </div>
                   <div className="mt-2 text-2xl font-bold text-slate-900 sm:text-3xl">
                     {DEGREE.title}
                   </div>
-                  <div className="mt-1 font-mono text-xs text-slate-500">
+                  <div className="mt-1 font-mono text-xs text-muted">
                     {DEGREE.start} to {DEGREE.end}
                   </div>
                 </div>
@@ -176,7 +176,7 @@ export function Education() {
               </div>
 
               <div className="mt-6 border-t border-slate-900/[0.08] pt-5">
-                <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
                   Coursework, by what it feeds
                 </div>
                 <div className="space-y-3.5">
@@ -214,7 +214,7 @@ export function Education() {
           <div className="flex flex-col gap-4">
             <Reveal delay={120}>
               <SpotlightCard className="bg-white/55 p-5 sm:p-6">
-                <div className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                <div className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
                   Standing
                 </div>
                 <div className="space-y-2.5">
@@ -239,20 +239,20 @@ export function Education() {
                 className="h-full bg-white/55 p-5 sm:p-6"
                 contentClassName="flex h-full flex-col"
               >
-                <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                <div className="mb-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
                   Where it points
                 </div>
                 <div className="flex flex-col gap-3.5">
                   {FOCUS_AREAS.map((area, i) => (
                     <div key={area.label} className="flex gap-3">
-                      <span className="mt-0.5 font-mono text-[10px] text-slate-400">
+                      <span className="mt-0.5 font-mono text-[10px] text-muted">
                         0{i + 1}
                       </span>
                       <div>
                         <div className="text-sm font-semibold text-slate-800">
                           {area.label}
                         </div>
-                        <div className="text-xs leading-relaxed text-slate-500">
+                        <div className="text-xs leading-relaxed text-muted">
                           {area.desc}
                         </div>
                       </div>

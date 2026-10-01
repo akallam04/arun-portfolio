@@ -53,8 +53,14 @@ export function scrollToSection(key: SectionKey) {
   history.replaceState(null, "", `#${key}`);
 }
 
-/** One-shot in-view flag for scroll reveal / chart draw triggers. */
-export function useInView<T extends HTMLElement>(threshold = 0.25) {
+/**
+ * One-shot in-view flag for scroll reveal / chart draw triggers.
+ * `rootMargin` lets callers fire early, e.g. to prefetch before a reveal.
+ */
+export function useInView<T extends HTMLElement>(
+  threshold = 0.25,
+  rootMargin = "0px"
+) {
   const ref = useRef<T | null>(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
@@ -67,11 +73,11 @@ export function useInView<T extends HTMLElement>(threshold = 0.25) {
           obs.disconnect();
         }
       },
-      { threshold }
+      { threshold, rootMargin }
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, [threshold]);
+  }, [threshold, rootMargin]);
   return { ref, inView };
 }
 

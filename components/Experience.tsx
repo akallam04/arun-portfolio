@@ -50,7 +50,7 @@ function CareerAxis({
               className="absolute top-0 flex flex-col items-center"
               style={{ left: `${left}%`, transform: "translateX(-50%)" }}
             >
-              <span className="font-mono text-[10px] text-slate-400">{y}</span>
+              <span className="font-mono text-[10px] text-muted">{y}</span>
               <span className="mt-1 h-2 w-px bg-slate-900/15" />
             </div>
           );
@@ -92,7 +92,7 @@ function CareerAxis({
             onClick={() => onSelect(i)}
             className={cn(
               "flex items-center gap-1.5 font-mono text-[10px] transition-colors",
-              selected === i ? "text-slate-800" : "text-slate-400 hover:text-slate-600"
+              selected === i ? "text-slate-800" : "text-muted hover:text-slate-600"
             )}
           >
             <span
@@ -171,7 +171,7 @@ export function Experience() {
                     {exp.role}
                   </h3>
 
-                  <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
+                  <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
                     <span className="flex items-center gap-1.5">
                       <BriefcaseIcon size={12} />
                       {exp.company}
@@ -181,7 +181,7 @@ export function Experience() {
                       {exp.location}
                     </span>
                   </div>
-                  <div className="mt-1 font-mono text-[11px] text-slate-400">
+                  <div className="mt-1 font-mono text-[11px] text-muted">
                     {exp.period}
                   </div>
 

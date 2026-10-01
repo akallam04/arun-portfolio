@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* Muted text: the lightest grey that still clears WCAG AA (4.5:1) for small
+   text on every page background, including the bluer top glow (#dcecfb). */
+@theme {
+  --color-muted: #586982;
+}
+
 /* ===== Base: glassy sky-blue & cloud-white theme ===== */
 html {
   scroll-behavior: smooth;

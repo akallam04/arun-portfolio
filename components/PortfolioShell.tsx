@@ -1,11 +1,11 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { Background } from "./Background";
 import { IntroOverlay } from "./IntroOverlay";
 import { Nav } from "./Nav";
 import { MobileDock } from "./MobileDock";
-import { CommandPalette } from "./CommandPalette";
 import { Hero } from "./Hero";
 import { AgentGraph } from "./AgentGraph";
 import { Education } from "./Education";
@@ -14,6 +14,12 @@ import { Experience } from "./Experience";
 import { Projects } from "./Projects";
 import { Contact } from "./Contact";
 import { Footer } from "./Footer";
+
+// Not needed for first paint: fetched when the page goes idle (so ⌘K still
+// opens instantly) and rendered only while open.
+const loadPalette = () =>
+  import("./CommandPalette").then((m) => m.CommandPalette);
+const CommandPalette = dynamic(loadPalette, { ssr: false });
 
 export function PortfolioShell() {
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -28,6 +34,16 @@ export function PortfolioShell() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  useEffect(() => {
+    const warm = () => void loadPalette();
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(warm, { timeout: 4000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const t = window.setTimeout(warm, 2500);
+    return () => window.clearTimeout(t);
   }, []);
 
   // A small hello for anyone who opens devtools.

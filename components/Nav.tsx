@@ -102,7 +102,7 @@ export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
                   "relative z-10 rounded-lg px-3.5 py-1.5 text-sm transition-colors duration-300",
                   isActive
                     ? "font-medium text-slate-900"
-                    : "text-slate-500 hover:text-slate-800"
+                    : "text-muted hover:text-slate-800"
                 )}
               >
                 {s.label}
@@ -115,11 +115,11 @@ export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
           <button
             onClick={onOpenPalette}
             aria-label="Open command palette"
-            className="flex items-center gap-2 rounded-lg border border-slate-400/30 bg-white/60 px-2.5 py-1.5 text-xs text-slate-500 transition hover:border-sky-500/40 hover:bg-slate-900/[0.05] hover:text-slate-800"
+            className="flex items-center gap-2 rounded-lg border border-slate-400/30 bg-white/60 px-2.5 py-1.5 text-xs text-muted transition hover:border-sky-500/40 hover:bg-slate-900/[0.05] hover:text-slate-800"
           >
             <SearchIcon size={14} />
             <span className="hidden sm:inline">Search</span>
-            <kbd className="hidden rounded border border-slate-400/40 bg-white/60 px-1.5 py-0.5 font-mono text-[10px] text-slate-500 sm:inline">
+            <kbd className="hidden rounded border border-slate-400/40 bg-white/60 px-1.5 py-0.5 font-mono text-[10px] text-muted sm:inline">
               {shortcut}
             </kbd>
           </button>
