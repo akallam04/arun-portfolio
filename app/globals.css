@@ -4,6 +4,10 @@
 html {
   scroll-behavior: smooth;
   background: #e9f2fb;
+  /* Keep anything scrolled or tabbed to clear of the fixed 56px header.
+     Section scroll-margins are reduced by the same amount, so anchor
+     jumps land exactly where they did before. */
+  scroll-padding-top: 56px;
 }
 
 body {

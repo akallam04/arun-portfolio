@@ -2,7 +2,7 @@
 
 import Dock from "./lightswind/dock";
 import { SECTIONS, type SectionKey } from "@/lib/data";
-import { scrollToSection, useActiveSection } from "@/lib/hooks";
+import { useActiveSection } from "@/lib/hooks";
 import {
   BriefcaseIcon,
   CapIcon,
@@ -30,7 +30,7 @@ export function MobileDock() {
     return {
       icon: <Icon size={19} />,
       label: s.label,
-      onClick: () => scrollToSection(s.key),
+      href: `#${s.key}`,
       active: active === s.key,
     };
   });

@@ -127,7 +127,7 @@ export function GET() {
               }}
             />
             <div style={{ display: "flex", fontSize: 21, color: "#047857" }}>
-              Open to Fall 2026 co-ops
+              Open to full-time roles from May 2027
             </div>
             <div
               style={{

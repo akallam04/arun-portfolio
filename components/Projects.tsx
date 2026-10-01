@@ -326,17 +326,11 @@ export function Projects() {
     return () => obs.disconnect();
   }, []);
 
-  const jumpTo = (i: number) => {
-    document
-      .getElementById(`project-${i}`)
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
   return (
     <section
       id="projects"
       data-key="projects"
-      className="scroll-mt-20 py-20 sm:py-24 lg:py-24"
+      className="scroll-mt-6 py-20 sm:py-24 lg:py-24"
     >
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <SectionHeader index="04" title="Projects" />
@@ -358,11 +352,11 @@ export function Projects() {
               {PROJECTS.map((p, i) => {
                 const on = active === i;
                 return (
-                  <button
+                  <a
                     key={p.name}
-                    onClick={() => jumpTo(i)}
+                    href={`#project-${i}`}
                     aria-label={p.name}
-                    aria-current={on ? "true" : undefined}
+                    aria-current={on ? "location" : undefined}
                     className="group flex items-center gap-2 py-1.5 text-left"
                   >
                     <span
@@ -380,7 +374,7 @@ export function Projects() {
                     >
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                  </button>
+                  </a>
                 );
               })}
             </div>
@@ -392,7 +386,7 @@ export function Projects() {
                 key={p.name}
                 id={`project-${i}`}
                 data-project-index={i}
-                className="scroll-mt-24"
+                className="scroll-mt-10"
               >
                 <Reveal>
                   <Placard project={p} index={i} />

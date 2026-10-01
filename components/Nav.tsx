@@ -2,14 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { SECTIONS, type SectionKey } from "@/lib/data";
-import { scrollToSection, useActiveSection } from "@/lib/hooks";
+import { useActiveSection } from "@/lib/hooks";
 import { cn } from "./ui";
 import { SearchIcon } from "./icons";
 
 export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
   const active = useActiveSection();
   const progressRef = useRef<HTMLDivElement>(null);
-  const linkRefs = useRef<Partial<Record<SectionKey, HTMLButtonElement>>>({});
+  const linkRefs = useRef<Partial<Record<SectionKey, HTMLAnchorElement>>>({});
   const [pill, setPill] = useState<{ left: number; width: number } | null>(
     null
   );
@@ -54,15 +54,17 @@ export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
   return (
     <header className="fixed left-0 right-0 top-0 z-50 border-b border-slate-900/[0.07] bg-white/65 backdrop-blur-2xl">
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-5 sm:px-8">
-        <button
-          onClick={() => scrollToSection("home")}
+        {/* Real anchors: middle-click, ⌘/Ctrl-click and the URL hash all work.
+            html { scroll-behavior: smooth } keeps the glide. */}
+        <a
+          href="#home"
           aria-label="Back to top"
           className="group flex items-center gap-2.5 text-sm font-bold tracking-widest transition"
         >
           <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-400/40 bg-white/60 transition group-hover:border-sky-500/60 group-hover:shadow-[0_0_14px_rgba(96,165,250,0.35)]">
             <span className="gradient-name text-[11px] font-bold">AK</span>
           </span>
-        </button>
+        </a>
 
         {/* Desktop section links with a sliding highlight */}
         <nav
@@ -86,12 +88,13 @@ export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
           {SECTIONS.map((s) => {
             const isActive = active === s.key;
             return (
-              <button
+              <a
                 key={s.key}
+                href={`#${s.key}`}
+                aria-current={isActive ? "location" : undefined}
                 ref={(el) => {
                   if (el) linkRefs.current[s.key] = el;
                 }}
-                onClick={() => scrollToSection(s.key)}
                 className={cn(
                   "relative z-10 rounded-lg px-3.5 py-1.5 text-sm transition-colors duration-300",
                   isActive
@@ -100,7 +103,7 @@ export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
                 )}
               >
                 {s.label}
-              </button>
+              </a>
             );
           })}
         </nav>

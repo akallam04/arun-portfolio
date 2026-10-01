@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { EXPERIENCE } from "@/lib/data";
-import { useInView } from "@/lib/hooks";
+import { useInView, usePrefersReducedMotion } from "@/lib/hooks";
 import { Chip, Reveal, SectionHeader, SpotlightCard, cn } from "./ui";
 import { BriefcaseIcon, PinIcon } from "./icons";
 
@@ -33,7 +33,9 @@ function CareerAxis({
   selected: number;
   onSelect: (i: number) => void;
 }) {
-  const { ref, inView } = useInView<HTMLDivElement>(0.3);
+  const { ref, inView: seen } = useInView<HTMLDivElement>(0.3);
+  const reduced = usePrefersReducedMotion();
+  const inView = seen || reduced;
   return (
     <div ref={ref} className="mb-6 sm:mb-8">
       <div className="relative h-9">
@@ -74,7 +76,9 @@ function CareerAxis({
                 transform: inView ? "scaleX(1)" : "scaleX(0)",
                 transformOrigin: "left",
                 boxShadow: on ? `0 0 0 4px ${r.color}22` : "none",
-                transition: `transform 0.6s cubic-bezier(0.22,1,0.36,1) ${i * 130}ms, opacity 0.4s ${i * 130}ms, box-shadow 0.3s`,
+                transition: reduced
+                  ? "none"
+                  : `transform 0.6s cubic-bezier(0.22,1,0.36,1) ${i * 130}ms, opacity 0.4s ${i * 130}ms, box-shadow 0.3s`,
               }}
             />
           );
@@ -110,7 +114,7 @@ export function Experience() {
     <section
       id="experience"
       data-key="experience"
-      className="scroll-mt-20 py-20 sm:py-24 lg:flex lg:min-h-[calc(100svh-56px)] lg:items-center lg:py-12"
+      className="scroll-mt-6 py-20 sm:py-24 lg:flex lg:min-h-[calc(100svh-56px)] lg:items-center lg:py-12"
     >
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <SectionHeader index="03" title="Experience" compact />
@@ -127,7 +131,13 @@ export function Experience() {
               <Reveal key={exp.company} delay={i * 110} className="h-full">
                 <SpotlightCard
                   blur={false}
+                  // Focus and tap select a card the same way hover does.
+                  tabIndex={0}
+                  role="group"
+                  aria-label={`${exp.role} at ${exp.company}`}
                   onMouseEnter={() => setSelected(i)}
+                  onFocus={() => setSelected(i)}
+                  onClick={() => setSelected(i)}
                   className="flex h-full flex-col p-5 transition-all duration-300 lg:p-5"
                   style={{
                     background: on

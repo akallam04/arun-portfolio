@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useRef } from "react";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 
 /**
  * Wraps a control so it leans toward the cursor and springs back on leave.
- * Inert on touch devices (mouse events simply never fire).
+ * Inert on touch devices (mouse events simply never fire) and under
+ * prefers-reduced-motion.
  */
 export function Magnetic({
   children,
@@ -18,10 +20,11 @@ export function Magnetic({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const reduced = usePrefersReducedMotion();
 
   const onMove = (e: React.MouseEvent) => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || reduced) return;
     const r = el.getBoundingClientRect();
     const dx = (e.clientX - (r.left + r.width / 2)) * strength;
     const dy = (e.clientY - (r.top + r.height / 2)) * strength;

@@ -7,7 +7,7 @@ import {
   TYPED_ROLES,
 } from "@/lib/data";
 import React, { useRef } from "react";
-import { scrollToSection, useTypewriter } from "@/lib/hooks";
+import { usePrefersReducedMotion, useTypewriter } from "@/lib/hooks";
 import { CountUp, Reveal } from "./ui";
 import { Magnetic } from "./Magnetic";
 import {
@@ -32,9 +32,11 @@ function AvailabilityBadge() {
 
 export function Hero() {
   const typed = useTypewriter(TYPED_ROLES);
+  const reduced = usePrefersReducedMotion();
   const photoRef = useRef<HTMLDivElement>(null);
 
   const onPhotoMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (reduced) return;
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches)
       return;
     const el = photoRef.current;
@@ -58,7 +60,7 @@ export function Hero() {
     <section
       id="home"
       data-key="home"
-      className="relative flex min-h-[calc(100svh-56px)] scroll-mt-14 items-center"
+      className="relative flex min-h-[calc(100svh-56px)] items-center"
     >
       <div className="relative z-10 mx-auto w-full max-w-6xl px-5 pb-16 pt-10 sm:px-8 lg:pb-8 lg:pt-6">
         <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-12">
@@ -98,9 +100,12 @@ export function Hero() {
             <Reveal delay={160}>
               <p className="text-lg leading-relaxed text-slate-700 sm:text-2xl">
                 CS student at ASU. I build{" "}
-                <span className="font-semibold text-slate-900">
+                {/* The typewriter is unreadable mid-word; give assistive tech
+                    the full list instead. */}
+                <span className="sr-only">{TYPED_ROLES.join(", ")}</span>
+                <span className="font-semibold text-slate-900" aria-hidden="true">
                   {typed}
-                  <span className="caret" aria-hidden="true" />
+                  <span className="caret" />
                 </span>
               </p>
             </Reveal>
@@ -206,6 +211,10 @@ export function Hero() {
                 <img
                   src="/arun-profile.jpeg"
                   alt={PROFILE.name}
+                  width={1200}
+                  height={1600}
+                  fetchPriority="high"
+                  decoding="async"
                   className="h-full w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-sky-950/20 via-transparent to-transparent" />
@@ -265,15 +274,15 @@ export function Hero() {
       </div>
 
       {/* Scroll cue */}
-      <button
-        onClick={() => scrollToSection("education")}
+      <a
+        href="#education"
         aria-label="Scroll to education"
         className="scroll-cue absolute bottom-4 left-1/2 hidden -translate-x-1/2 text-slate-400 transition hover:text-slate-700 lg:block"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
           <path d="M12 4v16m0 0-6-6m6 6 6-6" />
         </svg>
-      </button>
+      </a>
     </section>
   );
 }

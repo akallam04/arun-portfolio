@@ -1,12 +1,19 @@
 "use client";
 
 import { COURSEWORK_TRACKS, DEGREE, FOCUS_AREAS } from "@/lib/data";
-import { useInView } from "@/lib/hooks";
+import { useInView, usePrefersReducedMotion } from "@/lib/hooks";
 import { Reveal, SectionHeader, SpotlightCard } from "./ui";
 import { CapIcon } from "./icons";
 
+/** Reduced motion: draw in the final state, with no transitions. */
+function useDrawn<T extends HTMLElement>(threshold: number) {
+  const { ref, inView } = useInView<T>(threshold);
+  const reduced = usePrefersReducedMotion();
+  return { ref, inView: inView || reduced, reduced };
+}
+
 function GpaRing() {
-  const { ref, inView } = useInView<HTMLDivElement>(0.5);
+  const { ref, inView, reduced } = useDrawn<HTMLDivElement>(0.5);
   const r = 40;
   const C = 2 * Math.PI * r;
   return (
@@ -23,7 +30,11 @@ function GpaRing() {
           strokeLinecap="round"
           strokeDasharray={C}
           strokeDashoffset={inView ? 0 : C}
-          style={{ transition: "stroke-dashoffset 1.4s cubic-bezier(0.22,1,0.36,1)" }}
+          style={{
+            transition: reduced
+              ? "none"
+              : "stroke-dashoffset 1.4s cubic-bezier(0.22,1,0.36,1)",
+          }}
         />
         <defs>
           <linearGradient id="gpa-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -42,7 +53,7 @@ function GpaRing() {
 
 /** Eight terms of the degree, filled as they are completed. */
 function DegreeProgress() {
-  const { ref, inView } = useInView<HTMLDivElement>(0.4);
+  const { ref, inView, reduced } = useDrawn<HTMLDivElement>(0.4);
   return (
     <div ref={ref}>
       <div className="mb-2 flex items-baseline justify-between">
@@ -66,7 +77,9 @@ function DegreeProgress() {
                     : "rgba(15,42,67,0.10)",
                   transform: inView ? "scaleX(1)" : "scaleX(0)",
                   transformOrigin: "left",
-                  transition: `transform 0.5s cubic-bezier(0.22,1,0.36,1) ${i * 70}ms`,
+                  transition: reduced
+                    ? "none"
+                    : `transform 0.5s cubic-bezier(0.22,1,0.36,1) ${i * 70}ms`,
                 }}
               />
               <div className="mt-1.5 hidden text-center font-mono text-[8px] text-slate-400 sm:block">
@@ -82,7 +95,7 @@ function DegreeProgress() {
 
 /** How the 14 courses actually split across the three tracks. */
 function CourseMix() {
-  const { ref, inView } = useInView<HTMLDivElement>(0.4);
+  const { ref, inView, reduced } = useDrawn<HTMLDivElement>(0.4);
   const total = COURSEWORK_TRACKS.reduce((n, t) => n + t.courses.length, 0);
   return (
     <div ref={ref} className="mt-auto pt-6">
@@ -104,7 +117,9 @@ function CourseMix() {
               opacity: 0.85,
               transform: inView ? "scaleX(1)" : "scaleX(0)",
               transformOrigin: "left",
-              transition: `transform 0.7s cubic-bezier(0.22,1,0.36,1) ${i * 120}ms`,
+              transition: reduced
+                ? "none"
+                : `transform 0.7s cubic-bezier(0.22,1,0.36,1) ${i * 120}ms`,
             }}
           />
         ))}
@@ -132,7 +147,7 @@ export function Education() {
     <section
       id="education"
       data-key="education"
-      className="scroll-mt-20 py-20 sm:py-24 lg:flex lg:min-h-[calc(100svh-56px)] lg:items-center lg:py-12"
+      className="scroll-mt-6 py-20 sm:py-24 lg:flex lg:min-h-[calc(100svh-56px)] lg:items-center lg:py-12"
     >
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <SectionHeader index="01" title="Education" compact />

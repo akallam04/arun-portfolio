@@ -31,20 +31,15 @@ export function Chip({
 /** Card with a radial highlight that follows the pointer (desktop only). */
 export function SpotlightCard({
   className,
-  style,
   blur = true,
-  onMouseEnter,
   contentClassName,
   children,
-}: {
-  className?: string;
-  style?: React.CSSProperties;
+  ...rest
+}: Omit<React.HTMLAttributes<HTMLDivElement>, "onMouseMove"> & {
   /** Backdrop blur is costly on tall, frequently repainted cards; opt out there. */
   blur?: boolean;
-  onMouseEnter?: () => void;
   /** The inner wrapper; pass flex utilities when content must fill the card. */
   contentClassName?: string;
-  children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -56,15 +51,14 @@ export function SpotlightCard({
   };
   return (
     <div
+      {...rest}
       ref={ref}
       onMouseMove={onMouseMove}
-      onMouseEnter={onMouseEnter}
       className={cn(
         "spotlight-card relative overflow-hidden rounded-2xl border border-slate-900/[0.10]",
         blur && "backdrop-blur-xl",
         className
       )}
-      style={style}
     >
       <div className="spotlight-glow pointer-events-none absolute inset-0" />
       <div className="glass-glare pointer-events-none absolute inset-0" />
@@ -148,7 +142,7 @@ export function CountUp({
   const { ref, inView } = useInView<HTMLSpanElement>(0.4);
   const current = useCountUp(value, inView);
   return (
-    <span ref={ref} className={className}>
+    <span ref={ref} className={cn("tabular-nums", className)}>
       {current.toFixed(decimals)}
       {suffix}
     </span>
@@ -164,28 +158,34 @@ export function CopyButton({
 }) {
   const [copied, setCopied] = useState(false);
   return (
-    <button
-      onClick={async () => {
-        try {
-          await navigator.clipboard.writeText(value);
-          setCopied(true);
-          window.setTimeout(() => setCopied(false), 1600);
-        } catch {}
-      }}
-      aria-label={`${label} ${value}`}
-      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-400/30 bg-white/60 px-3 py-1.5 text-xs text-slate-500 transition hover:bg-slate-900/[0.05] hover:text-slate-800"
-    >
-      {copied ? (
-        <>
-          <CheckIcon size={13} className="text-emerald-600" />
-          <span className="text-emerald-600">Copied</span>
-        </>
-      ) : (
-        <>
-          <CopyIcon size={13} />
-          {label}
-        </>
-      )}
-    </button>
+    <>
+      <button
+        onClick={async () => {
+          try {
+            await navigator.clipboard.writeText(value);
+            setCopied(true);
+            window.setTimeout(() => setCopied(false), 1600);
+          } catch {}
+        }}
+        aria-label={`${label} ${value}`}
+        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-400/30 bg-white/60 px-3 py-1.5 text-xs text-slate-500 transition hover:bg-slate-900/[0.05] hover:text-slate-800"
+      >
+        {copied ? (
+          <>
+            <CheckIcon size={13} className="text-emerald-600" />
+            <span className="text-emerald-600">Copied</span>
+          </>
+        ) : (
+          <>
+            <CopyIcon size={13} />
+            {label}
+          </>
+        )}
+      </button>
+      {/* The button's aria-label is fixed, so announce the result here. */}
+      <span className="sr-only" aria-live="polite">
+        {copied ? `Copied ${value}` : ""}
+      </span>
+    </>
   );
 }

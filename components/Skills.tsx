@@ -39,8 +39,9 @@ function SkillRadar({
       <svg
         viewBox="0 0 380 300"
         className="w-full"
-        role="img"
-        aria-label="Skill radar chart across six domains"
+        // Visual mirror of the list beside it, which carries the same data
+        // and is keyboard-reachable; role="img" would hide the hover targets.
+        aria-hidden="true"
       >
         {/* Grid rings */}
         {rings.map((f) => (
@@ -170,7 +171,7 @@ export function Skills() {
     <section
       id="skills"
       data-key="skills"
-      className="scroll-mt-20 py-20 sm:py-24 lg:flex lg:min-h-[calc(100svh-56px)] lg:items-center lg:py-12"
+      className="scroll-mt-6 py-20 sm:py-24 lg:flex lg:min-h-[calc(100svh-56px)] lg:items-center lg:py-12"
     >
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <SectionHeader index="02" title="Skills" compact />

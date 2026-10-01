@@ -14,7 +14,7 @@ export const PROFILE = {
   linkedin: "https://linkedin.com/in/akallam3",
   resume: "/resume.pdf?v=20260716",
   site: "https://arunkallam.vercel.app",
-  availability: "Open to Fall 2026 Co-ops",
+  availability: "Open to full-time roles from May 2027",
   tagline:
     "CS student at ASU building AI agents, fine-tuned LLMs, and full-stack products.",
 } as const;

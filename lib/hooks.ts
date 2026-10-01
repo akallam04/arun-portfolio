@@ -43,10 +43,14 @@ export function useActiveSection() {
   return active;
 }
 
+/**
+ * Scripted equivalent of clicking `<a href="#key">`. No explicit behavior:
+ * `scrollIntoView` then follows `html { scroll-behavior }`, which is smooth
+ * normally and instant under prefers-reduced-motion.
+ */
 export function scrollToSection(key: SectionKey) {
-  document
-    .getElementById(key)
-    ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  document.getElementById(key)?.scrollIntoView({ block: "start" });
+  history.replaceState(null, "", `#${key}`);
 }
 
 /** One-shot in-view flag for scroll reveal / chart draw triggers. */
@@ -71,28 +75,46 @@ export function useInView<T extends HTMLElement>(threshold = 0.25) {
   return { ref, inView };
 }
 
-/** Counts from 0 to `target` with an ease-out curve once `start` is true. */
+const noopSubscribe = () => () => {};
+
+/** False during SSR and hydration, true once running in the browser. */
+export function useHydrated() {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false
+  );
+}
+
+/**
+ * Counts from 0 to `target` with an ease-out curve once `start` is true.
+ *
+ * Server HTML (and no-JS / crawler reads) carries the final `target`, so
+ * the page text is never "0 Internships". After hydration the number rests
+ * at 0 until `start`, then counts up. Reduced motion shows `target` only.
+ */
 export function useCountUp(target: number, start: boolean, duration = 1200) {
-  const [value, setValue] = useState(0);
+  const hydrated = useHydrated();
   const reduced = usePrefersReducedMotion();
+  // null until the first animation frame has run.
+  const [animated, setAnimated] = useState<number | null>(null);
+
   useEffect(() => {
-    if (!start) return;
+    if (!start || reduced) return;
     let raf = 0;
     const t0 = performance.now();
     const tick = (now: number) => {
-      if (reduced) {
-        setValue(target);
-        return;
-      }
       const p = Math.min((now - t0) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setValue(target * eased);
+      setAnimated(target * (1 - Math.pow(1 - p, 3)));
       if (p < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [target, start, duration, reduced]);
-  return value;
+
+  if (!hydrated || reduced) return target;
+  if (!start) return 0;
+  return animated ?? 0;
 }
 
 const SCRAMBLE_CHARS = "ΛΞΦ01<>/#&+*";

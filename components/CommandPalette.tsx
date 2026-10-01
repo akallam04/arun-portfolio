@@ -192,7 +192,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
       if (e.key !== "Tab" || !panelRef.current) return;
       const focusables = Array.from(
         panelRef.current.querySelectorAll<HTMLElement>(
-          'input, button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+          'input, button:not([disabled]):not([tabindex="-1"]), a[href], [tabindex]:not([tabindex="-1"])'
         )
       );
       if (focusables.length === 0) return;
@@ -244,7 +244,15 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
     }
   };
 
-  let lastGroup = "";
+  // Contiguous runs of one group, keeping each command's flat index so the
+  // arrow-key highlight and aria-activedescendant stay in sync.
+  const groups: { name: string; items: { c: Command; i: number }[] }[] = [];
+  filtered.forEach((c, i) => {
+    const last = groups[groups.length - 1];
+    if (last && last.name === c.group) last.items.push({ c, i });
+    else groups.push({ name: c.group, items: [{ c, i }] });
+  });
+  const optionId = (i: number) => `palette-option-${i}`;
 
   return (
     <div
@@ -267,6 +275,15 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
           <SearchIcon size={16} className="shrink-0 text-slate-400" />
           <input
             ref={inputRef}
+            role="combobox"
+            aria-expanded="true"
+            aria-controls="palette-list"
+            aria-autocomplete="list"
+            aria-activedescendant={
+              filtered[index] ? optionId(index) : undefined
+            }
+            autoComplete="off"
+            spellCheck={false}
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -281,23 +298,40 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
           </kbd>
         </div>
 
-        <div ref={listRef} className="max-h-[46vh] overflow-y-auto p-2">
+        <div
+          ref={listRef}
+          id="palette-list"
+          role="listbox"
+          aria-label="Commands"
+          className="max-h-[46vh] overflow-y-auto p-2"
+        >
           {filtered.length === 0 && (
             <div className="px-3 py-8 text-center text-sm text-slate-400">
               No matches for “{query}”
             </div>
           )}
-          {filtered.map((c, i) => {
-            const showGroup = c.group !== lastGroup;
-            lastGroup = c.group;
-            return (
-              <React.Fragment key={c.id}>
-                {showGroup && (
-                  <div className="px-3 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 first:pt-1">
-                    {c.group}
-                  </div>
+          {groups.map((g, gi) => (
+            <div
+              key={g.name + g.items[0].i}
+              role="group"
+              aria-labelledby={`palette-group-${gi}`}
+            >
+              <div
+                id={`palette-group-${gi}`}
+                className={cn(
+                  "px-3 pb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400",
+                  gi === 0 ? "pt-1" : "pt-3"
                 )}
+              >
+                {g.name}
+              </div>
+              {g.items.map(({ c, i }) => (
                 <button
+                  key={c.id}
+                  id={optionId(i)}
+                  role="option"
+                  aria-selected={i === index}
+                  tabIndex={-1}
                   data-idx={i}
                   onClick={() => c.run()}
                   onMouseMove={() => setIndex(i)}
@@ -330,9 +364,14 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
                     </span>
                   )}
                 </button>
-              </React.Fragment>
-            );
-          })}
+              ))}
+            </div>
+          ))}
+        </div>
+
+        {/* Copy results only change an icon; say it out loud too. */}
+        <div className="sr-only" aria-live="polite">
+          {copiedId ? "Copied to clipboard" : ""}
         </div>
 
         <div className="flex items-center gap-4 border-t border-slate-900/[0.08] px-4 py-2.5 text-[11px] text-slate-400">

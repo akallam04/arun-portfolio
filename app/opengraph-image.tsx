@@ -39,7 +39,7 @@ export default function OpenGraphImage() {
             }}
           />
           <div style={{ fontSize: 26, color: "#047857" }}>
-            Open to Fall 2026 Co-ops · Tempe, AZ
+            Open to full-time roles from May 2027 · Tempe, AZ
           </div>
         </div>
 

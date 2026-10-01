@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { CONTACT_ITEMS, PROFILE } from "@/lib/data";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 import { CopyButton, Reveal, SectionHeader, SpotlightCard } from "./ui";
 import { FileIcon, MailIcon, PinIcon } from "./icons";
 
@@ -20,7 +21,7 @@ function AvailabilitySpec() {
   }, []);
 
   const rows: [string, React.ReactNode][] = [
-    ["seeking", "Fall 2026 co-op / internship"],
+    ["seeking", "Full-time roles from May 2027"],
     ["focus", "AI & agent engineering, full-stack"],
     ["based", `${PROFILE.location} (${PROFILE.metro})`],
     ["remote", "Open, US time zones"],
@@ -63,6 +64,7 @@ function AvailabilitySpec() {
 
 /** Stylized Arizona silhouette with a glowing marker on the Phoenix valley. */
 function ArizonaCard() {
+  const reduced = usePrefersReducedMotion();
   return (
     <SpotlightCard className="bg-white/55 p-6">
       <div className="flex items-center gap-5">
@@ -88,12 +90,14 @@ function ArizonaCard() {
             strokeWidth="1"
           />
           <circle cx="48" cy="64" r="4" fill="#059669">
-            <animate
-              attributeName="opacity"
-              values="1;0.45;1"
-              dur="2.2s"
-              repeatCount="indefinite"
-            />
+            {!reduced && (
+              <animate
+                attributeName="opacity"
+                values="1;0.45;1"
+                dur="2.2s"
+                repeatCount="indefinite"
+              />
+            )}
           </circle>
         </svg>
         <div>
@@ -119,7 +123,7 @@ export function Contact() {
     <section
       id="contact"
       data-key="contact"
-      className="scroll-mt-20 py-20 sm:py-24 lg:flex lg:min-h-[calc(100svh-56px)] lg:items-center lg:py-12"
+      className="scroll-mt-6 py-20 sm:py-24 lg:flex lg:min-h-[calc(100svh-56px)] lg:items-center lg:py-12"
     >
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <SectionHeader index="05" title="Contact" />

@@ -7,7 +7,8 @@ import { cn } from "../ui";
 export type DockItem = {
   icon: React.ReactNode;
   label: string;
-  onClick: () => void;
+  /** In-page target; rendered as a real link so the URL hash updates. */
+  href: string;
   /** Highlights the item and shows the active dot. */
   active?: boolean;
 };
@@ -91,7 +92,9 @@ export default function Dock({
         onTouchMove={(e) => track(e.touches[0].clientX)}
         onTouchEnd={() => setPointerX(null)}
         onTouchCancel={() => setPointerX(null)}
-        style={{ touchAction: "none" }}
+        // Horizontal drags drive the magnification; vertical swipes that
+        // start on the dock still scroll the page.
+        style={{ touchAction: "pan-y" }}
         className="relative flex items-end gap-1 rounded-2xl border border-slate-900/[0.10] bg-white/70 p-1.5 shadow-[0_12px_36px_rgba(30,80,150,0.18)] backdrop-blur-2xl"
       >
         {nearest !== null && (
@@ -110,11 +113,11 @@ export default function Dock({
         {items.map((item, i) => {
           const s = sizeOf(i);
           return (
-            <button
+            <a
               key={item.label}
-              onClick={item.onClick}
+              href={item.href}
               aria-label={item.label}
-              aria-current={item.active ? "true" : undefined}
+              aria-current={item.active ? "location" : undefined}
               className={cn(
                 "relative flex items-center justify-center rounded-xl",
                 item.active
@@ -143,7 +146,7 @@ export default function Dock({
                   item.active ? "opacity-100" : "opacity-0"
                 )}
               />
-            </button>
+            </a>
           );
         })}
       </div>
