@@ -52,6 +52,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   const copy = useCallback(async (id: string, value: string) => {
     try {
@@ -178,13 +179,45 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
     );
   }, [commands, query]);
 
-  // Lock body scroll and focus the input for the lifetime of the dialog.
+  // Lock body scroll and focus the input for the lifetime of the dialog,
+  // then hand focus back to whatever opened it.
   useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
     document.documentElement.style.overflow = "hidden";
     const t = window.setTimeout(() => inputRef.current?.focus(), 30);
+
+    // Trap Tab inside the panel. Listening on window (not the panel) also
+    // catches focus that fell to <body> after a click on blank panel space.
+    const trapTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab" || !panelRef.current) return;
+      const focusables = Array.from(
+        panelRef.current.querySelectorAll<HTMLElement>(
+          'input, button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+        )
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const current = document.activeElement;
+      const inside = !!current && panelRef.current.contains(current);
+      if (!inside) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+      } else if (e.shiftKey && current === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && current === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    window.addEventListener("keydown", trapTab);
+
     return () => {
       document.documentElement.style.overflow = "";
       window.clearTimeout(t);
+      window.removeEventListener("keydown", trapTab);
+      if (opener?.isConnected) opener.focus({ preventScroll: true });
     };
   }, []);
 
@@ -226,6 +259,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
         className="absolute inset-0 cursor-default bg-slate-900/25 backdrop-blur-sm"
       />
       <div
+        ref={panelRef}
         className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-slate-900/[0.12] bg-white/85 shadow-[0_24px_70px_rgba(30,80,150,0.28)] backdrop-blur-2xl"
         onKeyDown={onKeyDown}
       >

@@ -39,24 +39,46 @@ const NODE_ORDER: Id[] = ["in", "san", "ref", "route", "rag", "tool", "ver", "ou
 const tint = (id: Id) =>
   id === "ref" ? "#dc2626" : id === "out" ? "#059669" : "#0284c7";
 
+const EXIT_MS = 600;
+
 export function IntroOverlay() {
   const [phase, setPhase] = useState<"show" | "exit" | "done">("show");
 
   useEffect(() => {
-    let seen = false;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    let seen = reduced;
     try {
-      seen =
-        !!sessionStorage.getItem("intro-seen") ||
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      seen = seen || !!sessionStorage.getItem("intro-seen");
       if (!seen) sessionStorage.setItem("intro-seen", "1");
     } catch {
       // storage unavailable: still play once
     }
-    const t1 = window.setTimeout(() => setPhase("exit"), seen ? 0 : 1750);
-    const t2 = window.setTimeout(() => setPhase("done"), seen ? 0 : 2350);
+    if (seen) {
+      const t = window.setTimeout(() => setPhase("done"), 0);
+      return () => window.clearTimeout(t);
+    }
+
+    let doneTimer = 0;
+    const exit = () => {
+      window.clearTimeout(exitTimer);
+      if (doneTimer) return;
+      setPhase("exit");
+      doneTimer = window.setTimeout(() => setPhase("done"), EXIT_MS);
+      window.removeEventListener("keydown", exit, true);
+      window.removeEventListener("pointerdown", exit, true);
+    };
+    const exitTimer = window.setTimeout(exit, 1750);
+    // Any key or click lifts the veil early. Capture phase, no
+    // preventDefault: the keystroke or click still does its normal job.
+    window.addEventListener("keydown", exit, true);
+    window.addEventListener("pointerdown", exit, true);
     return () => {
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
+      window.clearTimeout(exitTimer);
+      window.clearTimeout(doneTimer);
+      window.removeEventListener("keydown", exit, true);
+      window.removeEventListener("pointerdown", exit, true);
     };
   }, []);
 
@@ -65,12 +87,14 @@ export function IntroOverlay() {
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 z-[200] flex flex-col items-center justify-center gap-6 px-6"
+      className="intro-overlay fixed inset-0 z-[200] flex flex-col items-center justify-center gap-6 px-6"
       style={{
         background:
           "linear-gradient(180deg, #dcecfb 0%, #eaf3fc 55%, #f6faff 100%)",
         transform: phase === "exit" ? "translateY(-100%)" : "translateY(0)",
-        transition: "transform 600ms cubic-bezier(0.72, 0, 0.24, 1)",
+        transition: `transform ${EXIT_MS}ms cubic-bezier(0.72, 0, 0.24, 1)`,
+        // Stop swallowing clicks the moment it starts lifting.
+        pointerEvents: phase === "exit" ? "none" : undefined,
       }}
     >
       <svg

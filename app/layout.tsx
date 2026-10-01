@@ -102,6 +102,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {/* Hidden until focused, so the visual design is unchanged. */}
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-[300] focus:rounded-lg focus:border focus:border-slate-900/[0.12] focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-slate-900 focus:shadow-[0_10px_28px_rgba(30,80,150,0.18)]"
+        >
+          Skip to content
+        </a>
         {children}
         <script
           type="application/ld+json"

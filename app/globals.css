@@ -29,6 +29,19 @@ body {
   outline: none;
 }
 
+/* <main> only takes focus as the skip-link target; ringing the whole page
+   would be noise. */
+#main:focus {
+  outline: none;
+}
+
+/* Reduced motion: the intro never renders, not even for a frame. */
+@media (prefers-reduced-motion: reduce) {
+  .intro-overlay {
+    display: none;
+  }
+}
+
 /* Thin styled scrollbar (WebKit) */
 ::-webkit-scrollbar {
   width: 10px;

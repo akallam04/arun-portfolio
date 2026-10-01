@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { usePrefersReducedMotion } from "@/lib/hooks";
 
 /**
  * The hero background is Arun's own agent architecture, running.
@@ -82,6 +83,18 @@ const STOP = "220,38,38";
 
 export function AgentGraph() {
   const ref = useRef<HTMLCanvasElement>(null);
+  const reducedMotion = usePrefersReducedMotion();
+  // WCAG 2.2.2: endless motion in the content needs a pause control.
+  const [paused, setPaused] = useState(false);
+  const pausedRef = useRef(false);
+  const resumeRef = useRef<() => void>(() => {});
+
+  const togglePaused = () => {
+    const next = !pausedRef.current;
+    pausedRef.current = next;
+    setPaused(next);
+    if (!next) resumeRef.current();
+  };
 
   useEffect(() => {
     const canvas = ref.current;
@@ -96,7 +109,7 @@ export function AgentGraph() {
     let nodes: Node[] = [];
     let packets: Packet[] = [];
     let raf = 0;
-    let running = true;
+    let visible = true;
     let last = performance.now();
     let spawnIn = 300;
     const pointer = { x: -9999, y: -9999, on: false };
@@ -117,6 +130,8 @@ export function AgentGraph() {
         y: map[id][1] * h,
         pulse: 0,
       }));
+      // Resizing clears the canvas; repaint when no loop will do it.
+      if (reduced || pausedRef.current) draw(0);
     };
 
     const pick = () => {
@@ -249,7 +264,10 @@ export function AgentGraph() {
     };
 
     const step = (now: number) => {
-      if (!running) return;
+      if (!visible || pausedRef.current) {
+        raf = 0;
+        return;
+      }
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
 
@@ -303,25 +321,28 @@ export function AgentGraph() {
     host.addEventListener("pointermove", onMove);
     host.addEventListener("pointerleave", onLeave);
 
+    const start = () => {
+      if (raf || !visible || pausedRef.current) return;
+      last = performance.now();
+      raf = requestAnimationFrame(step);
+    };
+    resumeRef.current = start;
+
     if (reduced) {
       // Static topology: the architecture still reads, nothing moves.
       draw(0);
     } else {
       const io = new IntersectionObserver(
         ([entry]) => {
-          const was = running;
-          running = entry.isIntersecting;
-          if (running && !was) {
-            last = performance.now();
-            raf = requestAnimationFrame(step);
-          }
+          visible = entry.isIntersecting;
+          if (visible) start();
         },
         { threshold: 0 }
       );
       io.observe(canvas);
-      raf = requestAnimationFrame(step);
+      start();
       return () => {
-        running = false;
+        visible = false;
         cancelAnimationFrame(raf);
         io.disconnect();
         window.removeEventListener("resize", layout);
@@ -331,7 +352,7 @@ export function AgentGraph() {
     }
 
     return () => {
-      running = false;
+      visible = false;
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", layout);
       host.removeEventListener("pointermove", onMove);
@@ -361,6 +382,16 @@ export function AgentGraph() {
           <span className="text-xs text-slate-500 sm:hidden">
             my Shopify agent, as it actually runs
           </span>
+          {!reducedMotion && (
+            <button
+              type="button"
+              onClick={togglePaused}
+              className="ml-auto font-mono text-[10px] uppercase tracking-[0.2em] text-slate-400 transition-colors hover:text-slate-700"
+            >
+              {paused ? "play" : "pause"}
+              <span className="sr-only"> animation</span>
+            </button>
+          )}
         </div>
         <div className="relative h-[330px] w-full sm:h-[240px] lg:h-[230px]">
           <canvas
