@@ -28,7 +28,13 @@ function AvailabilitySpec() {
     [
       "local time",
       <span key="t" className="font-mono tabular-nums">
-        {now ?? "--:--"} MST
+        {now ?? (
+          // Muted bar the width of "0:00 PM" until the clock hydrates.
+          <span className="inline-block h-[0.8em] w-[7ch] rounded bg-slate-900/[0.08] align-[-0.05em]">
+            <span className="sr-only">Loading time…</span>
+          </span>
+        )}{" "}
+        MST
       </span>,
     ],
     [

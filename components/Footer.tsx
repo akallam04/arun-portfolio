@@ -1,14 +1,22 @@
 "use client";
 
 import { PROFILE } from "@/lib/data";
+import { useHydrated, useShortcutLabel } from "@/lib/hooks";
 import { GitHubIcon, LinkedInIcon, ArrowUpIcon } from "./icons";
 
 export function Footer() {
+  // Hydrate with the build year (what the static HTML says), then show the
+  // real current year, so a page built in December never mismatches.
+  const hydrated = useHydrated();
+  const year = hydrated
+    ? new Date().getFullYear()
+    : Number(process.env.BUILD_YEAR);
+  const shortcut = useShortcutLabel();
   return (
     <footer className="border-t border-slate-900/[0.07] pb-28 pt-8 lg:pb-8">
       <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-5 sm:flex-row sm:px-8">
         <div className="text-center text-xs text-slate-400 sm:text-left">
-          © {new Date().getFullYear()} {PROFILE.name}
+          © {year} {PROFILE.name}
           <span className="mx-2 text-slate-900/15">·</span>
           Designed &amp; built in Next.js + Tailwind
         </div>
@@ -16,7 +24,7 @@ export function Footer() {
         <div className="flex items-center gap-2">
           <span className="mr-1 hidden items-center gap-1.5 text-[11px] text-slate-400 lg:flex">
             <kbd className="rounded border border-slate-400/40 bg-white/60 px-1.5 py-0.5 font-mono text-[9px]">
-              ⌘K
+              {shortcut}
             </kbd>
             anywhere
           </span>

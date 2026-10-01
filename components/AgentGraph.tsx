@@ -375,12 +375,14 @@ export function AgentGraph() {
             </span>
             Live topology
           </span>
-          <span className="hidden text-xs text-slate-500 sm:inline">
+          {/* Visually sm+ only, but always in the accessibility tree, so
+              phone screen readers get the full description of the graph. */}
+          <span className="sr-only text-xs text-slate-500 sm:not-sr-only sm:inline">
             my Shopify support agent, as it actually runs: requests are
             sanitized, routed by intent, answered from RAG or MCP tools, then
             grounding-checked before they may reply
           </span>
-          <span className="text-xs text-slate-500 sm:hidden">
+          <span className="text-xs text-slate-500 sm:hidden" aria-hidden="true">
             my Shopify agent, as it actually runs
           </span>
           {!reducedMotion && (

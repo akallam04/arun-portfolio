@@ -12,6 +12,10 @@ html {
 
 body {
   overflow-x: hidden;
+  /* No double-tap-zoom delay on taps; pinch zoom still works. */
+  touch-action: manipulation;
+  /* Soft sky tint on tap instead of the browser's default grey box. */
+  -webkit-tap-highlight-color: rgba(2, 132, 199, 0.12);
   color: #14304a;
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }

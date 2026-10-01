@@ -86,6 +86,27 @@ export function useHydrated() {
   );
 }
 
+const isApplePlatform = () =>
+  /mac|iphone|ipad|ipod/i.test(
+    (navigator as Navigator & { userAgentData?: { platform?: string } })
+      .userAgentData?.platform ||
+      navigator.platform ||
+      navigator.userAgent
+  );
+
+/**
+ * The palette shortcut as this visitor would type it: "⌘K" on Apple
+ * devices, "Ctrl K" elsewhere. Server HTML says "⌘K"; the client swaps it
+ * right after hydration.
+ */
+export function useShortcutLabel() {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => (isApplePlatform() ? "⌘K" : "Ctrl\u00A0K"),
+    () => "⌘K"
+  );
+}
+
 /**
  * Counts from 0 to `target` with an ease-out curve once `start` is true.
  *

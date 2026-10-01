@@ -7,7 +7,11 @@ import {
   TYPED_ROLES,
 } from "@/lib/data";
 import React, { useRef } from "react";
-import { usePrefersReducedMotion, useTypewriter } from "@/lib/hooks";
+import {
+  usePrefersReducedMotion,
+  useShortcutLabel,
+  useTypewriter,
+} from "@/lib/hooks";
 import { CountUp, Reveal } from "./ui";
 import { Magnetic } from "./Magnetic";
 import {
@@ -20,7 +24,7 @@ import {
 
 function AvailabilityBadge() {
   return (
-    <div className="group inline-flex w-fit cursor-default items-center gap-2.5 rounded-full border border-emerald-600/30 bg-emerald-500/10 px-4 py-2 text-xs text-emerald-700 transition-all duration-300 hover:border-emerald-600/50 hover:shadow-[0_0_24px_rgba(52,211,153,0.18)] sm:text-sm">
+    <div className="inline-flex w-fit items-center gap-2.5 rounded-full border border-emerald-600/30 bg-emerald-500/10 px-4 py-2 text-xs text-emerald-700 sm:text-sm">
       <span className="relative inline-flex h-2 w-2">
         <span className="ping-soft absolute inline-flex h-full w-full rounded-full bg-emerald-500/60" />
         <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
@@ -33,6 +37,7 @@ function AvailabilityBadge() {
 export function Hero() {
   const typed = useTypewriter(TYPED_ROLES);
   const reduced = usePrefersReducedMotion();
+  const shortcut = useShortcutLabel();
   const photoRef = useRef<HTMLDivElement>(null);
 
   const onPhotoMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -119,7 +124,7 @@ export function Hero() {
                   {CORE_STACK.map((t) => (
                     <span
                       key={t}
-                      className="rounded-lg border border-slate-400/30 bg-white/60 px-2.5 py-1 text-xs text-slate-600 transition hover:border-sky-500/40 hover:text-slate-800 sm:px-3 sm:py-1.5 sm:text-sm"
+                      className="rounded-lg border border-slate-400/30 bg-white/60 px-2.5 py-1 text-xs text-slate-600 sm:px-3 sm:py-1.5 sm:text-sm"
                     >
                       {t}
                     </span>
@@ -175,7 +180,7 @@ export function Hero() {
               <p className="hidden items-center gap-2 text-xs text-slate-400 lg:flex">
                 Press
                 <kbd className="rounded border border-slate-400/40 bg-white/60 px-1.5 py-0.5 font-mono text-[10px] text-slate-500">
-                  ⌘K
+                  {shortcut}
                 </kbd>
                 to navigate anywhere
               </p>
@@ -279,7 +284,7 @@ export function Hero() {
         aria-label="Scroll to education"
         className="scroll-cue absolute bottom-4 left-1/2 hidden -translate-x-1/2 text-slate-400 transition hover:text-slate-700 lg:block"
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
           <path d="M12 4v16m0 0-6-6m6 6 6-6" />
         </svg>
       </a>

@@ -222,7 +222,7 @@ export function Skills() {
 
                     <div className="mt-2 ml-5 h-[3px] overflow-hidden rounded-full bg-slate-900/[0.07]">
                       <div
-                        className="h-full rounded-full transition-all duration-700"
+                        className="h-full rounded-full"
                         style={{
                           width: `${group.level}%`,
                           background: `linear-gradient(90deg, ${group.color}55, ${group.color})`,

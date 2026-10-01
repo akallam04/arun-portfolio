@@ -303,7 +303,7 @@ export function CommandPalette({ onClose }: { onClose: () => void }) {
           id="palette-list"
           role="listbox"
           aria-label="Commands"
-          className="max-h-[46vh] overflow-y-auto p-2"
+          className="max-h-[46vh] overflow-y-auto overscroll-contain p-2"
         >
           {filtered.length === 0 && (
             <div className="px-3 py-8 text-center text-sm text-slate-400">

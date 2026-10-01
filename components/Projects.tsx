@@ -60,7 +60,7 @@ function CompareBars({ project }: { project: Project }) {
           </div>
           <div className="h-1.5 overflow-hidden rounded-full bg-slate-900/[0.08]">
             <div
-              className="h-full rounded-full transition-all duration-700"
+              className="h-full rounded-full"
               style={{
                 width: `${row.value}%`,
                 background: row.highlight
@@ -360,7 +360,7 @@ export function Projects() {
                     className="group flex items-center gap-2 py-1.5 text-left"
                   >
                     <span
-                      className="h-px transition-all duration-300"
+                      className="h-px transition-[width,background-color] duration-300"
                       style={{
                         width: on ? 20 : 10,
                         background: on ? p.color : "rgba(15,42,67,0.25)",
@@ -429,7 +429,7 @@ export function Projects() {
                 }
                 // The invisible ::before grows the tap target to ~46px tall
                 // and fills half of each gap; the visible dot is unchanged.
-                className="relative h-1.5 rounded-full transition-all duration-300 before:absolute before:-inset-x-1 before:-inset-y-5 before:content-['']"
+                className="relative h-1.5 rounded-full transition-[width,background-color] duration-300 before:absolute before:-inset-x-1 before:-inset-y-5 before:content-['']"
                 style={{
                   width: card === i ? 22 : 6,
                   background: card === i ? p.color : "rgba(15,42,67,0.2)",

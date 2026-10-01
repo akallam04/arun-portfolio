@@ -23,14 +23,16 @@ type GitHubData = {
 const CACHE_KEY = "gh-stats-v1";
 const CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
+const RELATIVE = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
+/** "today", "yesterday", "3 days ago", "last month", "2 months ago"… */
 function relativeAgo(iso: string): string {
   const ms = Date.now() - new Date(iso).getTime();
   const days = Math.floor(ms / 86400000);
-  if (days === 0) return "today";
-  if (days === 1) return "yesterday";
-  if (days < 30) return `${days} days ago`;
+  if (days < 30) return RELATIVE.format(-days, "day");
   const months = Math.floor(days / 30);
-  return months === 1 ? "a month ago" : `${months} months ago`;
+  if (months < 12) return RELATIVE.format(-months, "month");
+  return RELATIVE.format(-Math.floor(days / 365), "year");
 }
 
 function useGitHubData(): GitHubData {
@@ -222,7 +224,7 @@ export function GitHubPanel() {
             rel="noreferrer"
             className="text-sm text-slate-500 transition hover:text-slate-800"
           >
-            @{PROFILE.githubUser} →
+            @{PROFILE.githubUser} <span aria-hidden="true">→</span>
           </a>
         </div>
 

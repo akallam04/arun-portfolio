@@ -138,7 +138,7 @@ export function Experience() {
                   onMouseEnter={() => setSelected(i)}
                   onFocus={() => setSelected(i)}
                   onClick={() => setSelected(i)}
-                  className="flex h-full flex-col p-5 transition-all duration-300 lg:p-5"
+                  className="flex h-full flex-col p-5 transition-[background-color,border-color] duration-300 lg:p-5"
                   style={{
                     background: on
                       ? `linear-gradient(160deg, ${exp.color}16 0%, rgba(255,255,255,0) 60%), rgba(255,255,255,0.72)`

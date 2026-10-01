@@ -2,12 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { SECTIONS, type SectionKey } from "@/lib/data";
-import { useActiveSection } from "@/lib/hooks";
+import { useActiveSection, useShortcutLabel } from "@/lib/hooks";
 import { cn } from "./ui";
 import { SearchIcon } from "./icons";
 
 export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
   const active = useActiveSection();
+  const shortcut = useShortcutLabel();
   const progressRef = useRef<HTMLDivElement>(null);
   const linkRefs = useRef<Partial<Record<SectionKey, HTMLAnchorElement>>>({});
   const [pill, setPill] = useState<{ left: number; width: number } | null>(
@@ -74,12 +75,14 @@ export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
           {pill && (
             <span
               aria-hidden="true"
-              className="absolute inset-y-0 z-0 rounded-lg bg-sky-600/10"
+              className="absolute inset-y-0 left-0 z-0 rounded-lg bg-sky-600/10"
               style={{
-                left: pill.left,
+                // Slide on the compositor. Width still eases between link
+                // sizes: scaleX would squash the rounded corners mid-move.
+                transform: `translateX(${pill.left}px)`,
                 width: pill.width,
                 transition:
-                  "left 350ms cubic-bezier(0.22,1,0.36,1), width 350ms cubic-bezier(0.22,1,0.36,1)",
+                  "transform 350ms cubic-bezier(0.22,1,0.36,1), width 350ms cubic-bezier(0.22,1,0.36,1)",
               }}
             >
               <span className="absolute -bottom-[1px] left-3 right-3 h-px bg-gradient-to-r from-sky-500/0 via-sky-500/80 to-sky-500/0" />
@@ -117,7 +120,7 @@ export function Nav({ onOpenPalette }: { onOpenPalette: () => void }) {
             <SearchIcon size={14} />
             <span className="hidden sm:inline">Search</span>
             <kbd className="hidden rounded border border-slate-400/40 bg-white/60 px-1.5 py-0.5 font-mono text-[10px] text-slate-500 sm:inline">
-              ⌘K
+              {shortcut}
             </kbd>
           </button>
         </div>
