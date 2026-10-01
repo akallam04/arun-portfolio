@@ -183,3 +183,16 @@ export const PinIcon = (p: IconProps) => (
     <circle cx="12" cy="10" r="2.5" />
   </Base>
 );
+
+export const PauseIcon = (p: IconProps) => (
+  <Base fill="currentColor" stroke="none" {...p}>
+    <rect x="6" y="5" width="4" height="14" rx="1" />
+    <rect x="14" y="5" width="4" height="14" rx="1" />
+  </Base>
+);
+
+export const PlayIcon = (p: IconProps) => (
+  <Base fill="currentColor" stroke="none" {...p}>
+    <path d="M8 5.6v12.8a1 1 0 0 0 1.53.85l10.2-6.4a1 1 0 0 0 0-1.7L9.53 4.75A1 1 0 0 0 8 5.6Z" />
+  </Base>
+);

@@ -22,7 +22,7 @@ function AvailabilitySpec() {
 
   const rows: [string, React.ReactNode][] = [
     ["seeking", "Full-time roles from May 2027"],
-    ["focus", "AI & agent engineering, full-stack"],
+    ["focus", "AI & agent engineering"],
     ["based", `${PROFILE.location} (${PROFILE.metro})`],
     ["remote", "Open, US time zones"],
     [

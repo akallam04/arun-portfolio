@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePrefersReducedMotion } from "@/lib/hooks";
+import { PauseIcon, PlayIcon } from "./icons";
 
 /**
  * The hero background is Arun's own agent architecture, running.
@@ -386,8 +387,11 @@ export function AgentGraph() {
             <button
               type="button"
               onClick={togglePaused}
-              className="ml-auto font-mono text-[10px] uppercase tracking-[0.2em] text-slate-400 transition-colors hover:text-slate-700"
+              // Same sky-700 as the "Live topology" label, in the site's
+              // chip style; hover darkens to sky-900 for more contrast.
+              className="ml-auto inline-flex items-center gap-1.5 rounded-md border border-sky-600/30 bg-white/70 px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-sky-700 transition-colors hover:border-sky-600/55 hover:bg-white/90 hover:text-sky-900"
             >
+              {paused ? <PlayIcon size={10} /> : <PauseIcon size={10} />}
               {paused ? "play" : "pause"}
               <span className="sr-only"> animation</span>
             </button>
