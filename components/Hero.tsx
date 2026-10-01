@@ -69,11 +69,13 @@ export function Hero() {
             </Reveal>
 
             <h1 className="text-[clamp(38px,9vw,72px)] font-bold leading-[1.04] tracking-tight lg:text-[clamp(38px,5vw,70px)]">
-              <span className="block text-slate-900" aria-label={PROFILE.shortName}>
+              {/* Real text for assistive tech; the per-letter spans are
+                  presentation only (aria-label on a span is unreliable). */}
+              <span className="sr-only">{PROFILE.shortName} </span>
+              <span className="block text-slate-900" aria-hidden="true">
                 {PROFILE.shortName.split("").map((ch, i) => (
                   <span
                     key={i}
-                    aria-hidden="true"
                     className="letter-rise"
                     style={{ animationDelay: `${0.25 + i * 0.035}s` }}
                   >

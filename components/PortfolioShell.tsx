@@ -48,7 +48,7 @@ export function PortfolioShell() {
         <CommandPalette onClose={() => setPaletteOpen(false)} />
       )}
 
-      <main className="pt-14">
+      <main id="main" tabIndex={-1} className="pt-14">
         <Hero />
         <AgentGraph />
         <Education />

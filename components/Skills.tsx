@@ -186,8 +186,15 @@ export function Skills() {
               return (
                 <Reveal key={group.label} delay={i * 60}>
                   <div
+                    // Keyboard focus and taps drive the same highlight as hover.
+                    tabIndex={0}
+                    role="group"
+                    aria-label={`${group.label}, level ${group.level} of 100`}
                     onMouseEnter={() => setHovered(i)}
                     onMouseLeave={() => setHovered(null)}
+                    onFocus={() => setHovered(i)}
+                    onBlur={() => setHovered(null)}
+                    onClick={() => setHovered(i)}
                     className="group py-3.5 transition-colors duration-300 lg:py-3"
                     style={{
                       background: on ? `${group.color}0c` : "transparent",
