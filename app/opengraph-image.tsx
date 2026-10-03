@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Arun Teja Reddy Kallam | CS @ ASU · AI, Full-Stack & Data";
+export const alt = "Arun Kallam · AI Engineer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -65,7 +65,7 @@ export default function OpenGraphImage() {
             display: "flex",
           }}
         >
-          CS @ ASU · AI agents, fine-tuned LLMs, full-stack apps
+          CS @ ASU · AI agents, fine-tuned LLMs, web apps
         </div>
 
         <div style={{ display: "flex", gap: 14, marginTop: 44 }}>

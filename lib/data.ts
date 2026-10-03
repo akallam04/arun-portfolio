@@ -16,13 +16,13 @@ export const PROFILE = {
   site: "https://arunkallam.vercel.app",
   availability: "Open to full-time roles from May 2027",
   tagline:
-    "CS student at ASU building AI agents, fine-tuned LLMs, and full-stack products.",
+    "CS student at ASU building AI agents, fine-tuned LLMs, and web products.",
 } as const;
 
 export const TYPED_ROLES = [
   "AI agents & LLM products",
   "fine-tuned LLMs",
-  "full-stack web apps",
+  "web apps",
   "reliable, tested APIs",
   "data dashboards",
 ];
@@ -130,7 +130,7 @@ export const FOCUS_AREAS = [
     desc: "LangGraph agents, RAG, QLoRA fine-tuning, eval harnesses",
   },
   {
-    label: "Full-Stack Development",
+    label: "Web Development",
     desc: "Web apps end-to-end, APIs, and databases",
   },
   {
@@ -283,27 +283,27 @@ export const EXPERIENCE: Experience[] = [
     ],
   },
   {
-    role: "Full-Stack Web Development Intern",
+    role: "Web Development Intern",
     company: "Prodigy InfoTech",
     location: "Mumbai, India",
     period: "Sep 2024 - Oct 2024",
     start: "2024-09",
     end: "2024-10",
-    kind: "Full-stack",
+    kind: "Web",
     tags: ["MERN", "JWT Auth", "bcrypt", "MongoDB", "React", "Express"],
     color: "#059669",
     bullets: [
       "Shipped a MERN authentication portal with JWT sessions, bcrypt password hashing, rate-limited endpoints, and role-based access control on React routes and Express middleware.",
-      "Built a full-stack Employee Management System with admin-only CRUD, server-side search/filter/sort, and a MongoDB aggregation pipeline dashboard surfacing real-time headcount, average salary, and department breakdowns.",
+      "Built an Employee Management System with admin-only CRUD, server-side search/filter/sort, and a MongoDB aggregation pipeline dashboard surfacing real-time headcount, average salary, and department breakdowns.",
     ],
   },
 ];
 
-export type ProjectDomain = "ai" | "fullstack" | "data";
+export type ProjectDomain = "ai" | "web" | "data";
 
 export const DOMAIN_LABELS: Record<ProjectDomain, string> = {
   ai: "AI / LLM",
-  fullstack: "Full-Stack",
+  web: "Web",
   data: "Data",
 };
 
@@ -326,7 +326,7 @@ export type Project = {
 export const PROJECTS: Project[] = [
   {
     name: "AI Support Agent for E-commerce",
-    domains: ["ai", "fullstack"],
+    domains: ["ai", "web"],
     desc: "AI customer support agent for a Shopify store: a LangGraph state machine over the Anthropic API with RAG retrieval, tool calling, and layered safety, live on AWS Lambda + Vercel.",
     tags: [
       "Python",
@@ -387,7 +387,7 @@ export const PROJECTS: Project[] = [
   },
   {
     name: "Goalsetter+",
-    domains: ["ai", "fullstack"],
+    domains: ["ai", "web"],
     desc: "Production-deployed MERN goal tracker with AI-powered SMART goal suggestions, a hand-built SVG analytics dashboard, sub-tasks, share links, and natural-language due dates.",
     tags: [
       "React",
@@ -414,7 +414,7 @@ export const PROJECTS: Project[] = [
   },
   {
     name: "LLM Multilingual Feedback API",
-    domains: ["ai", "fullstack"],
+    domains: ["ai", "web"],
     desc: "FastAPI service with a built-in web app giving language learners structured feedback: minimal corrections, categorized errors explained in their native language, and a CEFR difficulty estimate.",
     tags: [
       "Python",
@@ -440,7 +440,7 @@ export const PROJECTS: Project[] = [
   },
   {
     name: "NBA Teams Dashboard",
-    domains: ["fullstack"],
+    domains: ["web"],
     desc: "Editorial-style dashboard for all 30 NBA franchises: team pages, live search, and franchise stats with motion-rich UI.",
     tags: ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS", "Framer Motion"],
     bullets: [
