@@ -44,3 +44,5 @@ next-env.d.ts
 .claude/*
 !.claude/skills/
 !.claude/settings.json
+# Playwright CLI output (may contain credentials)
+.playwright-cli/
