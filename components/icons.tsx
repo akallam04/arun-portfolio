@@ -196,3 +196,103 @@ export const PlayIcon = (p: IconProps) => (
     <path d="M8 5.6v12.8a1 1 0 0 0 1.53.85l10.2-6.4a1 1 0 0 0 0-1.7L9.53 4.75A1 1 0 0 0 8 5.6Z" />
   </Base>
 );
+
+export const PlayCircleIcon = (p: IconProps) => (
+  <Base {...p}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M10 8.8v6.4a.6.6 0 0 0 .9.5l5-3.2a.6.6 0 0 0 0-1l-5-3.2a.6.6 0 0 0-.9.5Z" />
+  </Base>
+);
+
+export const BookIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15Z" />
+    <path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5" />
+    <path d="M8.5 7.5h7M8.5 11h5" />
+  </Base>
+);
+
+export const ChartIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
+  </Base>
+);
+
+export const FlaskIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M9 3h6M10 3v6.2L4.6 18.4A1.7 1.7 0 0 0 6 21h12a1.7 1.7 0 0 0 1.4-2.6L14 9.2V3" />
+    <path d="M7.5 14h9" />
+  </Base>
+);
+
+export const TagIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M3 12.6V4a1 1 0 0 1 1-1h8.6a1 1 0 0 1 .7.3l7.4 7.4a1 1 0 0 1 0 1.4l-8.6 8.6a1 1 0 0 1-1.4 0l-7.4-7.4a1 1 0 0 1-.3-.7Z" />
+    <circle cx="8" cy="8" r="1.6" />
+  </Base>
+);
+
+export const MenuIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M4 7h16M4 12h16M4 17h16" />
+  </Base>
+);
+
+export const CloseIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M6 6l12 12M18 6 6 18" />
+  </Base>
+);
+
+export const SendIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M21 3 10.5 13.5" />
+    <path d="M21 3 14.5 21l-4-7.5L3 9.5 21 3Z" />
+  </Base>
+);
+
+export const ChatIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.2A8 8 0 1 1 20 12Z" />
+  </Base>
+);
+
+export const CalendarIcon = (p: IconProps) => (
+  <Base {...p}>
+    <rect x="3" y="5" width="18" height="16" rx="2" />
+    <path d="M3 10h18M8 3v4M16 3v4" />
+  </Base>
+);
+
+export const StopIcon = (p: IconProps) => (
+  <Base fill="currentColor" stroke="none" {...p}>
+    <rect x="6" y="6" width="12" height="12" rx="2" />
+  </Base>
+);
+
+export const ArrowRightIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M5 12h14M13 6l6 6-6 6" />
+  </Base>
+);
+
+export const BackIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M15 6l-6 6 6 6" />
+  </Base>
+);
+
+export const SkipIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M5 6l7 6-7 6V6Z" fill="currentColor" stroke="none" />
+    <path d="M12 6l7 6-7 6V6Z" fill="currentColor" stroke="none" />
+  </Base>
+);
+
+export const ServerIcon = (p: IconProps) => (
+  <Base {...p}>
+    <rect x="4" y="4" width="16" height="7" rx="2" />
+    <rect x="4" y="13" width="16" height="7" rx="2" />
+    <path d="M8 7.5h.01M8 16.5h.01" />
+  </Base>
+);

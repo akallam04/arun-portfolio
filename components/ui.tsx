@@ -1,34 +1,20 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { useCountUp, useInView, useScramble } from "@/lib/hooks";
-import { CheckIcon, CopyIcon } from "./icons";
+import React, { useRef, useSyncExternalStore } from "react";
+import {
+  BookIcon,
+  ChartIcon,
+  FlaskIcon,
+  GitHubIcon,
+  PauseIcon,
+  PlayIcon,
+  PlayCircleIcon,
+  TagIcon,
+} from "./icons";
+import type { LinkIcon } from "@/lib/data";
+import { cn, EXTERNAL } from "@/lib/cn";
 
-export function cn(...classes: Array<string | false | null | undefined>) {
-  return classes.filter(Boolean).join(" ");
-}
 
-export function Chip({
-  children,
-  compact = false,
-}: {
-  children: React.ReactNode;
-  /** Shrinks the chip on lg+ screens so dense sections fit one viewport; mobile unchanged. */
-  compact?: boolean;
-}) {
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-full border border-slate-400/30 bg-white/60 px-2.5 py-1 text-xs text-slate-600 sm:px-3 sm:text-sm",
-        compact && "lg:px-2.5 lg:py-0.5 lg:text-xs"
-      )}
-    >
-      {children}
-    </span>
-  );
-}
-
-/** Card with a radial highlight that follows the pointer (desktop only). */
 export function SpotlightCard({
   className,
   blur = true,
@@ -36,9 +22,7 @@ export function SpotlightCard({
   children,
   ...rest
 }: Omit<React.HTMLAttributes<HTMLDivElement>, "onMouseMove"> & {
-  /** Backdrop blur is costly on tall, frequently repainted cards; opt out there. */
   blur?: boolean;
-  /** The inner wrapper; pass flex utilities when content must fill the card. */
   contentClassName?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -67,125 +51,154 @@ export function SpotlightCard({
   );
 }
 
-/** Scroll-reveal wrapper: fades + slides in once when it enters the viewport. */
-export function Reveal({
+export const GLASS_CARD = "bg-white/55 shadow-[0_14px_40px_rgba(30,80,150,0.10)]";
+
+export function Chip({
   children,
-  delay = 0,
   className,
 }: {
   children: React.ReactNode;
-  delay?: number;
   className?: string;
 }) {
-  const { ref, inView } = useInView<HTMLDivElement>(0.12);
   return (
-    <div
-      ref={ref}
-      className={cn("reveal", inView && "reveal-visible", className)}
-      style={{ transitionDelay: `${delay}ms` }}
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-xl border border-slate-900/[0.09] bg-white/60 px-2.5 py-1 text-[13px] leading-5 text-ink-2 desk:text-[clamp(12px,1.55vh,16px)]",
+        className
+      )}
     >
       {children}
-    </div>
-  );
-}
-
-export function SectionHeader({
-  index,
-  title,
-  compact = false,
-}: {
-  index: string;
-  title: string;
-  /** Tightens the header on lg+ so the section content fits one viewport; mobile unchanged. */
-  compact?: boolean;
-}) {
-  const { ref, inView } = useInView<HTMLHeadingElement>(0.6);
-  const scrambled = useScramble(title, inView);
-  return (
-    <Reveal>
-      <div
-        className={cn(
-          "mb-8 flex items-center gap-3 sm:mb-10 sm:gap-4",
-          compact && "lg:mb-6"
-        )}
-      >
-        <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-muted">
-          {index}
-        </span>
-        <h2
-          ref={ref}
-          aria-label={title}
-          className={cn(
-            "text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl",
-            compact && "lg:text-4xl"
-          )}
-        >
-          {scrambled}
-        </h2>
-        <div className="h-px flex-1 bg-gradient-to-r from-slate-900/[0.15] to-transparent" />
-      </div>
-    </Reveal>
-  );
-}
-
-export function CountUp({
-  value,
-  decimals = 0,
-  suffix = "",
-  className,
-}: {
-  value: number;
-  decimals?: number;
-  suffix?: string;
-  className?: string;
-}) {
-  const { ref, inView } = useInView<HTMLSpanElement>(0.4);
-  const current = useCountUp(value, inView);
-  return (
-    <span ref={ref} className={cn("tabular-nums", className)}>
-      {current.toFixed(decimals)}
-      {suffix}
     </span>
   );
 }
 
-export function CopyButton({
-  value,
-  label = "Copy",
+const LINK_ICONS: Record<LinkIcon, React.ReactNode> = {
+  demo: <PlayCircleIcon size={15} />,
+  code: <GitHubIcon size={15} />,
+  doc: <BookIcon size={15} />,
+  results: <ChartIcon size={15} />,
+  release: <TagIcon size={15} />,
+  test: <FlaskIcon size={15} />,
+};
+
+export function IconLinkButton({
+  href,
+  label,
+  icon,
+  srLabel,
 }: {
-  value: string;
-  label?: string;
+  href: string;
+  label: string;
+  icon: LinkIcon;
+  srLabel?: string;
 }) {
-  const [copied, setCopied] = useState(false);
   return (
-    <>
-      <button
-        onClick={async () => {
-          try {
-            await navigator.clipboard.writeText(value);
-            setCopied(true);
-            window.setTimeout(() => setCopied(false), 1600);
-          } catch {}
-        }}
-        aria-label={`${label} ${value}`}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-400/30 bg-white/60 px-3 py-1.5 text-xs text-muted transition hover:bg-slate-900/[0.05] hover:text-slate-800"
-      >
-        {copied ? (
-          <>
-            <CheckIcon size={13} className="text-emerald-600" />
-            <span className="text-emerald-600">Copied</span>
-          </>
-        ) : (
-          <>
-            <CopyIcon size={13} />
-            {label}
-          </>
-        )}
-      </button>
-      {/* The button's aria-label is fixed, so announce the result here. */}
-      <span className="sr-only" aria-live="polite">
-        {copied ? `Copied ${value}` : ""}
+    <a
+      href={href}
+      {...EXTERNAL}
+      className="inline-flex items-center gap-2 rounded-xl border border-slate-900/[0.10] bg-white/60 px-3 py-2 text-[14px] font-semibold text-ink shadow-[0_6px_18px_rgba(30,80,150,0.08)] transition-colors hover:border-accent/40 hover:bg-white/85 hover:text-accent-strong desk:px-[clamp(10px,1.3vh,16px)] desk:py-[clamp(6px,1vh,11px)] desk:text-[clamp(13px,1.6vh,17px)]"
+    >
+      <span className="text-accent-strong" aria-hidden="true">
+        {LINK_ICONS[icon]}
       </span>
-    </>
+      {label}
+      {srLabel ? <span className="sr-only">, {srLabel}</span> : null}
+    </a>
+  );
+}
+
+export function PauseButton({
+  paused,
+  onClick,
+  className,
+}: {
+  paused: boolean;
+  onClick: () => void;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-slate-900/[0.10] bg-white/70 px-2.5 py-1 text-[13px] font-semibold text-ink-2 transition-colors hover:border-accent/40 hover:text-accent-strong",
+        className
+      )}
+    >
+      {paused ? <PlayIcon size={12} /> : <PauseIcon size={12} />}
+      {paused ? "Play" : "Pause"}
+    </button>
+  );
+}
+
+const subscribeNever = () => () => {};
+
+export function useMounted() {
+  return useSyncExternalStore(
+    subscribeNever,
+    () => true,
+    () => false
+  );
+}
+
+let clientNow: number | null = null;
+
+function readNow() {
+  if (clientNow === null) clientNow = Date.now();
+  return clientNow;
+}
+
+/** The time when the page first rendered in the browser. Null during server rendering and hydration. */
+export function useNow() {
+  return useSyncExternalStore(subscribeNever, readNow, () => null);
+}
+
+let introAtLoad: boolean | null = null;
+
+function readIntro() {
+  if (introAtLoad === null) {
+    const state = document.documentElement.getAttribute("data-intro");
+    introAtLoad = state === "wait" || state === "play" || state === "glide";
+  }
+  return introAtLoad;
+}
+
+/** True when the first-visit intro was still playing as the page hydrated. */
+export function useIntroActive() {
+  return useSyncExternalStore(subscribeNever, readIntro, () => false);
+}
+
+export function useShortcutLabel() {
+  return useSyncExternalStore(
+    subscribeNever,
+    () => (/Mac|iPhone|iPad/.test(navigator.userAgent) ? "⌘K" : "Ctrl K"),
+    () => "Ctrl K"
+  );
+}
+
+const RELATIVE = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+const DATE = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" });
+
+export function formatDate(iso: string) {
+  return DATE.format(new Date(iso));
+}
+
+/** Relative time for the last 30 days, then a plain date such as "Nov 25, 2026". */
+export function timeAgo(iso: string, now = Date.now()) {
+  const seconds = Math.round((new Date(iso).getTime() - now) / 1000);
+  const abs = Math.abs(seconds);
+  if (abs >= 86400 * 30) return formatDate(iso);
+  if (abs < 60) return "just now";
+  if (abs < 3600) return RELATIVE.format(Math.round(seconds / 60), "minute");
+  if (abs < 86400) return RELATIVE.format(Math.round(seconds / 3600), "hour");
+  return RELATIVE.format(Math.round(seconds / 86400), "day");
+}
+
+export function TimeAgo({ iso, prefix = "" }: { iso: string; prefix?: string }) {
+  const mounted = useMounted();
+  return (
+    <time dateTime={iso} suppressHydrationWarning>
+      {mounted ? `${prefix}${timeAgo(iso)}` : " "}
+    </time>
   );
 }

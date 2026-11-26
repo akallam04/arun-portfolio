@@ -1,10 +1,24 @@
 import { ImageResponse } from "next/og";
+import { archivoFonts } from "@/lib/og-font";
+import { PROFILE } from "@/lib/data";
 
-export const alt = "Arun Kallam · AI Engineer";
+export const alt = "Arun Kallam | Software and AI Engineer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OpenGraphImage() {
+const NAME = "Arun Kallam";
+const ROLE = "Software and AI Engineer";
+const LEDE = "I build AI agents and test whether they really work.";
+const SITE = PROFILE.domain;
+
+export default async function OpenGraphImage() {
+  const fonts = await archivoFonts([
+    { text: NAME, weight: 800, stretch: 120 },
+    { text: ROLE, weight: 700, stretch: 112 },
+    { text: `${LEDE}${SITE}`, weight: 500, stretch: 100 },
+  ]);
+  const family = (stretch: number) => (fonts.some((font) => font.name === `Archivo${stretch}`) ? `Archivo${stretch}` : "sans-serif");
+
   return new ImageResponse(
     (
       <div
@@ -12,95 +26,41 @@ export default function OpenGraphImage() {
           width: "100%",
           height: "100%",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          padding: "80px",
+          alignItems: "center",
+          padding: "0 72px",
           backgroundColor: "#e9f2fb",
           backgroundImage:
-            "radial-gradient(at 8% 8%, rgba(56,150,235,0.30), transparent 60%), radial-gradient(at 95% 5%, rgba(255,255,255,0.9), transparent 55%), radial-gradient(at 60% 110%, rgba(103,200,240,0.35), transparent 60%)",
-          color: "#0f2a43",
-          fontFamily: "sans-serif",
+            "linear-gradient(180deg, #dcecfb 0%, #e9f2fb 45%, #f4f9ff 100%), radial-gradient(circle at 12% 10%, rgba(56,150,235,0.30), transparent 55%), radial-gradient(circle at 92% 8%, rgba(255,255,255,0.95), transparent 50%), radial-gradient(circle at 60% 110%, rgba(103,200,240,0.28), transparent 55%)",
+          color: "#14304a",
         }}
       >
         <div
           style={{
             display: "flex",
-            alignItems: "center",
-            gap: 12,
-            marginBottom: 28,
-          }}
-        >
-          <div
-            style={{
-              width: 12,
-              height: 12,
-              borderRadius: 999,
-              background: "#059669",
-            }}
-          />
-          <div style={{ fontSize: 26, color: "#047857" }}>
-            Open to full-time roles from May 2027 · Tempe, AZ
-          </div>
-        </div>
-
-        <div
-          style={{
-            fontSize: 76,
-            fontWeight: 800,
-            letterSpacing: -2,
-            lineHeight: 1.05,
-            display: "flex",
             flexDirection: "column",
+            width: "100%",
+            padding: "64px 68px",
+            borderRadius: 32,
+            border: "1px solid rgba(15,23,42,0.10)",
+            background: "rgba(255,255,255,0.55)",
+            boxShadow: "0 24px 60px rgba(30,80,150,0.16)",
           }}
         >
-          <span>Arun Teja Reddy</span>
-          <span style={{ color: "#0284c7" }}>Kallam</span>
-        </div>
-
-        <div
-          style={{
-            marginTop: 30,
-            fontSize: 32,
-            color: "rgba(15,42,67,0.72)",
-            display: "flex",
-          }}
-        >
-          CS @ ASU · AI agents, fine-tuned LLMs, web apps
-        </div>
-
-        <div style={{ display: "flex", gap: 14, marginTop: 44 }}>
-          {["AI / LLM", "LangGraph", "React", "Next.js", "Python", "FastAPI"].map(
-            (t) => (
-              <div
-                key={t}
-                style={{
-                  display: "flex",
-                  padding: "10px 22px",
-                  borderRadius: 12,
-                  border: "1px solid rgba(15,42,67,0.18)",
-                  background: "rgba(255,255,255,0.65)",
-                  fontSize: 24,
-                  color: "rgba(15,42,67,0.85)",
-                }}
-              >
-                {t}
-              </div>
-            )
-          )}
-        </div>
-
-        <div
-          style={{
-            marginTop: 48,
-            fontSize: 24,
-            color: "rgba(15,42,67,0.45)",
-            display: "flex",
-          }}
-        >
-          arunkallam.vercel.app
+          <div style={{ display: "flex", fontFamily: family(120), fontSize: 118, fontWeight: 800, letterSpacing: -3, lineHeight: 1 }}>
+            {NAME}
+          </div>
+          <div style={{ display: "flex", marginTop: 26, fontFamily: family(112), fontSize: 44, fontWeight: 700, color: "#14304a" }}>
+            {ROLE}
+          </div>
+          <div style={{ display: "flex", marginTop: 18, fontFamily: family(100), fontSize: 34, fontWeight: 500, color: "#29445f" }}>
+            {LEDE}
+          </div>
+          <div style={{ display: "flex", marginTop: 44, fontFamily: family(100), fontSize: 26, fontWeight: 500, color: "#0369a1" }}>
+            {SITE}
+          </div>
         </div>
       </div>
     ),
-    { ...size }
+    { ...size, fonts }
   );
 }

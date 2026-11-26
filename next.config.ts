@@ -1,17 +1,23 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Inlined identically into server and client bundles, so the footer's
-  // hydration render always matches the prerendered HTML.
-  env: { BUILD_YEAR: String(new Date().getFullYear()) },
+  cacheComponents: true,
   images: {
-    // Serve the profile photo as AVIF, falling back to WebP.
     formats: ["image/avif", "image/webp"],
+    qualities: [75, 90],
   },
   experimental: {
-    // Inline the (small) global stylesheet into the HTML so first paint
-    // doesn't wait on a separate render-blocking CSS request.
     inlineCss: true,
+  },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "arunkallam\\.vercel\\.app" }],
+        destination: "https://arunkallam.com/:path*",
+        permanent: true,
+      },
+    ];
   },
 };
 

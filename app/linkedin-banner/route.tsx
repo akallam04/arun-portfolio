@@ -1,18 +1,25 @@
 import { ImageResponse } from "next/og";
+import { archivoFonts } from "@/lib/og-font";
+import { PROFILE } from "@/lib/data";
 
-// LinkedIn cover: 1584x396. LinkedIn already prints the name and headline
-// directly beneath this image, so the banner carries none of that. It shows
-// proof instead: three numbers from shipped work. Content sits right of
-// x=560 to clear the profile photo and stays centered for the mobile crop.
 export const size = { width: 1584, height: 396 };
 
 const STATS = [
-  { value: "100%", label: "53-case agent eval pass" },
-  { value: "24×", label: "cheaper fine-tuned LLM" },
-  { value: "6", label: "products shipped end to end" },
+  { value: "0 of 200", label: "changes the customer never agreed to" },
+  { value: "16,994", label: "Shortfall runs, all public" },
+  { value: "3,120", label: "Oversold test runs, rechecked in CI" },
 ];
 
-export function GET() {
+const AVAILABILITY = "Open to full-time Software and AI Engineer roles from May 2027";
+const SITE = PROFILE.domain;
+
+export async function GET() {
+  const fonts = await archivoFonts([
+    { text: STATS.map((stat) => stat.value).join(""), weight: 800, stretch: 116 },
+    { text: `${STATS.map((stat) => stat.label).join("")}${AVAILABILITY}${SITE}`, weight: 500, stretch: 100 },
+  ]);
+  const family = (stretch: number) => (fonts.some((font) => font.name === `Archivo${stretch}`) ? `Archivo${stretch}` : "sans-serif");
+
   return new ImageResponse(
     (
       <div
@@ -21,132 +28,49 @@ export function GET() {
           height: "100%",
           display: "flex",
           alignItems: "center",
-          backgroundColor: "#eaf3fd",
+          backgroundColor: "#e9f2fb",
           backgroundImage:
-            "linear-gradient(120deg, #d3e7fb 0%, #eaf3fd 45%, #f7fbff 100%), radial-gradient(at 10% 24%, rgba(56,150,235,0.38), transparent 52%), radial-gradient(at 70% 118%, rgba(96,196,240,0.30), transparent 55%), radial-gradient(at 92% 12%, rgba(255,255,255,0.75), transparent 42%)",
-          fontFamily: "sans-serif",
-          position: "relative",
+            "linear-gradient(180deg, #dcecfb 0%, #e9f2fb 45%, #f4f9ff 100%), radial-gradient(circle at 10% 20%, rgba(56,150,235,0.30), transparent 50%), radial-gradient(circle at 88% 0%, rgba(255,255,255,0.95), transparent 45%), radial-gradient(circle at 62% 120%, rgba(103,200,240,0.28), transparent 55%)",
+          color: "#14304a",
         }}
       >
-        {/* constellation, echoing the portfolio hero */}
-        {[
-          [120, 96, 5],
-          [210, 172, 3],
-          [318, 88, 4],
-          [268, 268, 3],
-          [404, 210, 5],
-          [150, 300, 4],
-          [462, 120, 3],
-        ].map(([x, y, r], i) => (
-          <div
-            key={i}
-            style={{
-              position: "absolute",
-              left: x,
-              top: y,
-              width: r * 2,
-              height: r * 2,
-              borderRadius: 999,
-              background: "rgba(37,99,235,0.32)",
-            }}
-          />
-        ))}
-
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            marginLeft: 560,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              fontSize: 19,
-              letterSpacing: 6,
-              textTransform: "uppercase",
-              color: "rgba(15,42,67,0.42)",
-              marginBottom: 26,
-            }}
-          >
-            Evidence, not adjectives
-          </div>
-
-          <div style={{ display: "flex", gap: 22 }}>
-            {STATS.map((s) => (
+        <div style={{ display: "flex", flexDirection: "column", marginLeft: 560 }}>
+          <div style={{ display: "flex", gap: 20 }}>
+            {STATS.map((stat) => (
               <div
-                key={s.label}
+                key={stat.label}
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  padding: "20px 26px",
-                  borderRadius: 18,
-                  border: "1px solid rgba(15,42,67,0.12)",
-                  background: "rgba(255,255,255,0.72)",
+                  width: 290,
+                  padding: "22px 26px",
+                  borderRadius: 22,
+                  border: "1px solid rgba(15,23,42,0.10)",
+                  background: "rgba(255,255,255,0.6)",
+                  boxShadow: "0 14px 40px rgba(30,80,150,0.12)",
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    fontSize: 46,
-                    fontWeight: 800,
-                    letterSpacing: -1,
-                    color: "#0284c7",
-                  }}
-                >
-                  {s.value}
+                <div style={{ display: "flex", fontFamily: family(116), fontSize: 46, fontWeight: 800, color: "#14304a" }}>
+                  {stat.value}
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    marginTop: 6,
-                    fontSize: 19,
-                    color: "rgba(15,42,67,0.62)",
-                  }}
-                >
-                  {s.label}
+                <div style={{ display: "flex", marginTop: 6, fontFamily: family(100), fontSize: 19, fontWeight: 500, color: "#29445f" }}>
+                  {stat.label}
                 </div>
               </div>
             ))}
           </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              marginTop: 30,
-            }}
-          >
-            <div
-              style={{
-                width: 9,
-                height: 9,
-                borderRadius: 999,
-                background: "#059669",
-              }}
-            />
-            <div style={{ display: "flex", fontSize: 21, color: "#047857" }}>
-              Open to full-time roles from May 2027
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 28 }}>
+            <div style={{ width: 10, height: 10, borderRadius: 999, background: "#10b981" }} />
+            <div style={{ display: "flex", fontFamily: family(100), fontSize: 22, fontWeight: 500, color: "#047857" }}>
+              {AVAILABILITY}
             </div>
-            <div
-              style={{
-                display: "flex",
-                fontSize: 21,
-                color: "rgba(15,42,67,0.28)",
-                paddingLeft: 4,
-                paddingRight: 4,
-              }}
-            >
-              ·
-            </div>
-            <div style={{ display: "flex", fontSize: 21, color: "#0284c7" }}>
-              arunkallam.vercel.app
-            </div>
+          </div>
+          <div style={{ display: "flex", marginTop: 10, fontFamily: family(100), fontSize: 22, fontWeight: 500, color: "#0369a1" }}>
+            {SITE}
           </div>
         </div>
       </div>
     ),
-    { ...size }
+    { ...size, fonts }
   );
 }

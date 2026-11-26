@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
+import { PROFILE } from "@/lib/data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: "https://arunkallam.vercel.app",
+      url: PROFILE.site,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 1,

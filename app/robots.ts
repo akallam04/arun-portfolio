@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
+import { PROFILE } from "@/lib/data";
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: { userAgent: "*", allow: "/" },
-    sitemap: "https://arunkallam.vercel.app/sitemap.xml",
+    sitemap: `${PROFILE.site}/sitemap.xml`,
   };
 }
