@@ -2,7 +2,7 @@
 
 Personal portfolio website built with Next.js + TypeScript and deployed on Vercel.
 
-Live: https://arunkallam.vercel.app
+Live: https://arunkallam.com
 
 ## Tech Stack
 - Next.js (App Router)
