@@ -2,7 +2,7 @@
 
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { BYLD_SECTIONS, BYLD_TILES, EXPERIENCE, FOOD_FOREST_STEPS, type Job } from "@/lib/data";
-import { along, clamp01, ease, phase, useFigureClock, type Pt } from "@/lib/figure";
+import { along, clamp01, ease, loopTime, phase, useFigureClock, useMedia, type Pt } from "@/lib/figure";
 import { CalendarIcon, CheckIcon, PinIcon } from "../icons";
 import { SpotlightCard } from "../ui";
 import { cn } from "@/lib/cn";
@@ -10,8 +10,7 @@ import { cn } from "@/lib/cn";
 const START = 300;
 const LEG = 1150;
 const LIT_FOR = 900;
-const STRIP_FOR = 1700;
-const UNTIL = START + LEG * (EXPERIENCE.length - 1) + STRIP_FOR + 200;
+const UNTIL = START + LEG * (EXPERIENCE.length - 1) + LIT_FOR + 100;
 
 function Rich({ text }: { text: string }) {
   return (
@@ -29,43 +28,85 @@ function Rich({ text }: { text: string }) {
   );
 }
 
-function ByldStrip({ p }: { p: number }) {
-  const shown = Math.round(clamp01((p - 0.25) / 0.7) * (BYLD_TILES.length + BYLD_SECTIONS));
-  const split = ease(phase(p, 0.05, 0.25));
+const DESK = "(min-width: 1024px) and (min-height: 600px)";
+
+/** Each strip loops on its own clock: it plays, holds its finished frame for a short pause, then plays again. */
+function useStripClock(delay: number, loop: number) {
+  const { ref, t, reduced } = useFigureClock<HTMLDivElement>({ page: "experience", replay: true });
+  const local = reduced ? null : loopTime(t, delay, loop);
+  const round = local === null ? -1 : Math.floor((t - delay) / loop);
+  return { ref, local, round };
+}
+
+function pulse(local: number | null, start: number, length: number) {
+  if (local === null) return 0;
+  const u = (local - start) / length;
+  return u <= 0 || u >= 1 ? 0 : Math.sin(Math.PI * u);
+}
+
+const BYLD_LOOP = 3600;
+const BYLD_LINES = [12, 30, 48];
+
+/** One codebase sends work down three lines, and the 14 outputs light up one after another. */
+function ByldStrip({ delay }: { delay: number }) {
+  const { ref, local } = useStripClock(delay, BYLD_LOOP);
+  const source = pulse(local, 0, 380);
   return (
-    <div className="grid grid-cols-[auto_26px_minmax(0,1fr)] items-center" aria-hidden="true">
-      <span className="max-w-[5.6em] rounded-lg border border-accent/40 bg-white px-2 py-1 text-center text-[12px] font-bold leading-tight text-accent-strong desk:text-[clamp(12px,1.45vh,15px)]">
+    <div ref={ref} className="grid grid-cols-[auto_26px_minmax(0,1fr)] items-center" aria-hidden="true">
+      <span
+        className="max-w-[5.6em] rounded-lg border border-accent/40 bg-white px-2 py-1 text-center text-[12px] font-bold leading-tight text-accent-strong desk:text-[clamp(12px,1.45vh,15px)]"
+        style={{
+          transform: `scale(${1 + 0.06 * source})`,
+          boxShadow: source > 0 ? `0 0 0 ${4 * source}px rgba(14,165,233,${0.22 * source})` : undefined,
+        }}
+      >
         One codebase
       </span>
-      <svg viewBox="0 0 26 60" className="h-[60px] w-[26px]" preserveAspectRatio="none">
-        {[12, 30, 48].map((y) => (
-          <line key={y} x1="0" y1="30" x2={26 * split} y2={30 + (y - 30) * split} stroke="#0284c7" strokeOpacity="0.5" strokeWidth="1.4" />
+      <svg viewBox="0 0 26 60" className="h-[60px] w-[26px] overflow-visible" preserveAspectRatio="none">
+        {BYLD_LINES.map((y) => (
+          <line key={y} x1="0" y1="30" x2="26" y2={y} stroke="#0284c7" strokeOpacity="0.5" strokeWidth="1.4" />
         ))}
+        {local !== null
+          ? BYLD_LINES.map((y, j) => {
+              const u = phase(local, 150 + j * 70, 520);
+              if (u <= 0 || u >= 1) return null;
+              const k = ease(u);
+              return <circle key={y} cx={26 * k} cy={30 + (y - 30) * k} r="2.6" fill="#0284c7" />;
+            })
+          : null}
       </svg>
       <div className="grid min-w-0 gap-1.5">
         <div className="flex flex-wrap gap-1">
-          {BYLD_TILES.map((tile, i) => (
-            <span
-              key={tile}
-              className={cn(
-                "rounded-md border px-1.5 py-0.5 text-[12px] font-semibold transition-colors duration-200 desk:text-[clamp(12px,1.4vh,15px)]",
-                i < shown ? "border-accent/50 bg-sky-50 text-accent-strong" : "border-slate-900/10 bg-white/50 text-muted/60"
-              )}
-            >
-              {tile}
-            </span>
-          ))}
+          {BYLD_TILES.map((tile, i) => {
+            const k = pulse(local, 650 + i * 110, 360);
+            return (
+              <span
+                key={tile}
+                className={cn(
+                  "rounded-md border px-1.5 py-0.5 text-[12px] font-semibold transition-colors duration-150 desk:text-[clamp(12px,1.4vh,15px)]",
+                  k > 0.35 ? "border-accent bg-accent text-white" : "border-accent/50 bg-sky-50 text-accent-strong"
+                )}
+                style={{ transform: `scale(${1 + 0.08 * k})` }}
+              >
+                {tile}
+              </span>
+            );
+          })}
         </div>
         <div className="flex flex-wrap gap-1">
-          {Array.from({ length: BYLD_SECTIONS }, (_, i) => (
-            <span
-              key={i}
-              className={cn(
-                "block h-3.5 w-3.5 rounded-[4px] border transition-colors duration-200 desk:h-[clamp(11px,1.6vh,17px)] desk:w-[clamp(11px,1.6vh,17px)]",
-                i + BYLD_TILES.length < shown ? "border-accent bg-accent/80" : "border-slate-900/10 bg-white/50"
-              )}
-            />
-          ))}
+          {Array.from({ length: BYLD_SECTIONS }, (_, i) => {
+            const k = pulse(local, 650 + (BYLD_TILES.length + i) * 110, 360);
+            return (
+              <span
+                key={i}
+                className={cn(
+                  "block h-3.5 w-3.5 rounded-[4px] border transition-colors duration-150 desk:h-[clamp(11px,1.6vh,17px)] desk:w-[clamp(11px,1.6vh,17px)]",
+                  k > 0.35 ? "border-accent-strong bg-accent-strong" : "border-accent bg-accent/80"
+                )}
+                style={{ transform: `scale(${1 + 0.22 * k})` }}
+              />
+            );
+          })}
         </div>
         <span className="text-[12px] font-medium text-muted desk:text-[clamp(12px,1.4vh,15px)]">
           {BYLD_SECTIONS} section blocks
@@ -84,44 +125,60 @@ const SNAKE: Pt[] = [
   [16.67, 75],
 ];
 const SNAKE_CELL = ["col-start-1 row-start-1", "col-start-2 row-start-1", "col-start-3 row-start-1", "col-start-3 row-start-2", "col-start-2 row-start-2", "col-start-1 row-start-2"];
+const FOOD_LOOP = 3800;
+const FOOD_TRAVEL = 2200;
 
-function FoodForestStrip({ p }: { p: number }) {
+/** A record moves through the pipeline, step by step, and lands in MySQL. */
+function FoodForestStrip({ delay }: { delay: number }) {
+  const { ref, local } = useStripClock(delay, FOOD_LOOP);
   const steps = FOOD_FOREST_STEPS.length;
-  const at = clamp01(p) * (steps - 1);
-  const done = p >= 1;
-  const [x, y] = along(SNAKE, clamp01(p));
+  const u = local === null ? 1 : clamp01(local / FOOD_TRAVEL);
+  const moving = local !== null && local < FOOD_TRAVEL + 160;
+  const dotOpacity = local === null ? 0 : Math.min(phase(local, 0, 160), 1 - phase(local, FOOD_TRAVEL, 160));
+  const [x, y] = along(SNAKE, ease(u));
+  let near = -1;
+  let best = 9;
+  SNAKE.forEach(([px, py], i) => {
+    const d = Math.hypot(px - x, py - y);
+    if (d < best) {
+      best = d;
+      near = i;
+    }
+  });
+  const land = pulse(local, FOOD_TRAVEL - 60, 420);
   return (
-    <div className="relative grid grid-cols-3 grid-rows-2 gap-x-2 gap-y-3" aria-hidden="true">
+    <div ref={ref} className="relative grid grid-cols-3 grid-rows-2 gap-x-2 gap-y-3" aria-hidden="true">
       <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
         <polyline
           points={SNAKE.map(([px, py]) => `${px},${py}`).join(" ")}
           fill="none"
-          stroke="rgba(20,48,74,0.16)"
+          stroke="rgba(2,132,199,0.28)"
           strokeWidth="2"
           vectorEffect="non-scaling-stroke"
         />
       </svg>
-      {p > 0 && !done ? (
+      {moving && dotOpacity > 0 ? (
         <span
-          className="absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_0_4px_rgba(14,165,233,0.22),0_0_12px_3px_rgba(14,165,233,0.45)]"
-          style={{ left: `${x}%`, top: `${y}%` }}
+          className="absolute z-0 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_0_4px_rgba(14,165,233,0.22),0_0_12px_3px_rgba(14,165,233,0.45)]"
+          style={{ left: `${x}%`, top: `${y}%`, opacity: dotOpacity }}
         />
       ) : null}
       {FOOD_FOREST_STEPS.map((step, i) => {
-        const reached = i <= at + 0.001 && p > 0;
-        const last = done && i === steps - 1;
+        const last = i === steps - 1;
+        const active = moving && near === i && !last;
         return (
           <span
             key={step}
             className={cn(
-              "relative z-[1] justify-self-center whitespace-nowrap rounded-md border px-2 py-0.5 text-[12px] font-semibold transition-colors duration-200 desk:text-[clamp(12px,1.45vh,15px)]",
+              "relative z-[1] justify-self-center whitespace-nowrap rounded-md border px-2 py-0.5 text-[12px] font-semibold transition-[background-color,border-color,color,transform] duration-200 desk:text-[clamp(12px,1.45vh,15px)]",
               SNAKE_CELL[i],
               last
                 ? "border-accent bg-accent text-white"
-                : reached
-                  ? "border-accent/40 bg-sky-50 text-accent-strong"
-                  : "border-slate-900/10 bg-white text-muted"
+                : active
+                  ? "border-accent bg-white text-accent-strong shadow-[0_0_0_3px_rgba(14,165,233,0.18)]"
+                  : "border-accent/40 bg-sky-50 text-accent-strong"
             )}
+            style={{ transform: `scale(${last ? 1 + 0.1 * land : active ? 1.06 : 1})` }}
           >
             {step}
           </span>
@@ -131,19 +188,44 @@ function FoodForestStrip({ p }: { p: number }) {
   );
 }
 
-const PRODIGY_ROWS = [
+const PRODIGY_LOOP = 3400;
+const PRODIGY_WIDTHS: [number, number][] = [
   [46, 26],
   [38, 30],
+  [42, 22],
+  [34, 28],
+  [48, 24],
 ];
 
-/** From the bullet: an admin-only employee list where a new row is added, saved, then sits in the list. */
-function ProdigyStrip({ p }: { p: number }) {
-  const pressed = p > 0.04 && p < 0.2;
-  const grow = ease(phase(p, 0.18, 0.24));
-  const saved = p >= 0.52;
-  const settle = phase(p, 0.78, 0.2);
+function rowWidths(index: number) {
+  const n = PRODIGY_WIDTHS.length;
+  return PRODIGY_WIDTHS[((index % n) + n) % n];
+}
+
+function mix(a: number[], b: number[], k: number) {
+  const c = a.map((value, i) => value + (b[i] - value) * k);
+  return `rgba(${Math.round(c[0])},${Math.round(c[1])},${Math.round(c[2])},${c[3].toFixed(3)})`;
+}
+
+const NEW_BG = [224, 242, 254, 0.95];
+const BASE_BG = [255, 255, 255, 0.7];
+const NEW_BORDER = [2, 132, 199, 0.45];
+const BASE_BORDER = [20, 48, 74, 0.08];
+const NEW_BAR = [2, 132, 199, 0.5];
+const BASE_BAR = [20, 48, 74, 0.15];
+
+/** From the bullet: in an admin-only employee list, a new row is added, saved, and joins the list. */
+function ProdigyStrip({ delay }: { delay: number }) {
+  const { ref, local, round } = useStripClock(delay, PRODIGY_LOOP);
+  const pressed = local !== null && local > 60 && local < 280;
+  const grow = local === null ? 1 : ease(phase(local, 260, 500));
+  const saved = local === null ? 0 : Math.min(phase(local, 760, 200), 1 - phase(local, 1500, 400));
+  const settle = local === null ? 1 : ease(phase(local, 1100, 800));
+  const top = round + 1;
+  const sliding = local !== null && grow < 1;
+  const rows = sliding ? [top, top - 1, top - 2, top - 3] : [top, top - 1, top - 2];
   return (
-    <div className="w-full max-w-[290px]" aria-hidden="true">
+    <div ref={ref} className="w-full max-w-[290px]" aria-hidden="true">
       <div className="flex items-center justify-between gap-2">
         <span className="text-[12px] font-bold text-ink desk:text-[clamp(12px,1.45vh,15px)]">Employees</span>
         <span className="flex items-center gap-1">
@@ -161,45 +243,43 @@ function ProdigyStrip({ p }: { p: number }) {
           </span>
         </span>
       </div>
-      <ul className="mt-1.5 grid gap-[3px]">
-        <li
-          className="flex h-[18px] items-center gap-2 rounded-md border px-2 transition-colors duration-300 desk:h-[clamp(16px,2.4vh,24px)]"
-          style={{
-            opacity: grow,
-            transform: `translateY(${(1 - grow) * -5}px)`,
-            borderColor: settle < 1 ? "rgba(2,132,199,0.45)" : "rgba(20,48,74,0.08)",
-            background: settle < 1 ? "rgba(224,242,254,0.95)" : "rgba(255,255,255,0.7)",
-          }}
-        >
-          <span
-            className={cn("h-2 w-[40%] rounded-full transition-colors duration-500", settle < 1 ? "bg-accent/55" : "bg-slate-900/15")}
-          />
-          <span
-            className={cn("h-2 w-[22%] rounded-full transition-colors duration-500", settle < 1 ? "bg-accent/35" : "bg-slate-900/10")}
-          />
-          <span
-            className="ml-auto inline-flex items-center gap-1 text-[12px] font-semibold leading-none text-good-strong transition-opacity duration-300 desk:text-[clamp(12px,1.4vh,14.5px)]"
-            style={{ opacity: saved && settle < 1 ? 1 : 0 }}
-          >
-            <CheckIcon size={11} />
-            Saved
-          </span>
-        </li>
-        {PRODIGY_ROWS.map(([a, b], i) => (
-          <li
-            key={i}
-            className="flex h-[18px] items-center gap-2 rounded-md border border-slate-900/[0.08] bg-white/70 px-2 desk:h-[clamp(16px,2.4vh,24px)]"
-          >
-            <span className="h-2 rounded-full bg-slate-900/15" style={{ width: `${a}%` }} />
-            <span className="h-2 rounded-full bg-slate-900/10" style={{ width: `${b}%` }} />
-          </li>
-        ))}
-      </ul>
+      <div className="mt-1.5 h-[calc(var(--row)*3+6px)] overflow-hidden [--row:18px] desk:[--row:clamp(16px,2.4vh,24px)]">
+        {rows.map((index, i) => {
+          const fresh = i === 0;
+          const [a, b] = rowWidths(index);
+          const k = fresh ? settle : 1;
+          return (
+            <div
+              key={index}
+              className="flex items-center gap-2 overflow-hidden rounded-md border px-2"
+              style={{
+                height: fresh ? `calc(var(--row) * ${grow})` : "var(--row)",
+                marginTop: i === 0 ? 0 : i === 1 ? `${3 * grow}px` : "3px",
+                opacity: fresh ? grow : 1,
+                borderColor: mix(NEW_BORDER, BASE_BORDER, k),
+                background: mix(NEW_BG, BASE_BG, k),
+              }}
+            >
+              <span className="h-2 min-w-0 rounded-full" style={{ width: `${a}%`, background: mix(NEW_BAR, BASE_BAR, k) }} />
+              <span className="h-2 min-w-0 rounded-full" style={{ width: `${b}%`, background: mix(NEW_BAR, BASE_BAR, k * 0.9 + 0.1) }} />
+              {fresh ? (
+                <span
+                  className="ml-auto inline-flex shrink-0 items-center gap-1 text-[12px] font-semibold leading-none text-good-strong desk:text-[clamp(12px,1.4vh,14.5px)]"
+                  style={{ opacity: saved }}
+                >
+                  <CheckIcon size={11} />
+                  Saved
+                </span>
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
-function JobCard({ job, lit, strip }: { job: Job; lit: boolean; strip: number }) {
+function JobCard({ job, lit, delay }: { job: Job; lit: boolean; delay: number }) {
   const hasStrip = true;
   return (
     <SpotlightCard
@@ -247,11 +327,11 @@ function JobCard({ job, lit, strip }: { job: Job; lit: boolean; strip: number })
         {hasStrip ? (
           <div className="flex items-center justify-center rounded-2xl border border-slate-900/[0.06] bg-sky-50/40 px-3 py-2.5 desk:px-[clamp(8px,1.4vh,16px)] desk:py-[clamp(6px,1.1vh,14px)]">
             {job.id === "byld" ? (
-              <ByldStrip p={strip} />
+              <ByldStrip delay={delay} />
             ) : job.id === "foodforest" ? (
-              <FoodForestStrip p={strip} />
+              <FoodForestStrip delay={delay} />
             ) : (
-              <ProdigyStrip p={strip} />
+              <ProdigyStrip delay={delay} />
             )}
           </div>
         ) : null}
@@ -261,7 +341,8 @@ function JobCard({ job, lit, strip }: { job: Job; lit: boolean; strip: number })
 }
 
 export function ExperiencePage() {
-  const { ref, t, reduced } = useFigureClock<HTMLDivElement>({ until: UNTIL, page: "experience" });
+  const { ref, t, reduced } = useFigureClock<HTMLDivElement>({ until: UNTIL, page: "experience", replay: true });
+  const desk = useMedia(DESK, true);
   const listRef = useRef<HTMLOListElement>(null);
   const nodeRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [stops, setStops] = useState<number[]>([]);
@@ -331,7 +412,7 @@ export function ExperiencePage() {
             {EXPERIENCE.map((job, i) => {
               const reached = reduced || t >= arrive(i) - 60;
               const lit = !reduced && t >= arrive(i) - 60 && t < arrive(i) + LIT_FOR;
-              const strip = reduced ? 1 : clamp01((t - arrive(i)) / STRIP_FOR);
+              const delay = desk ? arrive(i) : START;
               return (
                 <li key={job.id} className="relative">
                   <span
@@ -346,7 +427,7 @@ export function ExperiencePage() {
                   >
                     {lit ? <span className="absolute inset-[3px] rounded-full bg-accent" /> : null}
                   </span>
-                  <JobCard job={job} lit={lit} strip={strip} />
+                  <JobCard job={job} lit={lit} delay={delay} />
                 </li>
               );
             })}

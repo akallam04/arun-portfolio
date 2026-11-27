@@ -72,7 +72,7 @@ function Seal({ p }: { p: number }) {
 
 export function EducationPage() {
   const now = useNow();
-  const { ref, t, reduced } = useFigureClock<HTMLDivElement>({ until: UNTIL, page: "education" });
+  const { ref, t, reduced } = useFigureClock<HTMLDivElement>({ until: UNTIL, page: "education", replay: true });
   const target = now !== null ? schoolProgress(now) : 0;
   const ring = reduced ? target : target * ease(phase(t, RING_AT, RING_FOR));
   const shine = (delay: number) => (reduced ? null : phase(t, SHINE_AT + delay, SHINE_FOR));

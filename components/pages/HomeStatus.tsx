@@ -4,16 +4,17 @@ import { HOME, schoolProgress } from "@/lib/data";
 import { ease, phase, useFigureClock } from "@/lib/figure";
 import { CapIcon } from "../icons";
 import { useIntroActive, useNow } from "../ui";
-import { cn } from "@/lib/cn";
 
 const FILL_AT = 250;
 const FILL_FOR = 1400;
 
-export function HomeStatus({ pinned = false }: { pinned?: boolean }) {
+export function HomeStatus() {
   const now = useNow();
   const mounted = now !== null;
-  const start = FILL_AT + (useIntroActive() ? 700 : 0);
-  const { ref, t, reduced } = useFigureClock<HTMLDivElement>({ until: start + FILL_FOR + 100, page: "home" });
+  const introActive = useIntroActive();
+  const clock = useFigureClock<HTMLDivElement>({ until: FILL_AT + 700 + FILL_FOR + 100, page: "home", replay: true });
+  const { ref, t, reduced } = clock;
+  const start = FILL_AT + (introActive && clock.runs <= 1 ? 700 : 0);
   const target = now !== null ? schoolProgress(now) : 0;
   const p = reduced ? target : target * ease(phase(t, start, FILL_FOR));
   const dot = mounted && (reduced || t >= start);
@@ -22,12 +23,7 @@ export function HomeStatus({ pinned = false }: { pinned?: boolean }) {
   return (
     <div
       ref={ref}
-      className={cn(
-        "rounded-[22px] px-4 py-3.5 desk:px-[clamp(14px,2vh,24px)] desk:py-[clamp(10px,1.8vh,20px)]",
-        pinned
-          ? "glass w-full border-white/70 bg-white/90 shadow-[0_18px_44px_rgba(30,80,150,0.24)]"
-          : "glass max-w-[560px]"
-      )}
+      className="glass max-w-[560px] rounded-[22px] px-4 py-3.5 desk:max-w-none desk:px-[clamp(14px,2vh,24px)] desk:py-[clamp(10px,1.8vh,20px)]"
     >
       <div className="flex items-start gap-3 desk:gap-[clamp(10px,1.6vh,18px)]">
         <span

@@ -56,12 +56,22 @@ export type FigureClock<T extends Element> = {
   restart: () => void;
   reduced: boolean;
   started: boolean;
+  /** How many times the clock has started from zero: 1 on the first play, 2 after the first replay. */
+  runs: number;
 };
 
+const IN_VIEW_THRESHOLDS = [0, 0.1, 0.2, 0.33, 0.5, 0.75, 1];
+
+/**
+ * A clock for one figure. It ticks only while the figure is on screen, the tab is visible and motion
+ * is allowed. With replay, leaving the screen resets it to zero, so the figure plays again from the
+ * beginning every time it comes back. A figure counts as on screen once a third of it shows, or once
+ * it fills 40% of the screen height (for figures taller than the screen).
+ */
 export function useFigureClock<T extends Element = HTMLDivElement>(
-  options: { until?: number; page?: string; active?: boolean; onRestart?: () => void } = {},
+  options: { until?: number; page?: string; active?: boolean; onRestart?: () => void; replay?: boolean } = {},
 ): FigureClock<T> {
-  const { until, page, active = true, onRestart } = options;
+  const { until, page, active = true, onRestart, replay = false } = options;
   const onRestartRef = useRef(onRestart);
   useEffect(() => {
     onRestartRef.current = onRestart;
@@ -73,6 +83,7 @@ export function useFigureClock<T extends Element = HTMLDivElement>(
   const [started, setStarted] = useState(false);
   const [paused, setPaused] = useState(false);
   const [t, setT] = useState(0);
+  const [runs, setRuns] = useState(0);
   const elapsed = useRef(0);
   const finished = until !== undefined && t >= until;
   const running = active && inView && pageVisible && !paused && !reduced && !finished;
@@ -80,20 +91,31 @@ export function useFigureClock<T extends Element = HTMLDivElement>(
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
+    let visible = false;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.intersectionRatio >= 0.33) {
+        const screen = entry.rootBounds?.height ?? window.innerHeight;
+        const enough =
+          entry.isIntersecting && (entry.intersectionRatio >= 0.33 || entry.intersectionRect.height >= screen * 0.4);
+        if (enough && !visible) {
+          visible = true;
+          if (elapsed.current === 0) setRuns((count) => count + 1);
           setInView(true);
           setStarted(true);
         } else if (!entry.isIntersecting) {
+          visible = false;
           setInView(false);
+          if (replay) {
+            elapsed.current = 0;
+            setT(0);
+          }
         }
       },
-      { threshold: [0, 0.33] },
+      { threshold: IN_VIEW_THRESHOLDS },
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, []);
+  }, [replay]);
 
   useEffect(() => {
     if (!running) return;
@@ -119,6 +141,7 @@ export function useFigureClock<T extends Element = HTMLDivElement>(
     elapsed.current = 0;
     setT(0);
     setPaused(false);
+    setRuns((count) => count + 1);
   }, []);
 
   useEffect(() => {
@@ -135,7 +158,13 @@ export function useFigureClock<T extends Element = HTMLDivElement>(
 
   const togglePause = useCallback(() => setPaused((value) => !value), []);
 
-  return { ref, t, paused, setPaused, togglePause, seek, restart, reduced, started };
+  return { ref, t, paused, setPaused, togglePause, seek, restart, reduced, started, runs };
+}
+
+/** Where a looping figure is in its loop: before its delay it rests on its finished frame. */
+export function loopTime(t: number, delay: number, loop: number) {
+  if (t < delay) return null;
+  return (t - delay) % loop;
 }
 
 export function clamp01(value: number) {

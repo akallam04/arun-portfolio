@@ -79,7 +79,7 @@ function Donut({ languages, draw }: { languages: GitHubData["languages"]; draw: 
 }
 
 export function GitHubPage({ data }: { data: GitHubData }) {
-  const { ref, t, reduced } = useFigureClock<HTMLDivElement>({ until: UNTIL, page: "github" });
+  const { ref, t, reduced } = useFigureClock<HTMLDivElement>({ until: UNTIL, page: "github", replay: true });
   const typed = reduced ? 1 : phase(t, TYPE_AT, TYPE_FOR);
   const message = data.nowBuilding?.message ?? "";
   const shown = message.slice(0, Math.ceil(message.length * typed));
@@ -135,9 +135,9 @@ export function GitHubPage({ data }: { data: GitHubData }) {
                   {...EXTERNAL}
                   className="mt-1 grid text-[15px] text-ink-2 hover:text-ink desk:text-[clamp(13px,1.9vh,21px)]"
                 >
-                  <span className="invisible [grid-area:1/1]" aria-hidden="true">
+                  <span className="text-ink-2/30 [grid-area:1/1]" aria-hidden="true">
                     {message}
-                    <span className="caret" />
+                    <span className="caret invisible" />
                   </span>
                   <span className="[grid-area:1/1]">
                     <span aria-hidden="true">{shown}</span>
@@ -226,8 +226,9 @@ export function GitHubPage({ data }: { data: GitHubData }) {
                           title={`${day.count} on ${day.date}`}
                           className="block h-[9px] w-[9px] rounded-[2px] desk:h-[clamp(6px,1.2vh,16px)] desk:w-[clamp(6px,1.2vh,16px)]"
                           style={{
-                            background: LEVELS[day.level] ?? LEVELS[0],
-                            opacity: reduced ? 1 : phase(t, cellsFrom + w * CELL_STEP, 260),
+                            background:
+                              reduced || t >= cellsFrom + w * CELL_STEP ? (LEVELS[day.level] ?? LEVELS[0]) : LEVELS[0],
+                            transition: "background-color 260ms ease",
                           }}
                         />
                       ))}

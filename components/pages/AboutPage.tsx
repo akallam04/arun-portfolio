@@ -78,7 +78,7 @@ function BalanceIcon({ p }: { p: number }) {
 const ICONS = { gate: GateIcon, stamp: StampIcon, balance: BalanceIcon } as const;
 
 export function AboutPage() {
-  const { ref, t, reduced } = useFigureClock<HTMLUListElement>({ until: UNTIL, page: "about" });
+  const { ref, t, reduced } = useFigureClock<HTMLUListElement>({ until: UNTIL, page: "about", replay: true });
   return (
     <section id="about" data-page aria-labelledby="about-title" className="page">
       <div className="page-inner gap-4 desk:gap-[clamp(10px,2.2vh,32px)]">

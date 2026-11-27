@@ -9,14 +9,10 @@ export function HomePage() {
       <div className="page-inner">
         <div className="grid flex-1 items-center gap-7 desk:mx-auto desk:min-h-0 desk:w-full desk:max-w-[clamp(1080px,152vh,1700px)] desk:grid-cols-[minmax(0,55fr)_minmax(0,45fr)] desk:gap-x-14 desk:gap-y-0">
           <div className="flex justify-center desk:order-last desk:justify-start">
-            <div className="relative">
-              <HomePhoto />
-              <div className="absolute -bottom-7 -left-14 hidden w-[clamp(300px,46vh,460px)] desk:block" data-pinned-card>
-                <HomeStatus pinned />
-              </div>
-            </div>
+            <HomePhoto />
           </div>
           <div className="min-w-0">
+            <div className="desk:w-fit desk:max-w-full">
             <p className="text-[17px] font-medium text-muted desk:text-[clamp(15px,2.3vh,26px)]">{HOME.hello}</p>
             <h1
               id="home-title"
@@ -35,11 +31,12 @@ export function HomePage() {
             <p className="mt-1.5 max-w-[34ch] text-[18px] leading-snug text-ink-2 desk:mt-[clamp(4px,0.9vh,12px)] desk:max-w-[40ch] desk:text-[clamp(16px,2.4vh,29px)]">
               {HOME.lede}
             </p>
-            <div className="mt-5 desk:hidden">
+            <div className="mt-5 desk:mt-[clamp(12px,2.6vh,36px)] desk:w-0 desk:min-w-full">
               <HomeStatus />
             </div>
-            <div className="mt-5 desk:mt-[clamp(16px,3.2vh,44px)]">
+            <div className="mt-5 desk:mt-[clamp(12px,2.6vh,36px)]">
               <HomeActions />
+            </div>
             </div>
           </div>
         </div>
